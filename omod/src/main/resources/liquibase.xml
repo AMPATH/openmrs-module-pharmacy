@@ -1,0 +1,5341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+	http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd" >
+
+    <!--
+         See http://wiki.openmrs.org/display/docs/Module+liquibase+File for 
+		documentation on this file. See http://www.liquibase.org/manual/home#available_database_refactorings 
+		for a list of supported elements and attributes
+
+    -->
+
+    <changeSet
+            id="pharmacy-2012-05-03-6:0000000"
+            author="nbore" >
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:00"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_drug_unit" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the drug_unit table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_drug_unit" >
+
+            <column
+                    name="pharmacy_drug_unit_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="unit_name"
+                    type="varchar(255)" />
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_drug_unit" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_drug_unit_id"
+                tableName="pharmacy_drug_unit" />
+
+        <update tableName="pharmacy_drug_unit" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:02"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_indicator" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_indicator table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_indicator" >
+
+            <column
+                    name="pharmacy_indicator_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="indicator_name"
+                    type="varchar(255)" />
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_indicator" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_indicator_id"
+                tableName="pharmacy_indicator" />
+
+        <update tableName="pharmacy_indicator" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:03"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_drug_formulation" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_drug_formulation table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_drug_formulation" >
+
+            <column
+                    name="pharmacy_drug_formulation_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="formulation_name"
+                    type="varchar(255)" />
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_drug_formulation" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_drug_formulation_id"
+                tableName="pharmacy_drug_formulation" />
+
+        <update tableName="pharmacy_drug_formulation" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:04"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_drug_name" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_drug_name table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_drug_name" >
+
+            <column
+                    name="pharmacy_drug_name_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="drug_name"
+                    type="varchar(255)" />
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_drug_name" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_drug_name_id"
+                tableName="pharmacy_drug_name" />
+
+        <update tableName="pharmacy_drug_name" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:05"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_supplier" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_supplier table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_supplier" >
+
+            <column
+                    name="pharmacy_supplier_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="name"
+                    type="char(38)" />
+
+            <column
+                    name="description"
+                    type="char(38)" />
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_supplier" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_supplier_id"
+                tableName="pharmacy_supplier" />
+
+        <update tableName="pharmacy_supplier" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:055"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_locations" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_supplier table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_locations" >
+
+            <column
+                    name="pharmacy_locations_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="name"
+                    type="char(38)" />
+
+            <column
+                    name="description"
+                    type="char(38)" />
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_locations" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_locations_id"
+                tableName="pharmacy_locations" />
+
+        <update tableName="pharmacy_locations" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:06"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_transaction_type" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_transaction_type table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_transaction_type" >
+
+            <column
+                    name="pharmacy_transaction_type_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="name"
+                    type="char(38)" />
+
+            <column
+                    name="description"
+                    type="char(38)" />
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_transaction_type" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_transaction_type_id"
+                tableName="pharmacy_transaction_type" />
+
+        <update tableName="pharmacy_transaction_type" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:07"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_category" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_category table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_category" >
+
+            <column
+                    name="pharmacy_category_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="name"
+                    type="char(38)" />
+
+            <column
+                    name="description"
+                    type="char(38)" />
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_category" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_category_id"
+                tableName="pharmacy_category" />
+
+        <update tableName="pharmacy_category" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:08"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_frequency" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_frequency_concept_fk" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_frequency table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_frequency" >
+
+            <column
+                    name="pharmacy_frequency_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="frequency_name"
+                    type="varchar(255)" />
+
+            <column
+                    name="concept_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_frequency" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_frequency_id"
+                tableName="pharmacy_frequency" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="concept_uuid"
+                baseTableName="pharmacy_frequency"
+                constraintName="pharmacy_frequency_concept_fk"
+                referencedColumnNames="uuid"
+                referencedTableName="concept" />
+
+        <update tableName="pharmacy_frequency" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:09"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_drug_strength" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_drug_strength_concept_fk" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the drug_strength table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_drug_strength" >
+
+            <column
+                    name="pharmacy_drug_strength_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="drug_strength_name"
+                    type="varchar(255)" />
+
+            <column
+                    name="concept_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_drug_strength" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_drug_strength_id"
+                tableName="pharmacy_drug_strength" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="concept_uuid"
+                baseTableName="pharmacy_drug_strength"
+                constraintName="pharmacy_drug_strength_concept_fk"
+                referencedColumnNames="uuid"
+                referencedTableName="concept" />
+
+        <update tableName="pharmacy_drug_strength" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:10"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_drug" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_drug_drug_unit_fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_drug__drug_strength_fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_drug__drug_formulation_f9" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_drug_name_fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_drug_concept_fk" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the drug table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_drug" >
+
+            <column
+                    name="pharmacy_drug_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="drug_name_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="concept_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="pharmacy_drug_formulation_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="pharmacy_drug_strength_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="pharmacy_drug_unit_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_drug" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_drug_id"
+                tableName="pharmacy_drug" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_drug_unit_uuid"
+                baseTableName="pharmacy_drug"
+                constraintName="pharmacy_drug_drug_unit_fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_drug_unit" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_drug_strength_uuid"
+                baseTableName="pharmacy_drug"
+                constraintName="pharmacy_drug__drug_strength_fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_drug_strength" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_drug_formulation_uuid"
+                baseTableName="pharmacy_drug"
+                constraintName="pharmacy_drug__drug_formulation_fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_drug_formulation" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="drug_name_uuid"
+                baseTableName="pharmacy_drug"
+                constraintName="pharmacy_drug_name_fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_drug_name" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="concept_uuid"
+                baseTableName="pharmacy_drug"
+                constraintName="pharmacy_drug_concept_fk"
+                referencedColumnNames="uuid"
+                referencedTableName="concept" />
+
+        <update tableName="pharmacy_drug" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:11"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_dose" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_dose_drug_fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_dose_frequency_fk" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_dose table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_dose" >
+
+            <column
+                    name="pharmacy_dose_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="pharmacy_frequency_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="pharmacy_drug_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="quantity"
+                    type="int(11)" >
+            </column>
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_dose" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_dose_id"
+                tableName="pharmacy_dose" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_frequency_uuid"
+                baseTableName="pharmacy_dose"
+                constraintName="pharmacy_dose_frequency_fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_frequency" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_drug_uuid"
+                baseTableName="pharmacy_dose"
+                constraintName="pharmacy_dose_drug_fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_drug" />
+
+        <update tableName="pharmacy_dose" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:13"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_inventory_incoming" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_incoming_destination__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_incoming_location__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_incoming_supplier__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_incoming_transaction__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_incoming_category__fk" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_inventory_incoming table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_inventory_incoming" >
+
+            <column
+                    name="pharmacy_inventory_incoming_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="pharmacy_drug_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="quantity_in"
+                    type="int(11)" />
+
+            <column
+                    name="maxlevel"
+                    type="int(11)" />
+
+            <column
+                    name="minlevel"
+                    type="int(11)" />
+
+            <column
+                    name="batch_no"
+                    type="int(11)" >
+            </column>
+
+            <column
+                    name="s11_no"
+                    type="int(11)" >
+            </column>
+
+            <column
+                    name="expiredate"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="delivery_no"
+                    type="int(11)" >
+            </column>
+
+            <column
+                    name="change_reason"
+                    type="text" />
+
+            <column
+                    name="pharmacy_category_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="destination_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="location_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="supplier_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="transaction_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="approved"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="requestedBy"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="issuedBy"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="authorizedBy"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="status"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_inventory_incoming" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_inventory_incoming_id"
+                tableName="pharmacy_inventory_incoming" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="destination_uuid"
+                baseTableName="pharmacy_inventory_incoming"
+                constraintName="pharmacy_inventory_incoming_destination__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_locations" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="location_uuid"
+                baseTableName="pharmacy_inventory_incoming"
+                constraintName="pharmacy_inventory_incoming_location__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_locations" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="supplier_uuid"
+                baseTableName="pharmacy_inventory_incoming"
+                constraintName="pharmacy_inventory_incoming_supplier__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_supplier" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="transaction_uuid"
+                baseTableName="pharmacy_inventory_incoming"
+                constraintName="pharmacy_inventory_incoming_transaction__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_transaction_type" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_category_uuid"
+                baseTableName="pharmacy_inventory_incoming"
+                constraintName="pharmacy_inventory_incoming_category__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_category" />
+
+        <update tableName="pharmacy_inventory_incoming" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:14"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_inventory_outgoing" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_outgoing_drug__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_outgoing_destination__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_outgoing_location__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_outgoing_supplier__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_outgoing_transaction__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_outgoing_category__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_outgoing_incoming__fk" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_inventory_outgoing table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_inventory_outgoing" >
+
+            <column
+                    name="pharmacy_inventory_outgoing_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="quantity_in"
+                    type="int(11)" />
+
+            <column
+                    name="maxlevel"
+                    type="int(11)" />
+
+            <column
+                    name="minlevel"
+                    type="int(11)" />
+
+            <column
+                    name="batch_no"
+                    type="int(11)" >
+            </column>
+
+            <column
+                    name="s11_no"
+                    type="int(11)" >
+            </column>
+
+            <column
+                    name="expiredate"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="pharmacy_category_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="pharmacy_drug_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="destination_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="location_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="supplier_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="transaction_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="incoming_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="delivery_no"
+                    type="int(11)" >
+            </column>
+
+            <column
+                    name="change_reason"
+                    type="text" />
+
+            <column
+                    name="approved"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="requestedBy"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="issuedBy"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="authorizedBy"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="status"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_inventory_outgoing" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_inventory_outgoing_id"
+                tableName="pharmacy_inventory_outgoing" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="destination_uuid"
+                baseTableName="pharmacy_inventory_outgoing"
+                constraintName="pharmacy_inventory_outgoing_destination__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_locations" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="location_uuid"
+                baseTableName="pharmacy_inventory_outgoing"
+                constraintName="pharmacy_inventory_outgoing_location__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_locations" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="supplier_uuid"
+                baseTableName="pharmacy_inventory_outgoing"
+                constraintName="pharmacy_inventory_outgoing_supplier__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_supplier" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="transaction_uuid"
+                baseTableName="pharmacy_inventory_outgoing"
+                constraintName="pharmacy_inventory_outgoing_transaction__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_transaction_type" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="incoming_uuid"
+                baseTableName="pharmacy_inventory_outgoing"
+                constraintName="pharmacy_inventory_outgoing_incoming__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_inventory_incoming" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_drug_uuid"
+                baseTableName="pharmacy_inventory_outgoing"
+                constraintName="pharmacy_inventory_outgoing_drug__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="drug" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_category_uuid"
+                baseTableName="pharmacy_inventory_outgoing"
+                constraintName="pharmacy_inventory_outgoing_category__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_category" />
+
+        <update tableName="pharmacy_inventory_outgoing" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:15"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_inventory" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_category__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_drug_fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_outgoing__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_incoming_two__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_supplier__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_transaction__fk" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_inventory table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_inventory" >
+
+            <column
+                    name="pharmacy_inventory_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="pharmacy_drug_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="quantity"
+                    type="int(11)" />
+
+            <column
+                    name="quantity_in"
+                    type="int(11)" />
+
+            <column
+                    name="quantity_out"
+                    type="int(11)" />
+
+            <column
+                    name="maxlevel"
+                    type="int(11)" />
+
+            <column
+                    name="minlevel"
+                    type="int(11)" />
+
+            <column
+                    name="change_reason"
+                    type="text" />
+
+            <column
+                    name="location_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="batch_no"
+                    type="int(11)" >
+            </column>
+
+            <column
+                    name="s11_no"
+                    type="int(11)" >
+            </column>
+
+            <column
+                    name="supplier_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="transaction_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="delivery_no"
+                    type="int(11)" >
+            </column>
+
+            <column
+                    name="expiredate"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="pharmacy_category_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="pharmacy_inventory_outgoing_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="pharmacy_inventory_incoming_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_inventory" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_inventory_id"
+                tableName="pharmacy_inventory" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_inventory_outgoing_uuid"
+                baseTableName="pharmacy_inventory"
+                constraintName="pharmacy_inventory_outgoing__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_inventory_outgoing" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_inventory_incoming_uuid"
+                baseTableName="pharmacy_inventory"
+                constraintName="pharmacy_inventory_incoming_two__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_inventory_incoming" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="supplier_uuid"
+                baseTableName="pharmacy_inventory"
+                constraintName="pharmacy_inventory_supplier__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_supplier" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="transaction_uuid"
+                baseTableName="pharmacy_inventory"
+                constraintName="pharmacy_inventory_transaction__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_transaction_type" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_drug_uuid"
+                baseTableName="pharmacy_inventory"
+                constraintName="pharmacy_inventory_drug_fk"
+                referencedColumnNames="uuid"
+                referencedTableName="drug" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_category_uuid"
+                baseTableName="pharmacy_inventory"
+                constraintName="pharmacy_inventory_category__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_category" />
+
+        <update tableName="pharmacy_inventory" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:16"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_drug_transactions" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_drug_transactions_drug_fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_drug_transactions_location__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_drug_transactions_category__fk" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_drug_transactions table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_drug_transactions" >
+
+            <column
+                    name="pharmacy_drug_transactions_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="pharmacy_drug_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="quantity_in"
+                    type="int(11)" />
+
+            <column
+                    name="quantity_out"
+                    type="int(11)" />
+
+            <column
+                    name="comment"
+                    type="varchar(255)" />
+
+            <column
+                    name="location_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="pharmacy_category_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="expiredate"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_drug_transactions" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_drug_transactions_id"
+                tableName="pharmacy_drug_transactions" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_drug_uuid"
+                baseTableName="pharmacy_drug_transactions"
+                constraintName="pharmacy_drug_transactions_drug_fk"
+                referencedColumnNames="uuid"
+                referencedTableName="drug" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="location_uuid"
+                baseTableName="pharmacy_drug_transactions"
+                constraintName="pharmacy_drug_transactions_location__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_locations" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_category_uuid"
+                baseTableName="pharmacy_drug_transactions"
+                constraintName="pharmacy_drug_transactions_category__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_category" />
+
+        <update tableName="pharmacy_drug_transactions" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:17"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_encounter_type" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_encounter_type table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_encounter_type" >
+
+            <column
+                    name="pharmacy_encounter_type_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="name"
+                    type="varchar(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="description"
+                    type="varchar(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_encounter_type" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_encounter_type_id"
+                tableName="pharmacy_encounter_type" />
+
+        <update tableName="pharmacy_encounter_type" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:18"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_encounter" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_encounter_location_fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_encounter_pharmacy_encounter_type_fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_encounter_patientt_fk" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_encounter table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_encounter" >
+
+            <column
+                    name="pharmacy_encounter_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="pharmacy_encounter_type_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="patient_uuid"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="location_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="form_name"
+                    type="varchar(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="encounter_datetime"
+                    type="datetime" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_encounter" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_encounter_id"
+                tableName="pharmacy_encounter" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="location_uuid"
+                baseTableName="pharmacy_encounter"
+                constraintName="pharmacy_encounter_location_fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_locations" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_encounter_type_uuid"
+                baseTableName="pharmacy_encounter"
+                constraintName="pharmacy_encounter_pharmacy_encounter_type_fk"
+                referencedColumnNames="uuid"
+                referencedTableName="encounter_type" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="patient_uuid"
+                baseTableName="pharmacy_encounter"
+                constraintName="pharmacy_encounter_patientt_fk"
+                referencedColumnNames="patient_id"
+                referencedTableName="patient" />
+
+        <update tableName="pharmacy_encounter" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:19"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_general_variables" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_general_variables table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_general_variables" >
+
+            <column
+                    name="pharmacy_general_variables_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="name"
+                    type="text" />
+
+            <column
+                    name="description"
+                    type="char(38)" />
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_general_variables" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_general_variables_id"
+                tableName="pharmacy_general_variables" />
+
+        <update tableName="pharmacy_general_variables" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:20"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_extra" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_question_uuid_fk" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_extra table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_extra" >
+
+            <column
+                    name="pharmacy_extra_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="pharmacy_question_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="question_ans"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_extra" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_extra_id"
+                tableName="pharmacy_extra" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_question_uuid"
+                baseTableName="pharmacy_extra"
+                constraintName="pharmacy_question_uuid_fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_general_variables" />
+
+        <update tableName="pharmacy_extra" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:2222"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_order" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_order_encounter__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_order_drug__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_order_Extra_fk" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_order table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_order" >
+
+            <column
+                    name="pharmacy_order_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="concept_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="pharmacy_encounter_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="instructions"
+                    type="varchar(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="startdate"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="auto_end_date"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="discontinued"
+                    type="smallint(6)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="discontinued_date"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="discontinued_reason"
+                    type="varchar(1000)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="plan"
+                    type="varchar(1000)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="route"
+                    type="varchar(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="dispensed"
+                    type="smallint(6)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="drug_id"
+                    type="char(38)" >
+            </column>
+
+            <column
+                    name="change_id"
+                    type="char(38)" >
+            </column>
+
+            <column
+                    name="route_ans"
+                    type="char(38)" >
+            </column>
+
+            <column
+                    name="frequency_id"
+                    type="char(38)" >
+            </column>
+
+            <column
+                    name="frequency_ans_id"
+                    type="char(38)" >
+            </column>
+
+            <column
+                    name="indication_id"
+                    type="char(38)" >
+            </column>
+
+            <column
+                    name="dose_id"
+                    type="char(38)" >
+            </column>
+
+            <column
+                    name="duration_id"
+                    type="char(38)" >
+            </column>
+
+            <column
+                    name="duration_ans_id"
+                    type="char(38)" >
+            </column>
+
+            <column
+                    name="quantity"
+                    type="int(11)" >
+            </column>
+
+            <column
+                    name="pill_count"
+                    type="int(11)" >
+            </column>
+
+            <column
+                    name="next_visit_date"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="monthsno"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="pharmacy_extra_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="amount"
+                    type="double" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="receiptno"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="waiverno"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="waiveramount"
+                    type="double" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="invoiceno"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+
+
+
+
+
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_order" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_order_id"
+                tableName="pharmacy_order" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_encounter_uuid"
+                baseTableName="pharmacy_order"
+                constraintName="pharmacy_order_encounter__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_encounter" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="drug_id"
+                baseTableName="pharmacy_order"
+                constraintName="pharmacy_order_drug__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="drug" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_extra_uuid"
+                baseTableName="pharmacy_order"
+                constraintName="pharmacy_order_Extra_fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_extra" />
+
+        <update tableName="pharmacy_order" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:22"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_obs" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_obs_encounter_fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_obs_order_fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_obs_location_fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_obs_person_fk" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_obs table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_obs" >
+
+            <column
+                    name="pharmacy_obs_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="patient_uuid"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="concept_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="pharmacy_encounter_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="location_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="value_group_id"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="value_boolen"
+                    type="tinyint(4)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="value_coded"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="value_coded_name"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="value_datetime"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="value_numeric"
+                    type="double" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="value_modifier"
+                    type="varchar(2)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="value_text"
+                    type="text" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="datetime_started"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="datetime_stopped"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="comment"
+                    type="text" />
+
+            <column
+                    name="prescriberId"
+                    type="char(38)" >
+            </column>
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_obs" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_obs_id"
+                tableName="pharmacy_obs" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_encounter_uuid"
+                baseTableName="pharmacy_obs"
+                constraintName="pharmacy_obs_encounter_fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_encounter" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="location_uuid"
+                baseTableName="pharmacy_obs"
+                constraintName="pharmacy_obs_location_fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_locations" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="patient_uuid"
+                baseTableName="pharmacy_obs"
+                constraintName="pharmacy_obs_person_fk"
+                referencedColumnNames="patient_id"
+                referencedTableName="patient" />
+
+        <update tableName="pharmacy_obs" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:23"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_regimen_name" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_regimen_name table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_regimen_name" >
+
+            <column
+                    name="pharmacy_regimen_name_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="regimen_name"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_regimen_name" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_regimen_name_id"
+                tableName="pharmacy_regimen_name" />
+
+        <update tableName="pharmacy_regimen_name" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:24"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_regimen" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_regimen_r_name__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_regimen_drug__fk" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_regimen table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_regimen" >
+
+            <column
+                    name="pharmacy_regimen_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="pharmacy_regimen_name_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="pharmacy_drug_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="combination"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_regimen" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_regimen_id"
+                tableName="pharmacy_regimen" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_regimen_name_uuid"
+                baseTableName="pharmacy_regimen"
+                constraintName="pharmacy_regimen_r_name__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_regimen_name" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_drug_uuid"
+                baseTableName="pharmacy_regimen"
+                constraintName="pharmacy_regimen_drug__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="drug" />
+
+        <update tableName="pharmacy_regimen" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:25"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_regimen_combination" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_regimen_combination_regimen__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_regimen_combination_r_name__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_regimen_combination_drug__fk" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_regimen_combination table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_regimen_combination" >
+
+            <column
+                    name="pharmacy_regimen_combination_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="pharmacy_regimen_name_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="drug_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="pharmacy_regimen_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_regimen_combination" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_regimen_combination_id"
+                tableName="pharmacy_regimen_combination" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_regimen_uuid"
+                baseTableName="pharmacy_regimen_combination"
+                constraintName="pharmacy_regimen_combination_regimen__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_regimen" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_regimen_name_uuid"
+                baseTableName="pharmacy_regimen_combination"
+                constraintName="pharmacy_regimen_combination_r_name__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_regimen_name" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="drug_uuid"
+                baseTableName="pharmacy_regimen_combination"
+                constraintName="pharmacy_regimen_combination_drug__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="drug" />
+
+        <update tableName="pharmacy_regimen_combination" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:26"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_drug_dispense_settings" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_drug_dispense_settings_drug__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_drug_dispense_settings_inventory__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_drug_dispense_settings_location__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_drug_dispense_settings_category__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_general_uuid__fk" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_drug_dispense_settings table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_drug_dispense_settings" >
+
+            <column
+                    name="pharmacy_drug_dispense_settings_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="drug_id"
+                    type="int(11)" >
+            </column>
+
+            <column
+                    name="batch_id"
+                    type="int(11)" >
+            </column>
+
+            <column
+                    name="pharmacy_general_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="value"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="amount"
+                    type="double" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="inventory_id"
+                    type="char(38)" >
+            </column>
+
+            <column
+                    name="location_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="pharmacy_category_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_drug_dispense_settings" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_drug_dispense_settings_id"
+                tableName="pharmacy_drug_dispense_settings" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="drug_id"
+                baseTableName="pharmacy_drug_dispense_settings"
+                constraintName="pharmacy_drug_dispense_settings_drug__fk"
+                referencedColumnNames="drug_id"
+                referencedTableName="drug" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="inventory_id"
+                baseTableName="pharmacy_drug_dispense_settings"
+                constraintName="pharmacy_drug_dispense_settings_inventory__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_inventory" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="location_uuid"
+                baseTableName="pharmacy_drug_dispense_settings"
+                constraintName="pharmacy_drug_dispense_settings_location__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_locations" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_category_uuid"
+                baseTableName="pharmacy_drug_dispense_settings"
+                constraintName="pharmacy_drug_dispense_settings_category__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_category" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_general_uuid"
+                baseTableName="pharmacy_drug_dispense_settings"
+                constraintName="pharmacy_general_uuid__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_general_variables" />
+
+        <update tableName="pharmacy_drug_dispense_settings" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:27"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_maxmin" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_maxmin_drug_fk" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_maxmin table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_maxmin" >
+
+            <column
+                    name="pharmacy_maxmin_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="drug_id"
+                    type="int(11)" >
+            </column>
+
+            <column
+                    name="max"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="min"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="total"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_maxmin" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_maxmin_id"
+                tableName="pharmacy_maxmin" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="drug_id"
+                baseTableName="pharmacy_maxmin"
+                constraintName="pharmacy_maxmin_drug_fk"
+                referencedColumnNames="drug_id"
+                referencedTableName="drug" />
+
+        <update tableName="pharmacy_maxmin" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:299"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_inventory_approved" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_approved_destination__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_approved_location__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_approved_supplier__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_approved_transaction__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_approved_category__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_approved_incoming__fk" />
+
+                <foreignKeyConstraintExists foreignKeyName="pharmacy_inventory_approved_outgoing__fk" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_inventory_approved table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_inventory_approved" >
+
+            <column
+                    name="pharmacy_inventory_approved_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="pharmacy_drug_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="quantity_in"
+                    type="int(11)" />
+
+            <column
+                    name="maxlevel"
+                    type="int(11)" />
+
+            <column
+                    name="minlevel"
+                    type="int(11)" />
+
+            <column
+                    name="batch_no"
+                    type="int(11)" >
+            </column>
+
+            <column
+                    name="s11_no"
+                    type="int(11)" >
+            </column>
+
+            <column
+                    name="expiredate"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="delivery_no"
+                    type="int(11)" >
+            </column>
+
+            <column
+                    name="change_reason"
+                    type="text" />
+
+            <column
+                    name="pharmacy_category_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="destination_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="location_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="supplier_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="transaction_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="incoming_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="outgoing_uuid"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="approved"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="requestedBy"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="issuedBy"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="authorizedBy"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="status"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_inventory_approved" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_inventory_approved_id"
+                tableName="pharmacy_inventory_approved" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="destination_uuid"
+                baseTableName="pharmacy_inventory_approved"
+                constraintName="pharmacy_inventory_approved_destination__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_locations" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="location_uuid"
+                baseTableName="pharmacy_inventory_approved"
+                constraintName="pharmacy_inventory_approved_location__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_locations" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="supplier_uuid"
+                baseTableName="pharmacy_inventory_approved"
+                constraintName="pharmacy_inventory_approved_supplier__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_supplier" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="transaction_uuid"
+                baseTableName="pharmacy_inventory_approved"
+                constraintName="pharmacy_inventory_approved_transaction__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_transaction_type" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="pharmacy_category_uuid"
+                baseTableName="pharmacy_inventory_approved"
+                constraintName="pharmacy_inventory_approved_category__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_category" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="incoming_uuid"
+                baseTableName="pharmacy_inventory_approved"
+                constraintName="pharmacy_inventory_approved_incoming__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_inventory_incoming" />
+
+        <addForeignKeyConstraint
+                baseColumnNames="outgoing_uuid"
+                baseTableName="pharmacy_inventory_approved"
+                constraintName="pharmacy_inventory_approved_outgoing__fk"
+                referencedColumnNames="uuid"
+                referencedTableName="pharmacy_inventory_outgoing" />
+
+        <update tableName="pharmacy_inventory_approved" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:30"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <tableExists tableName="pharmacy_drug_dispense_settings" />
+        </preConditions>
+
+        <addColumn tableName="pharmacy_drug_dispense_settings" >
+
+            <column
+                    name="quantity"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="form"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="front"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="back"
+                    type="char(38)" >
+
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:31"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <tableExists tableName="pharmacy_inventory" />
+        </preConditions>
+
+        <addColumn tableName="pharmacy_inventory" >
+
+            <column
+                    name="stock_reason"
+                    type="text" >
+
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:32"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <tableExists tableName="pharmacy_order" />
+        </preConditions>
+
+        <addColumn tableName="pharmacy_order" >
+
+            <column
+                    name="form_id"
+                    type="char(38)" >
+            </column>
+
+            <column
+                    name="form_ans_id"
+                    type="char(38)" >
+            </column>
+
+            <column
+                    name="medication_id"
+                    type="char(38)" >
+            </column>
+
+            <column
+                    name="weigth_range"
+                    type="char(38)" >
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:34"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <tableExists tableName="pharmacy_order" />
+        </preConditions>
+
+        <addColumn tableName="pharmacy_order" >
+
+            <column
+                    name="regimenId"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:35"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <tableExists tableName="pharmacy_order" />
+        </preConditions>
+
+        <dropColumn
+                columnName="route"
+                tableName="pharmacy_order" />
+
+        <dropColumn
+                columnName="route_ans"
+                tableName="pharmacy_order" />
+
+        <dropColumn
+                columnName="form_id"
+                tableName="pharmacy_order" />
+
+        <dropColumn
+                columnName="form_ans_id"
+                tableName="pharmacy_order" />
+
+        <dropColumn
+                columnName="frequency_id"
+                tableName="pharmacy_order" />
+
+        <dropColumn
+                columnName="frequency_ans_id"
+                tableName="pharmacy_order" />
+
+        <dropColumn
+                columnName="weigth_range"
+                tableName="pharmacy_order" />
+
+        <dropColumn
+                columnName="duration_id"
+                tableName="pharmacy_order" />
+
+        <dropColumn
+                columnName="duration_ans_id"
+                tableName="pharmacy_order" />
+    </changeSet>
+
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:36"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <tableExists tableName="pharmacy_order" />
+        </preConditions>
+
+        <addColumn tableName="pharmacy_order" >
+
+
+
+            <column
+                    name="dispensed_by"
+                    type="char(38)" >
+                <constraints nullable="true" />
+            </column>
+
+        </addColumn>
+    </changeSet>
+    <changeSet
+            id="pharmacy-2012-05-04-8:37"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <tableExists tableName="pharmacy_order" />
+        </preConditions>
+
+        <addColumn tableName="pharmacy_order" >
+
+
+
+            <column
+                    name="valueText"
+                    type="char(38)" >
+                <constraints nullable="true" />
+            </column>
+
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:38"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <tableExists tableName="pharmacy_order" />
+        </preConditions>
+
+        <addColumn tableName="pharmacy_order" >
+
+
+
+            <column
+                    name="quantityRequested"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet
+            id="pharmacy-2012-05-04-8:39"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <not>
+
+                <tableExists tableName="pharmacy_location_users" />
+            </not>
+
+            <dbms type="mysql" />
+        </preConditions>
+
+        <comment>
+            Creating the pharmacy_supplier table
+
+
+        </comment>
+
+        <createTable tableName="pharmacy_location_users" >
+
+            <column
+                    name="pharmacy_location_users_id"
+                    type="int(11)" >
+
+                <constraints
+                        nullable="false"
+                        primaryKey="true" />
+            </column>
+
+            <column
+                    name="usernname"
+                    type="char(38)" />
+
+            <column
+                    name="location"
+                    type="char(38)" />
+
+            <column
+                    name="creator"
+                    defaultValue="0"
+                    type="int(11)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="datecreated"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="voided"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="false" />
+            </column>
+
+            <column
+                    name="voided_by"
+                    type="int(11)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="date_voided"
+                    type="datetime" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="void_reason"
+                    type="varchar(255)" >
+
+                <constraints nullable="true" />
+            </column>
+
+            <column
+                    name="uuid"
+                    type="char(38)" >
+
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createIndex
+                indexName="uuid"
+                tableName="pharmacy_location_users" >
+
+            <column name="uuid" />
+        </createIndex>
+
+        <addAutoIncrement
+                columnDataType="int"
+                columnName="pharmacy_location_users_id"
+                tableName="pharmacy_location_users" />
+
+
+        <update tableName="pharmacy_location_users" >
+
+            <column
+                    name="uuid"
+                    valueNumeric="name-of-uuid-function" />
+
+            <where>
+                uuid is null
+
+            </where>
+        </update>
+
+        <modifySql dbms="mysql" >
+
+            <replace
+                    replace="name-of-uuid-function"
+                    with="UUID()" />
+        </modifySql>
+    </changeSet>
+    <changeSet
+            id="pharmacy-2012-05-04-8:41"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+            <tableExists tableName="pharmacy_dose" />
+        </preConditions>
+
+        <comment>
+            droping table the pharmacy_dose table
+        </comment>
+
+        <dropTable tableName="pharmacy_dose"/>
+
+    </changeSet>
+
+
+    <changeSet
+            id="pharmacy-2012-05-04-9:42"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+            <tableExists tableName="pharmacy_drug" />
+            <tableExists tableName="pharmacy_drug_formulation" />
+            <tableExists tableName="pharmacy_drug_name" />
+            <tableExists tableName="pharmacy_drug_strength" />
+            <tableExists tableName="pharmacy_drug_unit" />
+        </preConditions>
+
+        <comment>
+            droping table the pharmacy_dose table
+        </comment>
+
+        <dropTable tableName="pharmacy_drug"/>
+        <dropTable tableName="pharmacy_drug_formulation"/>
+        <dropTable tableName="pharmacy_drug_name"/>
+        <dropTable tableName="pharmacy_drug_strength"/>
+        <dropTable tableName="pharmacy_drug_unit"/>
+
+
+    </changeSet>
+
+    <changeSet
+            id="pharmacy-2012-05-04-9:43"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <tableExists tableName="pharmacy_regimen_combination" />
+        </preConditions>
+
+        <addColumn tableName="pharmacy_regimen_combination" >
+
+
+
+            <column
+                    name="options"
+                    defaultValue="0"
+                    type="smallint(6)" >
+
+                <constraints nullable="true" />
+            </column>
+
+        </addColumn>
+    </changeSet>
+    <changeSet
+            id="pharmacy-2012-05-04-9:44"
+            author="nbore" >
+
+        <preConditions onFail="MARK_RAN" >
+
+            <tableExists tableName="pharmacy_regimen" />
+        </preConditions>
+
+        <addColumn tableName="pharmacy_regimen" >
+
+
+
+            <column
+                    name="category"
+                    type="char(38)" >
+                <constraints nullable="true" />
+            </column>
+
+        </addColumn>
+    </changeSet>
+
+
+</databaseChangeLog>

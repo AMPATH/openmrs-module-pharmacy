@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+    <class name="org.openmrs.module.pharmacy.model.RegimenCombination" table=" pharmacy_regimen_combination">
+        <cache usage="read-write" />
+
+        <id name="id" type="int" column="pharmacy_regimen_combination_id" unsaved-value="0">
+            <generator
+                    class="org.openmrs.api.db.hibernate.NativeIfNotAssignedIdentityGenerator" />
+        </id>
+        <discriminator column="pharmacy_regimen_combination_id" insert="false" />
+
+
+        <many-to-one name="regimenNames"  property-ref="uuid"
+                     column="pharmacy_regimen_name_uuid" not-null="false" />
+
+
+        <many-to-one name="drugName"  property-ref="uuid"
+                     column="drug_uuid" not-null="false" />
+
+        <many-to-one name="pharmacyRegimen"  property-ref="uuid"
+                     column="pharmacy_regimen_uuid" not-null="false" />
+
+
+
+        <many-to-one name="creator" class="org.openmrs.User"
+                     column="creator" not-null="true" />
+
+        <property name="dateCreated" type="java.util.Date" column="datecreated"
+                  not-null="true" />
+
+        <property name="voided" type="boolean" not-null="true" />
+
+
+        <many-to-one name="voidedBy" class="org.openmrs.User"
+                     column="voided_by" />
+
+        <property name="dateVoided" type="java.util.Date" column="date_voided" />
+        <property name="voidReason" type="java.lang.String" column="void_reason"
+                  length="255" />
+
+        <property name="uuid" type="string" length="38" not-null="true"
+                  unique="true" />
+
+        <property name="options" type="boolean" column="options"  not-null="false" />
+
+
+    </class>
+</hibernate-mapping>

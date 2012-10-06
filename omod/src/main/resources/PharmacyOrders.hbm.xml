@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+    <class name="org.openmrs.module.pharmacy.model.PharmacyOrders" table="pharmacy_order">
+        <cache usage="read-write" />
+
+        <id name="id" type="int" column="pharmacy_order_id" unsaved-value="0">
+            <generator
+                    class="org.openmrs.api.db.hibernate.NativeIfNotAssignedIdentityGenerator" />
+        </id>
+
+        <property name="concept" type="java.lang.String" column="concept_uuid"
+                  length="255" />
+
+        <property name="changeId" type="java.lang.String"  column="change_id" length="38" />
+        <many-to-one name="drugId"  property-ref="uuid" column="drug_id" />
+
+        <property name="doseId" type="java.lang.String"  column="dose_id" length="38" />
+
+
+        <property name="dispensedBy" type="java.lang.String"  not-null="false" column="dispensed_by" length="38" />
+
+        <property name="medication" type="java.lang.String"  column="medication_id" length="38" />
+
+        <property name="indicationId" type="java.lang.String"  column="indication_id" length="38" />
+
+
+        <property name="valueText" type="java.lang.String"  column="valueText" length="38" />
+
+
+
+
+
+
+
+
+        <many-to-one name="pharmacyEncounter"  property-ref="uuid" column="pharmacy_encounter_uuid" />
+
+        <property name="instructions" type="java.lang.String" column="instructions"
+                  length="255" />
+        <property name="startDate" type="java.util.Date" column="startdate"
+                />
+
+        <property name="autoEndDate" type="java.util.Date" column="auto_end_date"
+                />
+
+        <property name="discontinued" type="boolean" column="discontinued"
+                />
+        <property name="discontinuedDate" type="java.util.Date" column="discontinued_date"
+                />
+        <property name="discontinuedReason" type="java.lang.String" column="discontinued_reason"
+                  length="255" />
+
+        <property name="plan" type="java.lang.String" column="plan"
+                  length="255" />
+
+
+        <property name="dispensed" type="boolean" column="dispensed"
+                />
+
+
+
+
+
+
+        <many-to-one name="creator" class="org.openmrs.User"
+                     column="creator" not-null="true" />
+
+        <property name="dateCreated" type="java.util.Date" column="datecreated"
+                  not-null="true" />
+
+        <property name="voided" type="boolean" not-null="true" />
+
+
+        <many-to-one name="voidedBy" class="org.openmrs.User"
+                     column="voided_by" />
+
+        <property name="dateVoided" type="java.util.Date" column="date_voided" />
+        <property name="voidReason" type="java.lang.String" column="void_reason"
+                  length="255" />
+
+        <property name="uuid" type="java.lang.String" length="38"
+                  not-null="true" unique="true" />
+
+
+
+        <property name="amount" type="double" column="amount"
+                />
+        <property name="receiptNo" type="int" column="receiptno"
+                  length="255" />
+        <property name="waiverNo" type="int" column="waiverno"
+                  length="255" />
+
+        <property name="waiverAmount" type="double" column="waiveramount"
+                  length="255" />
+
+        <property name="invoiceNo" type="int" column="invoiceno"
+                  length="255" />
+
+        <property name="quantityRequested" type="java.lang.Integer" column="quantityRequested" not-null="false"
+                  length="255" />
+        <property name="quantity" type="int" column="quantity"
+                  length="255" />
+
+        <property name="pillCount" type="int" column="pill_count"
+                  length="255" />
+
+
+        <property name="nextVisitDate" type="java.util.Date" column="next_visit_date"
+                />
+
+        <property name="monthsNo" type="int" column="monthsno"
+                  length="255" />
+        <property name="regimenId"  type="java.lang.Integer" column="regimenId"
+                  length="255" />
+        <many-to-one name="pharmacyExtra"  property-ref="uuid"  column="pharmacy_extra_uuid" />
+
+    </class>
+</hibernate-mapping>
