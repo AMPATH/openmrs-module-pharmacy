@@ -5,48 +5,37 @@ var urlTwo;
 $j("#drugtotaldiv").hide();
 
 
-
 var currentTime = new Date();
-var month = currentTime.getMonth()+ 1;
+var month = currentTime.getMonth() + 1;
 var day = currentTime.getDate();
 var year = currentTime.getFullYear();
 
 //compare to get the diffrence
 
-t2=day+"/"+month+"/"+year;
+t2 = day + "/" + month + "/" + year;
 var oCache = {
-    iCacheLower: -1
+    iCacheLower:-1
 };
 
 
-
-var y=t2.split("/");
-
+var y = t2.split("/");
 
 
-
-var dateCurrent=new Date(y[2],(y[1]-1),y[0]);
-
+var dateCurrent = new Date(y[2], (y[1] - 1), y[0]);
 
 
 getDrugCategory();
 
 
-
-
-
-
-$j.fn.dataTableExt.oApi.fnReloadAjax = function(oSettings, sNewSource)
-{
+$j.fn.dataTableExt.oApi.fnReloadAjax = function (oSettings, sNewSource) {
     oSettings.sAjaxSource = sNewSource;
     this.fnClearTable(this);
-    this.oApi._fnProcessingDisplay(oSettings, true );
+    this.oApi._fnProcessingDisplay(oSettings, true);
     var that = this;
 
-    $j.getJSON(oSettings.sAjaxSource, null, function(json){
+    $j.getJSON(oSettings.sAjaxSource, null, function (json) {
         /* Got the data - add it to the table */
-        for (var i=0; i<json.aaData.length; i++)
-        {
+        for (var i = 0; i < json.aaData.length; i++) {
             that.oApi._fnAddData(oSettings, json.aaData[i]);
         }
 
@@ -57,78 +46,70 @@ $j.fn.dataTableExt.oApi.fnReloadAjax = function(oSettings, sNewSource)
 }
 
 
-
-$j('select#filtercategorytotal').change( function() {
-
+$j('select#filtercategorytotal').change(function () {
 
 
     var e = document.getElementById("filtercategorytotal");
     var str = e.options[e.selectedIndex].value;
 
 
-
-    if(str!=="-1"){
-
+    if (str !== "-1") {
 
 
-
-
-        urlTwo='drugBincard.form?bintotal=total&category='+str;
-        if( $j('#drugtotaldiv').is(':visible') ) {
+        urlTwo = 'drugBincard.form?bintotal=total&category=' + str;
+        if ($j('#drugtotaldiv').is(':visible')) {
 
             oCache.iCacheLower = -1;
 
             $j('#tbincardtotal').dataTable().fnReloadAjax(urlTwo);
 
         }
-        else
-        {
+        else {
 
 
             binTableTotal = $j('#tbincardtotal').dataTable({
-                bJQueryUI : true,
-                bRetrieve : true,
-                bAutoWidth : false,
-                bServerSide : true,
-                bProcessing : true,
-                bPaginate: false,
+                bJQueryUI:true,
+                bRetrieve:true,
+                bAutoWidth:false,
+                bServerSide:true,
+                bProcessing:true,
+                bPaginate:false,
 
-                "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
-
-
-                    t1=aData[5];
+                "fnRowCallback":function (nRow, aData, iDisplayIndex) {
 
 
+                    t1 = aData[5];
 
-                    if(t1 > 4 && t1 <= 6)
+
+                    if (t1 > 4 && t1 <= 6)
                         $j('td:eq(4)', nRow).css("background-color", "#FFCC00");
-                    else if(t1 > 2 && t1 <=4)
+                    else if (t1 > 2 && t1 <= 4)
                         $j('td:eq(4)', nRow).css("background-color", "#FF9900");
-                    else if(t1 <=2)
+                    else if (t1 <= 2)
                         $j('td:eq(4)', nRow).css("background-color", "#FF0000");
 
 
-                    $j('td:eq(4)', nRow).html( '' );
-                    min=aData[4];
+                    $j('td:eq(4)', nRow).html('');
+                    min = aData[4];
 
 
-                    if(min ==8)
+                    if (min == 8)
                         $j('td:eq(3)', nRow).css("background-color", "#FFCC00");
 
 
-                    $j('td:eq(3)', nRow).html( '' );
+                    $j('td:eq(3)', nRow).html('');
                     return nRow;
                 },
-                bInfo: false,
-                sAjaxSource : urlTwo,
-                "fnServerData": fnDataTablesPipeline,
-                "aoColumnDefs" : [ {
-                    "bVisible" : false,
-                    "aTargets" : [ 1 ]
-                } ]
+                bInfo:false,
+                sAjaxSource:urlTwo,
+                "fnServerData":fnDataTablesPipeline,
+                "aoColumnDefs":[
+                    {
+                        "bVisible":false,
+                        "aTargets":[ 1 ]
+                    }
+                ]
             });
-
-
 
 
             $j("#drugtotaldiv").show();
@@ -139,26 +120,23 @@ $j('select#filtercategorytotal').change( function() {
 });
 
 
-
-$j('#tbincardtotal').delegate('tbody td img','click', function() {
+$j('#tbincardtotal').delegate('tbody td img', 'click', function () {
     var e = document.getElementById("filtercategorytotal");
     var str = e.options[e.selectedIndex].value;
 
 
     var nTr = this.parentNode.parentNode;
-    if ( this.src.match('details_close') )
-    {
+    if (this.src.match('details_close')) {
         /* This row is already open - close it */
-        this.src = ""+jQuery.Page.context+"moduleResources/pharmacy/images/details_open.png";
-        binTableTotal.fnClose( nTr );
+        this.src = "" + jQuery.Page.context + "moduleResources/pharmacy/images/details_open.png";
+        binTableTotal.fnClose(nTr);
     }
-    else
-    {
+    else {
         /* Open this row */
-        this.src = ""+jQuery.Page.context+"moduleResources/pharmacy/images/details_close.png";
-        var aData = binTableTotal.fnGetData( nTr );
-        $j.getJSON("drugBincard.form?druguuidshow="+aData[1]+"&category="+str,
-            function(result) {
+        this.src = "" + jQuery.Page.context + "moduleResources/pharmacy/images/details_close.png";
+        var aData = binTableTotal.fnGetData(nTr);
+        $j.getJSON("drugBincard.form?druguuidshow=" + aData[1] + "&category=" + str,
+            function (result) {
                 var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
                 sOut += '<thead><tr>';
                 sOut += '<th>Drug</th>';
@@ -173,46 +151,44 @@ $j('#tbincardtotal').delegate('tbody td img','click', function() {
                 sOut += '</tr></thead>';
                 sOut += '<tbody>';
 
-                $j.each(result,function(index, value) { //bincard"stateList
+                $j.each(result, function (index, value) { //bincard"stateList
                     sOut += '<tr>';
-                    $j.each(value,function(index, value) { //bincard"stateList
+                    $j.each(value, function (index, value) { //bincard"stateList
 
-                        if(index==5){
+                        if (index == 5) {
 
-                            var y=value.toString().split("-");
+                            var y = value.toString().split("-");
 
-                            var dateGiven=new Date(y[0],(y[1]),y[2]);
-                            var num =months_between(dateGiven,dateCurrent);
+                            var dateGiven = new Date(y[0], (y[1]), y[2]);
+                            var num = months_between(dateGiven, dateCurrent);
 
-                            if(num > 4 && num <= 6)
-                                sOut += '<td bgcolor="#FFCC00">'+value+'</td>';
-                            else if(num > 2 && num <=4)
-                                sOut += '<td bgcolor="#FF9900">'+value+'</td>';
-                            else if(num<=2)
-                                sOut += '<td bgcolor="#FF0000">'+value+'</td>';
+                            if (num > 4 && num <= 6)
+                                sOut += '<td bgcolor="#FFCC00">' + value + '</td>';
+                            else if (num > 2 && num <= 4)
+                                sOut += '<td bgcolor="#FF9900">' + value + '</td>';
+                            else if (num <= 2)
+                                sOut += '<td bgcolor="#FF0000">' + value + '</td>';
                         }
 
 
-                        else if(index==2){
-                            min=value;
-
+                        else if (index == 2) {
+                            min = value;
 
 
                         }
-                        else	if(index==4){
+                        else if (index == 4) {
 
 
-
-                            if(min <=value)
-                                sOut += '<td bgcolor="#FFCC00">'+value+'</td>';
+                            if (min <= value)
+                                sOut += '<td bgcolor="#FFCC00">' + value + '</td>';
                             else
-                                sOut += '<td>'+value+'</td>';
+                                sOut += '<td>' + value + '</td>';
 
                         }
 
-                        else{
-                            if(index!=2)
-                                sOut += '<td>'+value+'</td>';
+                        else {
+                            if (index != 2)
+                                sOut += '<td>' + value + '</td>';
 
 
                         }
@@ -225,7 +201,7 @@ $j('#tbincardtotal').delegate('tbody td img','click', function() {
                 sOut += '</table>';
 
 
-                binTableTotal.fnOpen( nTr, sOut, 'details' );
+                binTableTotal.fnOpen(nTr, sOut, 'details');
 
             });
 
@@ -234,12 +210,9 @@ $j('#tbincardtotal').delegate('tbody td img','click', function() {
 });
 
 
-
-
 function months_between(date1, date2) {
     return date2.getMonth() - date1.getMonth() + (12 * (date2.getFullYear() - date1.getFullYear()));
 }
-
 
 
 function getDrugCategory() {
@@ -247,7 +220,7 @@ function getDrugCategory() {
     $j
         .getJSON(
         "categoryName.form?drop=drop",
-        function(result) {
+        function (result) {
 
             $j("#filtercategorytotal").get(0).options.length = 0;
             $j("#filtercategorytotal").get(0).options[0] = new Option("Select",
@@ -255,7 +228,7 @@ function getDrugCategory() {
             $j
                 .each(
                 result,
-                function(index, value) { //bincard"stateList
+                function (index, value) { //bincard"stateList
 
                     $j("#filtercategorytotal").get(0).options[$j(
                         "#filtercategorytotal").get(0).options.length] = new Option(

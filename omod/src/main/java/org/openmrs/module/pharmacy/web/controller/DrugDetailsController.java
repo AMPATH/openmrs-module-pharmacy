@@ -48,9 +48,9 @@ public class DrugDetailsController {
 
     private boolean setLocation = false;
 
-    private String bar=null;
+    private String bar = null;
 
-    private String drug=null;
+    private String drug = null;
 
     private String id;
 
@@ -73,7 +73,7 @@ public class DrugDetailsController {
 
         int size = list.size();
         int size2 = list2.size();
-        int sizeUsers =locationUsers.size();
+        int sizeUsers = locationUsers.size();
         JSONObject json = new JSONObject();
 
         JSONArray jsons = new JSONArray();
@@ -83,27 +83,23 @@ public class DrugDetailsController {
 
                 if (drop.equalsIgnoreCase("drug")) {
 
-                    Drug drug=Context.getConceptService().getDrugByNameOrId(id);
+                    Drug drug = Context.getConceptService().getDrugByNameOrId(id);
                     jsons.put("" + drug.getName());
                     jsons.put("" + drug.getConcept().getId());
                     jsons.put("" + drug.getConcept().getDisplayString());
 
                     response.getWriter().print(jsons);
-                }
-                else if (drop.equalsIgnoreCase("drop")) {
+                } else if (drop.equalsIgnoreCase("drop")) {
 
                     List<Drug> listDrugs = serviceDrugs.getDrugs(searchDrug);
-                    int sizeD=listDrugs.size();
-                    if(bar !=null){
+                    int sizeD = listDrugs.size();
+                    if (bar != null) {
                         for (int i = 0; i < sizeD; i++) {
-                            jsons.put("" + listDrugs.get(i).getName() +"|"+listDrugs.get(i).getId());
+                            jsons.put("" + listDrugs.get(i).getName() + "|" + listDrugs.get(i).getId());
                         }
 
 
-
-                    }
-                    else
-                    {
+                    } else {
 
 
                         for (int i = 0; i < sizeD; i++) {
@@ -114,11 +110,11 @@ public class DrugDetailsController {
                 } else if (drop.equalsIgnoreCase("location")) {
 
 
-                    String name=Context.getAuthenticatedUser().getUsername();
+                    String name = Context.getAuthenticatedUser().getUsername();
 
                     Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
                     for (Role rl : xvc) {
-                        if((rl.getRole().equals("System Developer"))||(rl.getRole().equals("Provider"))){
+                        if ((rl.getRole().equals("System Developer")) || (rl.getRole().equals("Provider"))) {
                             setLocation = true;
                         }
 
@@ -132,10 +128,10 @@ public class DrugDetailsController {
                     if (setLocation) {
 
                         for (int ii = 0; ii < sizeUsers; ii++) {
-                            String val=  getDropDownLocation(locationUsers, ii,name);
+                            String val = getDropDownLocation(locationUsers, ii, name);
 
-                            if(!val.contentEquals("null"))
-                                jsons.put("" +val );
+                            if (!val.contentEquals("null"))
+                                jsons.put("" + val);
                         }
                     } else {
 
@@ -144,10 +140,10 @@ public class DrugDetailsController {
 
                     json.accumulate("", jsons);
                     response.getWriter().print(jsons);
-                }  else if (drop.equalsIgnoreCase("locationAll")) {
+                } else if (drop.equalsIgnoreCase("locationAll")) {
                     for (int ii = 0; ii < size2; ii++) {
-                                            System.out.println(list2.get(ii).getName() );
-                        jsons.put("" +list2.get(ii).getName() );
+                        System.out.println(list2.get(ii).getName());
+                        jsons.put("" + list2.get(ii).getName());
                     }
                     json.accumulate("", jsons);
                     response.getWriter().print(jsons);
@@ -171,8 +167,7 @@ public class DrugDetailsController {
             }
             response.flushBuffer();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // drugs
             log.error("Error generated", e);
         }
@@ -239,9 +234,7 @@ public class DrugDetailsController {
 
             }
 
-        }
-
-        else if (drugsuuidvoid != null) {
+        } else if (drugsuuidvoid != null) {
             //
             //			Drug drug = new Drug();
             //			drug = service.getDrugsByUuid(drugsuuidvoid);
@@ -298,22 +291,21 @@ public class DrugDetailsController {
         return drug.get(size).getName();
 
     }
+
     public synchronized String getDropDownBarcode(List<Drug> drug, int size) {
 
-        return drug.get(size).getName()+"|"+drug.get(size).getId();
+        return drug.get(size).getName() + "|" + drug.get(size).getId();
 
     }
 
-    public String getDropDownLocation(List<PharmacyLocationUsers> list2, int size,String name) {
+    public String getDropDownLocation(List<PharmacyLocationUsers> list2, int size, String name) {
 
 
-        if(list2.get(size).getUserName().equalsIgnoreCase(name)){
-
+        if (list2.get(size).getUserName().equalsIgnoreCase(name)) {
 
 
             return list2.get(size).getLocation();
-        }
-        else
+        } else
             return "null";
 
 

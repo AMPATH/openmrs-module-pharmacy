@@ -1,23 +1,19 @@
 var binTable;
 var binTable2;
 var oFormObjectForm;
-var totalElements=0;
+var totalElements = 0;
 var nTrIn;
 var batchEditTr;
 var batchaData;
 var batchLink
 var oCache = {
-    iCacheLower: -1
+    iCacheLower:-1
 };
 
 $j("#errorDivStore").hide();
 
 
-
-
 $j("#dispensevoid").hide();
-
-
 
 
 $j("#parent_div_2").hide();
@@ -46,9 +42,7 @@ function AutoReload() {
 }
 
 
-
-
-function RefreshInventory(tableId){
+function RefreshInventory(tableId) {
 
     table = $j(tableId).dataTable();
     oCache.iCacheLower = -1;
@@ -66,18 +60,16 @@ function fnFormatDetails(nTr) {
 
 
 function fnDetails(nTr) {
-    if(confirm('Are you sure?'))
-
-    {
+    if (confirm('Are you sure?')) {
         var batchaData = binTable.fnGetData(nTr);
 
-        dataString ="bindrug="+batchaData[2]+"&"+"binquantityin="+batchaData[3]+"&binmax="+batchaData[4]+"&binmin="+batchaData[5]+"&location="+batchaData[11]+"&date="+batchaData[8]+"&outgoing="+batchaData[1]+"&binedit="+false+"&less="+false;
+        dataString = "bindrug=" + batchaData[2] + "&" + "binquantityin=" + batchaData[3] + "&binmax=" + batchaData[4] + "&binmin=" + batchaData[5] + "&location=" + batchaData[11] + "&date=" + batchaData[8] + "&outgoing=" + batchaData[1] + "&binedit=" + false + "&less=" + false;
 
         $j.ajax({
-            type : "POST",
-            url : "drugBincard.form",
-            data : dataString,
-            success : function() {
+            type:"POST",
+            url:"drugBincard.form",
+            data:dataString,
+            success:function () {
 
 
             }
@@ -90,77 +82,66 @@ function fnDetails(nTr) {
 }
 
 
-
-
-
-
-
-function SetDispenseTable(id){
+function SetDispenseTable(id) {
     oCache.iCacheLower = -1;
-    var url='drugDispense.form?drugID='+id;
+    var url = 'drugDispense.form?drugID=' + id;
 
-    if( $j('#lower').is(':visible') ) {
+    if ($j('#lower').is(':visible')) {
 
         oCache.iCacheLower = -1;
         $j('#tdispense').dataTable().fnReloadAjax(url);
 
 
-       // binTable.fnDraw();
+        // binTable.fnDraw();
 
     }
-    else
-    {
+    else {
 
         binTable = $j('#tdispense').dataTable({
-            bJQueryUI : true,
-            bRetrieve : true,
-            bAutoWidth : false,
-            bServerSide : true,
-            bProcessing : true,
-            sAjaxSource : url,
+            bJQueryUI:true,
+            bRetrieve:true,
+            bAutoWidth:false,
+            bServerSide:true,
+            bProcessing:true,
+            sAjaxSource:url,
 
-            "fnServerData": fnDataTablesPipeline,
-            "fnRowCallback": function( nRow, batchaData, iDisplayIndex ) {
-
-
-                var htm= '<ul class="popSet">	<li> <img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/items.png" alt="" /><ul class="popSet" id='+"popSet"+batchaData[2]+'>';
+            "fnServerData":fnDataTablesPipeline,
+            "fnRowCallback":function (nRow, batchaData, iDisplayIndex) {
 
 
+                var htm = '<ul class="popSet">	<li> <img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/items.png" alt="" /><ul class="popSet" id=' + "popSet" + batchaData[2] + '>';
 
 
-                if(batchaData[10]=="void"){
-                    htm +=	'<li> <a href="#" id="deleteBatch" ><img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/delete.png" />Void</a></li>';
+                if (batchaData[10] == "void") {
+                    htm += '<li> <a href="#" id="deleteBatch" ><img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/delete.png" />Void</a></li>';
                 }
 
 
-
-                htm +='<li> <a href="#" id="cancelBatch"><img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/cancel.png" />Back</a></li>';
-
-
+                htm += '<li> <a href="#" id="cancelBatch"><img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/cancel.png" />Back</a></li>';
 
 
                 htm += '</ul></li></ul>';
-
-
 
 
                 $j('td:eq(0)', nRow).html(htm);
 
                 return nRow;
             },
-            "aoColumnDefs" : [ {
-                "bVisible" : false,
-                "aTargets" : [ 0 ]
-            },
+            "aoColumnDefs":[
                 {
-                    "bVisible" : false,
-                    "aTargets" : [ 2 ]
-                }, {
-                    "bVisible" : false,
-                    "aTargets" : [ 10 ]
-                }]
+                    "bVisible":false,
+                    "aTargets":[ 0 ]
+                },
+                {
+                    "bVisible":false,
+                    "aTargets":[ 2 ]
+                },
+                {
+                    "bVisible":false,
+                    "aTargets":[ 10 ]
+                }
+            ]
         });
-
 
 
     }
@@ -169,13 +150,12 @@ function SetDispenseTable(id){
 
 }
 //ooTable.fnSetColumnVis( 1, false );
-$j('#tdispense tbody td ul').live('click', function() {
-
+$j('#tdispense tbody td ul').live('click', function () {
 
 
     nTrIn = this.parentNode.parentNode;
-     batchaData = binTable.fnGetData(nTrIn);
-    batchLink="#popSet"+batchaData[2];
+    batchaData = binTable.fnGetData(nTrIn);
+    batchLink = "#popSet" + batchaData[2];
 
 
     $j(batchLink).show();
@@ -185,29 +165,25 @@ $j('#tdispense tbody td ul').live('click', function() {
 });
 
 
-
-$j('#cancelBatch').live('click', function() {
+$j('#cancelBatch').live('click', function () {
     $j("ul .popSet").hide();
 
 });
-$j('#deleteBatch').live('click', function() {
+$j('#deleteBatch').live('click', function () {
 
 
-
-             $j("ul .popSet").hide();
+    $j("ul .popSet").hide();
 
     var oFormObjectB = document.forms['dispensevoid'];
-    oFormObjectB.elements["dispenseuuidvoid"].value=batchaData[2];
+    oFormObjectB.elements["dispenseuuidvoid"].value = batchaData[2];
 
 
     $j("#dispensevoid").show();
 
 
-
-
 });
 
-$j('#editBatch').live('click', function() {
+$j('#editBatch').live('click', function () {
 
 
     /*             $j("ul .popSet").hide();
@@ -219,11 +195,9 @@ $j('#editBatch').live('click', function() {
      $j("#dispensevoid").show();*/
 
 
-
-
 });
 
-$j("form#filteroutgoing").submit(function() {
+$j("form#filteroutgoing").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
     if ($j("#filteroutgoing").valid()) {
         AutoReload();
@@ -234,21 +208,17 @@ $j("form#filteroutgoing").submit(function() {
 });
 
 
-
-
 getDrugFilter();
 
-$j.fn.dataTableExt.oApi.fnReloadAjax = function(oSettings, sNewSource)
-{
+$j.fn.dataTableExt.oApi.fnReloadAjax = function (oSettings, sNewSource) {
     oSettings.sAjaxSource = sNewSource;
     this.fnClearTable(this);
-    this.oApi._fnProcessingDisplay(oSettings, true );
+    this.oApi._fnProcessingDisplay(oSettings, true);
     var that = this;
 
-    $j.getJSON(oSettings.sAjaxSource, null, function(json){
+    $j.getJSON(oSettings.sAjaxSource, null, function (json) {
         /* Got the data - add it to the table */
-        for (var i=0; i<json.aaData.length; i++)
-        {
+        for (var i = 0; i < json.aaData.length; i++) {
             that.oApi._fnAddData(oSettings, json.aaData[i]);
         }
 
@@ -259,31 +229,32 @@ $j.fn.dataTableExt.oApi.fnReloadAjax = function(oSettings, sNewSource)
 }
 
 
-function setTable(uuid){
-    var url='drugDispenseStore.form?uuid='+uuid;
-    if( $j('#parent_div_1').is(':visible') ) {
-
+function setTable(uuid) {
+    var url = 'drugDispenseStore.form?uuid=' + uuid;
+    if ($j('#parent_div_1').is(':visible')) {
 
 
         oCache.iCacheLower = -1;
         $j('#tinventoryset').dataTable().fnReloadAjax(url);
 
     }
-    else{
+    else {
 
 
-        binTable2 = 	  $j('#tinventoryset').dataTable({
+        binTable2 = $j('#tinventoryset').dataTable({
 
-            bJQueryUI : true,
-            bRetrieve : true,
-            bAutoWidth : false,
-            bServerSide : true,
-            bProcessing : true,
-            sAjaxSource : url,
-            "aoColumnDefs" : [ {
-                "bVisible" : false,
-                "aTargets" : [ 0 ]
-            }]
+            bJQueryUI:true,
+            bRetrieve:true,
+            bAutoWidth:false,
+            bServerSide:true,
+            bProcessing:true,
+            sAjaxSource:url,
+            "aoColumnDefs":[
+                {
+                    "bVisible":false,
+                    "aTargets":[ 0 ]
+                }
+            ]
         });
 
     }
@@ -299,18 +270,17 @@ function setTable(uuid){
 //$j('#outgoingnumber').attr('disabled','disabled');
 
 
-
-function voidData(nTr){
+function voidData(nTr) {
     var batchaData = binTable.fnGetData(nTr);
 
-    var dataVal="outgoinguuidvoid="+batchaData[1]+"&outgoingreason="+"Dataadded";
+    var dataVal = "outgoinguuidvoid=" + batchaData[1] + "&outgoingreason=" + "Dataadded";
     $j.ajax({
-        type : "POST",
-        url : "drugIncoming.form",
-        data : dataVal,
+        type:"POST",
+        url:"drugIncoming.form",
+        data:dataVal,
 
 
-        success : function() {
+        success:function () {
 
             AutoReload();
         }
@@ -318,47 +288,43 @@ function voidData(nTr){
 }
 
 
-
-$j('#tinventoryset').delegate(' tbody td  input','click', function() {
+$j('#tinventoryset').delegate(' tbody td  input', 'click', function () {
     nTrIn = this.parentNode.parentNode;
 
     var aData2 = binTable2.fnGetData(nTrIn);
     var oFormObject = document.forms['dispenseextra'];
 
-    var myCars=new Array();
-    myCars[0]=oFormObject.elements["inventoryNo"].value;
+    var myCars = new Array();
+    myCars[0] = oFormObject.elements["inventoryNo"].value;
 
 
-    var myBoolean=new Boolean();
-    myBoolean=false;
-    var myBooleanTwo=new Boolean();
-    myBooleanTwo=false;
+    var myBoolean = new Boolean();
+    myBoolean = false;
+    var myBooleanTwo = new Boolean();
+    myBooleanTwo = false;
     oFormObjectForm = document.forms['dispenseextra'];
 
-    var  val=oFormObjectForm.elements['inventoryNo'].value;
-    if(val.length==0){
-
-
-
-
-    }
-    else{
+    var val = oFormObjectForm.elements['inventoryNo'].value;
+    if (val.length == 0) {
 
 
     }
-    for(var i=0;i<myCars.length;i++){
+    else {
 
 
+    }
+    for (var i = 0; i < myCars.length; i++) {
 
-        if(myCars[i]==aData2[0]){
-            myBoolean=true;
+
+        if (myCars[i] == aData2[0]) {
+            myBoolean = true;
             break;
         }
 
 
     }
 
-    if(!myBoolean){
+    if (!myBoolean) {
 
         var batchaData = binTable2.fnGetData(nTrIn);
         oFormObjectForm = document.forms['dispenseextra'];
@@ -366,11 +332,8 @@ $j('#tinventoryset').delegate(' tbody td  input','click', function() {
         oFormObjectForm.elements['inventoryNo'].value = batchaData[0];
 
 
-
-
-
     }
-    else{
+    else {
         var batchaData = binTable2.fnGetData(nTrIn);
         oFormObjectForm = document.forms['dispenseextra'];
 
@@ -383,30 +346,27 @@ $j('#tinventoryset').delegate(' tbody td  input','click', function() {
 });
 
 
-
-$j("form#dispensevoid").submit(function() {
+$j("form#dispensevoid").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
     if ($j("#dispensevoid").valid()) {
         dataString = $j("#dispensevoid").serialize();
-        var strUser =$j("#dispensedrug").val();
+        var strUser = $j("#dispensedrug").val();
 
-        dataString+="&dispensedrug="+strUser;
-
-
+        dataString += "&dispensedrug=" + strUser;
 
 
         $j.ajax({
-            type : "POST",
-            url : "drugDispense.form",
-            data : dataString,
-            success : function() {
+            type:"POST",
+            url:"drugDispense.form",
+            data:dataString,
+            success:function () {
                 $j("#dispensevoid").hide();//
                 var oFormObject = document.forms['dispensevoid'];
 
-                oFormObject.elements["dispenseuuidvoid"].value="";
-                oFormObject.elements["dispensereason"].value="";
+                oFormObject.elements["dispenseuuidvoid"].value = "";
+                oFormObject.elements["dispensereason"].value = "";
 
-                var strUser =$j("#dispensedrug").val();
+                var strUser = $j("#dispensedrug").val();
 
                 SetDispenseTable(strUser);
             }
@@ -416,30 +376,28 @@ $j("form#dispensevoid").submit(function() {
 });
 
 
-$j("form#dispenseextra").submit(function() {
+$j("form#dispenseextra").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
 
 
     if ($j("#dispenseextra").valid()) {
 
 
-
         dataString = $j("#dispenseextra").serialize();
 
 
-        var strUser =$j("#dispensedrug").val();
+        var strUser = $j("#dispensedrug").val();
 
 
+        var drugId = strUser.substr(0, strUser.indexOf('|'));
 
-        var  drugId=strUser.substr(0,strUser.indexOf('|'));
 
-
-        var drug=strUser.substr(strUser.indexOf('|')+1);
+        var drug = strUser.substr(strUser.indexOf('|') + 1);
         var oFormObject = document.forms['dispenseextra'];
 
         var quantity = oFormObject.elements["quantity"].value;
 
-        var msg=drug+"0"+quantity;
+        var msg = drug + "0" + quantity;
         var type = "code39";
         var height = "10mm";
         var moduleWidth = "0.12mm";
@@ -448,27 +406,25 @@ $j("form#dispenseextra").submit(function() {
 
         var qz = "10mw";
         var hrp = "none";
-        var url=jQuery.Page.context;
+        var url = jQuery.Page.context;
         loadImage(url, type, msg, height, moduleWidth, wideFactor, format, qz,
             hrp);
         var optionVal = $j("#option option:selected").text();
-        dataString+="&dispensedrug="+drugId+"&optionval="+optionVal;
+        dataString += "&dispensedrug=" + drugId + "&optionval=" + optionVal;
         $j.ajax({
-            type : "POST",
-            url : "drugDispense.form",
-            data : dataString,
-            success : function() {
+            type:"POST",
+            url:"drugDispense.form",
+            data:dataString,
+            success:function () {
 
 
-                var strUser =$j("#dispensedrug").val();
+                var strUser = $j("#dispensedrug").val();
 
-                var drug=strUser.substr(0, strUser.indexOf('|'));
+                var drug = strUser.substr(0, strUser.indexOf('|'));
 
                 SetDispenseTable(drug);
 
                 var oFormObject = document.forms['dispenseextra'];
-
-
 
 
                 oFormObject.elements["inventoryNo"].value = "";
@@ -480,9 +436,6 @@ $j("form#dispenseextra").submit(function() {
                 oFormObject.elements["value"].value = "";
 
 
-
-
-
             }
         });
 
@@ -490,14 +443,12 @@ $j("form#dispenseextra").submit(function() {
         return false;
 
 
-
     }
 
 
 });
 
-function loadImage(url,type, msg, height, moduleWidth, wideFactor, format, qz,
-                   hrp) {
+function loadImage(url, type, msg, height, moduleWidth, wideFactor, format, qz, hrp) {
 
     $j("#spinner").show();
     /***************************************************************************
@@ -506,7 +457,7 @@ function loadImage(url,type, msg, height, moduleWidth, wideFactor, format, qz,
      * 'Helvetica'; res = '300';
      **************************************************************************/
 
-    var imageSource = url+ "moduleServlet/pharmacy/Barcode?type=" + type + "&msg=" + msg + "&height=" + height + "&mw=" + moduleWidth+ "&wf=" + wideFactor + "&fmt=" + format + "&qz=" + qz	+ "&hrp=" + hrp;
+    var imageSource = url + "moduleServlet/pharmacy/Barcode?type=" + type + "&msg=" + msg + "&height=" + height + "&mw=" + moduleWidth + "&wf=" + wideFactor + "&fmt=" + format + "&qz=" + qz + "&hrp=" + hrp;
     showImage(imageSource);
     return false;
 }
@@ -518,7 +469,7 @@ function showPrint() {
     pwin.document.write('<html><body onload="window.print()">' + content
         + '</body></html>');
     pwin.document.close();
-    setTimeout(function() {
+    setTimeout(function () {
         pwin.close();
     }, 1000);
 }
@@ -526,13 +477,13 @@ function showImage(src) {
 
     $j("#barcodeImg").empty();
     $j("#cmdDownDiv").empty();
-    $j("#barcodeImg").append("<img id='theImg' src='"+src+"'/>");
+    $j("#barcodeImg").append("<img id='theImg' src='" + src + "'/>");
 
 
     $j("#spinner").hide();
 
 }
-$j("#hideoutgoingform").click(function() {
+$j("#hideoutgoingform").click(function () {
 
     $j("#hideoutgoingform").hide();
     $j("#parent_div_1").hide();
@@ -542,8 +493,7 @@ $j("#hideoutgoingform").click(function() {
 });
 
 
-
-$j("#outgoingform").click(function() {
+$j("#outgoingform").click(function () {
     getDataLocation();
     getDataDrug();
 
@@ -554,7 +504,6 @@ $j("#outgoingform").click(function() {
     show();
 
 
-
 });
 
 function getDataDrug() {
@@ -562,7 +511,7 @@ function getDataDrug() {
     $j
         .getJSON(
         "drugDetails.form?drop=drop",
-        function(result) {
+        function (result) {
 
             $j("#outgoingdrug").get(0).options.length = 0;
             $j("#outgoingdrug").get(0).options[0] = new Option("Select",
@@ -570,7 +519,7 @@ function getDataDrug() {
             $j
                 .each(
                 result,
-                function(index, value) { //bincard"stateList
+                function (index, value) { //bincard"stateList
 
                     $j("#outgoingdrug").get(0).options[$j(
                         "#outgoingdrug").get(0).options.length] = new Option(
@@ -586,7 +535,7 @@ function getDataLocation() {
     $j
         .getJSON(
         "drugDetails.form?drop=location",
-        function(result) {
+        function (result) {
 
             $j("#location").get(0).options.length = 0;
             $j("#location").get(0).options[0] = new Option("Select",
@@ -594,7 +543,7 @@ function getDataLocation() {
 
             $j.each(
                 result,
-                function(index, value) { //bincard"stateList
+                function (index, value) { //bincard"stateList
 
                     $j("#location").get(0).options[$j("#location").get(0).options.length] = new Option(value, value);
                 });
@@ -608,13 +557,13 @@ function getDataLocationTwo() {
     $j
         .getJSON(
         "drugDetails.form?drop=location",
-        function(result) {
+        function (result) {
             $j("#destination").get(0).options.length = 0;
             $j("#destination").get(0).options[0] = new Option("Select",
                 "-1");
             $j.each(
                 result,
-                function(index, value) { //bincard"stateList
+                function (index, value) { //bincard"stateList
 
                     $j("#destination").get(0).options[$j("#destination").get(0).options.length] = new Option(value, value);
                 });
@@ -629,7 +578,7 @@ function getDataSupplier() {
     $j
         .getJSON(
         "supplierName.form?drop=drop",
-        function(result) {
+        function (result) {
 
             $j("#supplierout").get(0).options.length = 0;
             $j("#supplierout").get(0).options[0] = new Option("Select",
@@ -637,7 +586,7 @@ function getDataSupplier() {
             $j
                 .each(
                 result,
-                function(index, value) { //bincard"stateList
+                function (index, value) { //bincard"stateList
 
                     $j("#supplierout").get(0).options[$j(
                         "#supplierout").get(0).options.length] = new Option(
@@ -654,7 +603,7 @@ function getDataTransactionType() {
     $j
         .getJSON(
         "transactionsName.form?drop=drop",
-        function(result) {
+        function (result) {
 
             $j("#transactions").get(0).options.length = 0;
             $j("#transactions").get(0).options[0] = new Option("Select",
@@ -662,7 +611,7 @@ function getDataTransactionType() {
             $j
                 .each(
                 result,
-                function(index, value) { //bincard"stateList
+                function (index, value) { //bincard"stateList
 
                     $j("#transactions").get(0).options[$j(
                         "#transactions").get(0).options.length] = new Option(
@@ -675,13 +624,13 @@ function getDataTransactionType() {
 }
 function getDataTotal(drug) {
 
-    var url="transactionsName.form?drop=total&drug="+drug;
+    var url = "transactionsName.form?drop=total&drug=" + drug;
     $j
         .getJSON(url
         ,
-        function(result) {
+        function (result) {
 
-              var oFormObject = document.forms['dispenseVal'];
+            var oFormObject = document.forms['dispenseVal'];
 
             oFormObject.elements["totalstore"].value = result;
         });
@@ -690,37 +639,35 @@ function getDataTotal(drug) {
 }
 
 
-
-
 $j("#dispensedrug").autocomplete({
-    search : function() {
+    search:function () {
         $j(this).addClass('working');
     },
 
-    source : function(request, response) {
+    source:function (request, response) {
 
         dataString = "searchDrug=" + request.term;
 
-        $j.getJSON("drugDetails.form?drop=drop&bar=bar&" + dataString, function(result) {
+        $j.getJSON("drugDetails.form?drop=drop&bar=bar&" + dataString, function (result) {
 
             $j("#dispensedrug").removeClass('working');
 
-            response($j.each(result, function(index, item) {
+            response($j.each(result, function (index, item) {
 
                 return {
-                    label : item,
-                    value : item
+                    label:item,
+                    value:item
                 }
             }));
 
         });
 
     },
-    minLength : 3,
-    select : function(event, ui) {
+    minLength:3,
+    select:function (event, ui) {
 
         var strUser = ui.item.label
-        var  drugId=strUser.substr(0,strUser.indexOf('|'));
+        var drugId = strUser.substr(0, strUser.indexOf('|'));
 
         //getDataTotal(strUser);
         setTable(drugId);
@@ -730,15 +677,14 @@ $j("#dispensedrug").autocomplete({
         // "Selected: " + ui.item.label :
         // "Nothing selected, input was " + this.value);
     },
-    open : function() {
+    open:function () {
         $j(this).removeClass("ui-corner-all").addClass("ui-corner-top");
     },
-    close : function() {
+    close:function () {
         $j(this).removeClass("ui-corner-top").addClass("ui-corner-all");
     }
 });
 function getDrugFilter() {
-
 
 
 }

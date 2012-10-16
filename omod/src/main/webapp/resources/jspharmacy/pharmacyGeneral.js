@@ -1,6 +1,5 @@
-
 var oCache = {
-    iCacheLower: -1
+    iCacheLower:-1
 };
 
 var ooTable;
@@ -40,66 +39,62 @@ function fnFormatDetails(nTr) {
 }
 
 ooTable = $j('#tgeneral').dataTable({
-    bJQueryUI : true,
-    bRetrieve : true,
-    bServerSide : true,
-    bAutoWidth: false,
-    bProcessing : true,
-    "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+    bJQueryUI:true,
+    bRetrieve:true,
+    bServerSide:true,
+    bAutoWidth:false,
+    bProcessing:true,
+    "fnRowCallback":function (nRow, aData, iDisplayIndex) {
 
 
-        var htm= '<ul class="popGeneral">	<li> <img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/items.png" alt="" /><ul class="popGeneral" id='+"popGeneral"+aData[2]+'>';
+        var htm = '<ul class="popGeneral">	<li> <img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/items.png" alt="" /><ul class="popGeneral" id=' + "popGeneral" + aData[2] + '>';
 
 
-        if(aData[0]=="edit"){
-            htm +=	'<li> <a href="#"  id="edit"><img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/edit2.png" />Edit</a></li>';
+        if (aData[0] == "edit") {
+            htm += '<li> <a href="#"  id="edit"><img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/edit2.png" />Edit</a></li>';
 
         }
 
-        if(aData[5]=="void"){
-            htm +=	'<li> <a href="#" id="deleteg" ><img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/delete.png" />Void</a></li>';
+        if (aData[5] == "void") {
+            htm += '<li> <a href="#" id="deleteg" ><img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/delete.png" />Void</a></li>';
         }
 
 
-
-        htm +='<li> <a href="#" id="cancel"><img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/cancel.png" />Back</a></li>';
-
-
+        htm += '<li> <a href="#" id="cancel"><img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/cancel.png" />Back</a></li>';
 
 
         htm += '</ul></li></ul>';
-
-
 
 
         $j('td:eq(0)', nRow).html(htm);
 
         return nRow;
     },
-    sAjaxSource : 'generalName.form',
-    "fnServerData": fnDataTablesPipeline,
-    "aoColumnDefs" : [  {
-        "bVisible" : false,
-        "aTargets" : [ 0 ]
-    },
+    sAjaxSource:'generalName.form',
+    "fnServerData":fnDataTablesPipeline,
+    "aoColumnDefs":[
         {
-            "bVisible" : false,
-            "aTargets" : [ 2 ]
+            "bVisible":false,
+            "aTargets":[ 0 ]
         },
         {
-            "bVisible" : false,
-            "aTargets" : [ 5 ]
-        } ]
+            "bVisible":false,
+            "aTargets":[ 2 ]
+        },
+        {
+            "bVisible":false,
+            "aTargets":[ 5 ]
+        }
+    ]
 });
 
 //						ooTable.fnSetColumnVis( 1, false );
-$j('#tgeneral tbody td ul').live('click', function() {
-
+$j('#tgeneral tbody td ul').live('click', function () {
 
 
     editTr = this.parentNode.parentNode;
     var aData = ooTable.fnGetData(editTr);
-    link="#popGeneral"+aData[2];
+    link = "#popGeneral" + aData[2];
 
 
     $j(link).show();
@@ -107,20 +102,20 @@ $j('#tgeneral tbody td ul').live('click', function() {
 //	
 
 });
-$j('#edit').live('click', function() {
+$j('#edit').live('click', function () {
     $j("ul .popGeneral").hide();
     fnFormatDetails(editTr);
 
 });
 
 
-$j('#cancel').live('click', function() {
+$j('#cancel').live('click', function () {
     $j("ul .popGeneral").hide();
 
 });
 
 
-$j('#deleteg').live('click', function() {
+$j('#deleteg').live('click', function () {
     $j("ul .popGeneral").hide();
     var aData = ooTable.fnGetData(editTr);
 
@@ -130,21 +125,19 @@ $j('#deleteg').live('click', function() {
     $j("#generalvoid").show();//
 });
 
-$j("form#generalForm").submit(function() {
+$j("form#generalForm").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
 
 
     if ($j("#generalForm").valid()) {
-        var	data = $j("#generalForm").serialize();
-
-
+        var data = $j("#generalForm").serialize();
 
 
         $j.ajax({
-            type : "POST",
-            url : "generalName.form",
-            data : data,
-            success : function() {
+            type:"POST",
+            url:"generalName.form",
+            data:data,
+            success:function () {
                 AutoReload();
                 var oFormObject = document.forms['generalForm'];
 
@@ -161,8 +154,8 @@ $j("form#generalForm").submit(function() {
 
 function clear_form_elements(ele) {
 
-    $j(ele).find(':input').each(function() {
-        switch(this.type) {
+    $j(ele).find(':input').each(function () {
+        switch (this.type) {
             case 'password':
             case 'select-multiple':
             case 'select-one':
@@ -179,16 +172,16 @@ function clear_form_elements(ele) {
 }
 
 
-$j("form#generalvoid").submit(function() {
+$j("form#generalvoid").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
     if ($j("#generalvoid").valid()) {
         dataString = $j("#generalvoid").serialize();
 
         $j.ajax({
-            type : "POST",
-            url : "generalName.form",
-            data : dataString,
-            success : function() {
+            type:"POST",
+            url:"generalName.form",
+            data:dataString,
+            success:function () {
                 AutoReload();
                 $j("#generalvoid").hide();//
                 var oFormObject = document.forms['generalvoid'];

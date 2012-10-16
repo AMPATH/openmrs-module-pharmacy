@@ -104,22 +104,17 @@ public class DrugApprovedController {
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/drugApproved")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
         userService = Context.getUserContext();
-        String locationVal=null;
-        service = Context.getService(PharmacyService.class)  ;
-        List<PharmacyLocationUsers> listUsers= service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        int sizeUsers =listUsers.size();
+        String locationVal = null;
+        service = Context.getService(PharmacyService.class);
+        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
+        int sizeUsers = listUsers.size();
 
 
+        if (sizeUsers > 1) {
+            locationVal = request.getSession().getAttribute("location").toString();
 
-
-
-        if(sizeUsers>1){
-            locationVal=request.getSession().getAttribute("location").toString();
-
-        }
-        else if(sizeUsers==1)
-        {
-            locationVal=listUsers.get(0).getLocation();
+        } else if (sizeUsers == 1) {
+            locationVal = listUsers.get(0).getLocation();
 
 
         }
@@ -127,8 +122,8 @@ public class DrugApprovedController {
         drop = request.getParameter("drop");
         dialog = request.getParameter("dialog");
         filter = request.getParameter("sSearch");
-        if(filter==null)
-            filter="a";
+        if (filter == null)
+            filter = "a";
 
         List<PharmacyStoreApproved> List = service.getPharmacyStoreApproved();
         int size = List.size();
@@ -176,9 +171,9 @@ public class DrugApprovedController {
                 for (int i = 0; i < size; i++) {
                     if (List.get(i).getDestination().getName().equalsIgnoreCase(locationVal)) {
 
-                        JSONArray val=    getArray(List, i,locationVal);
-                        if (val!= null)
-                            json.accumulate("aaData",val );
+                        JSONArray val = getArray(List, i, locationVal);
+                        if (val != null)
+                            json.accumulate("aaData", val);
 
                     }
                     if (exit)
@@ -229,8 +224,7 @@ public class DrugApprovedController {
             response.getWriter().print(json);
 
             response.flushBuffer();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             log.error("Error generated", e);
         }
@@ -240,29 +234,23 @@ public class DrugApprovedController {
     @RequestMapping(method = RequestMethod.POST, value = "module/pharmacy/drugApproved")
     public synchronized void pageLoadd(HttpServletRequest request, HttpServletResponse response) {
 
-        String locationVal=null;
+        String locationVal = null;
 
         String[] drugId;
         String[] drugQ;
         service = Context.getService(PharmacyService.class);
-        List<PharmacyLocationUsers> listUsers= service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        int sizeUsers =listUsers.size();
+        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
+        int sizeUsers = listUsers.size();
 
 
+        if (sizeUsers > 1) {
+            locationVal = locationVal;
 
-
-
-        if(sizeUsers>1){
-            locationVal=locationVal;
-
-        }
-        else if(sizeUsers==1)
-        {
-            locationVal=listUsers.get(0).getLocation();
+        } else if (sizeUsers == 1) {
+            locationVal = listUsers.get(0).getLocation();
 
 
         }
-
 
 
         serviceLocation = Context.getLocationService();
@@ -313,7 +301,7 @@ public class DrugApprovedController {
         originalbindrug = approveddrug;
 
 
-        drugId=request.getParameterValues("drugId");
+        drugId = request.getParameterValues("drugId");
 
 
         drugQ = request.getParameterValues("quantity");
@@ -402,8 +390,7 @@ public class DrugApprovedController {
                     if (approvedexpire != null) {
                         date = new SimpleDateFormat("MM/dd/yyyy").parse(approvedexpire);
                     }
-                }
-                catch (ParseException e) {
+                } catch (ParseException e) {
                     // TODO Auto-generated catch block
                     log.error("Error generated", e);
                 }
@@ -430,7 +417,7 @@ public class DrugApprovedController {
 
                 PharmacyStoreApproved pharmacyStoreApproved = new PharmacyStoreApproved();
                 pharmacyStoreApproved = service.getPharmacyStoreApprovedByUuid(approveduuid);
-                if (userService.getAuthenticatedUser().getUserId().equals( pharmacyStoreApproved.getCreator().getUserId())) {
+                if (userService.getAuthenticatedUser().getUserId().equals(pharmacyStoreApproved.getCreator().getUserId())) {
 
                     pharmacyStoreApproved.setDrugs(serviceDrugs.getDrugByUuid(uuid));
 
@@ -459,8 +446,7 @@ public class DrugApprovedController {
                         if (approvedexpire != null) {
                             date = new SimpleDateFormat("MM/dd/yyyy").parse(approvedexpire);
                         }
-                    }
-                    catch (ParseException e) {
+                    } catch (ParseException e) {
                         // TODO Auto-generated catch block
                         log.error("Error generated", e);
                     }
@@ -485,9 +471,7 @@ public class DrugApprovedController {
                 }
             }
 
-        }
-
-        else if (approveduuidvoid != null) {
+        } else if (approveduuidvoid != null) {
             PharmacyStoreApproved pharmacyStoreApproved = new PharmacyStoreApproved();
             pharmacyStoreApproved = service.getPharmacyStoreApprovedByUuid(approveduuidvoid);
 
@@ -498,7 +482,7 @@ public class DrugApprovedController {
 
         } else if (approveduuidextra != null) {
 
-            for(int y=0;y<drugId.length;y++){
+            for (int y = 0; y < drugId.length; y++) {
                 System.out.println(drugId[y]);
 
 
@@ -524,7 +508,7 @@ public class DrugApprovedController {
                 pharmacyStore.setExpireDate(pharmacyStoreApproved.getDateCreated());
                 pharmacyStore.setIncoming(pharmacyStoreApproved.getIncoming());
 
-                  pharmacyStore.setLocation(pharmacyStoreApproved.getDestination().getUuid());
+                pharmacyStore.setLocation(pharmacyStoreApproved.getDestination().getUuid());
 
 
                 pharmacyStore.setMaxLevel(pharmacyStoreApproved.getMaxLevel());
@@ -550,8 +534,6 @@ public class DrugApprovedController {
                 drugTransactionArray.add(drugTransaction);
 
 
-
-
                 if (requisition != null && issued != null && authorized != null) {
                     pharmacyStoreApproved.setRequested(Context.getUserService().getUser(Integer.parseInt(requisition)));
                     pharmacyStoreApproved.setAuthorized(Context.getUserService().getUser(Integer.parseInt(authorized)));
@@ -565,7 +547,7 @@ public class DrugApprovedController {
             }
 
 
-            if (approveds11 =="app") {
+            if (approveds11 == "app") {
 
                 PharmacyStoreApproved pharmacyStoreApproved = new PharmacyStoreApproved();
                 pharmacyStoreApproved = service.getPharmacyStoreApprovedByUuid(approveduuidextra);
@@ -701,7 +683,7 @@ public class DrugApprovedController {
 
     }
 
-    public synchronized JSONArray getArray(List<PharmacyStoreApproved> pharmacyApproved, int size,String location) {
+    public synchronized JSONArray getArray(List<PharmacyStoreApproved> pharmacyApproved, int size, String location) {
 
         if (filter.length() > 2) {
 
@@ -715,7 +697,7 @@ public class DrugApprovedController {
                     Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
                     for (Role rl : xvc) {
 
-                        if((rl.getRole().equals("System Developer"))||(rl.getRole().equals("Provider"))||(rl.getRole().equals("	Authenticated "))){
+                        if ((rl.getRole().equals("System Developer")) || (rl.getRole().equals("Provider")) || (rl.getRole().equals("	Authenticated "))) {
 
                             editPharmacy = true;
                             deletePharmacy = true;
@@ -778,12 +760,12 @@ public class DrugApprovedController {
 //
 
 
-                    if (pharmacyApproved.get(size).getAuthorized()!=null)
+                    if (pharmacyApproved.get(size).getAuthorized() != null)
                         data.put(pharmacyApproved.get(size).getAuthorized().getUsername());
                     else
                         data.put("null");
 
-                    if (pharmacyApproved.get(size).getissued()!=null)
+                    if (pharmacyApproved.get(size).getissued() != null)
                         data.put(pharmacyApproved.get(size).getissued().getUsername());
                     else
                         data.put("null");
@@ -794,13 +776,13 @@ public class DrugApprovedController {
             }
 
         } else {
-            if ((pharmacyApproved.get(size).getDestination().getName().equalsIgnoreCase(location))&& (!pharmacyApproved.get(size).getApproved())) {
+            if ((pharmacyApproved.get(size).getDestination().getName().equalsIgnoreCase(location)) && (!pharmacyApproved.get(size).getApproved())) {
 
                 data = new JSONArray();
                 Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
                 for (Role rl : xvc) {
 
-                    if((rl.getRole().equals("System Developer"))||(rl.getRole().equals("Provider"))||(rl.getRole().equals("	Authenticated "))){
+                    if ((rl.getRole().equals("System Developer")) || (rl.getRole().equals("Provider")) || (rl.getRole().equals("	Authenticated "))) {
 
                         editPharmacy = true;
                         deletePharmacy = true;
@@ -856,17 +838,17 @@ public class DrugApprovedController {
                     deletePharmacy = false;
                 } else
                     data.put("");
-                data.put(pharmacyApproved.get(size).getStatus()+"[" +pharmacyApproved.get(size).getDateCreated().toString().substring(0, 10)+"]");
+                data.put(pharmacyApproved.get(size).getStatus() + "[" + pharmacyApproved.get(size).getDateCreated().toString().substring(0, 10) + "]");
                 data.put("<input type=\"checkbox\" name=\"check\" id=\"one\" >");
 //
 
 
-                if (pharmacyApproved.get(size).getAuthorized()!=null)
+                if (pharmacyApproved.get(size).getAuthorized() != null)
                     data.put(pharmacyApproved.get(size).getAuthorized().getUsername());
                 else
                     data.put("null");
 
-                if (pharmacyApproved.get(size).getissued()!=null)
+                if (pharmacyApproved.get(size).getissued() != null)
                     data.put(pharmacyApproved.get(size).getissued().getUsername());
                 else
                     data.put("null");

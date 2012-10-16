@@ -9,8 +9,6 @@
 <DIV id="dtab_1">
 
 
-
-
     <form id="stockfilter" action="#">
         <hr color=#1aad9b width="100%">
 
@@ -36,10 +34,6 @@
         <!-- 		<a href="#" id="bincardform">Add drugs </a> -->
 
 
-
-
-
-
         <form id="filter" action="#">
             <hr color=#1aad9b width="100%">
 
@@ -49,10 +43,7 @@
 
                 <label>Drug</label>
                 <input type="text"
-                       name="filterdrugstock" id="filterdrugstock" />
-
-
-
+                       name="filterdrugstock" id="filterdrugstock"/>
 
 
             </fieldset>
@@ -82,7 +73,6 @@
             <th>Suppier</th>
 
 
-
             <th>Void</th>
         </tr>
         </thead>
@@ -109,7 +99,6 @@
             <th></th>
 
             <th></th>
-
 
 
         </tr>

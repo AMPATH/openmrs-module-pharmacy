@@ -1,6 +1,6 @@
 var binTable;
 var oCache = {
-    iCacheLower: -1
+    iCacheLower:-1
 };
 
 $j("#bincard").hide();
@@ -41,52 +41,55 @@ function fnFormatDetails(nTr) {
 
 }
 
-$j( "#binexpire" ).datepicker();
+$j("#binexpire").datepicker();
 
-$j(function() {
+$j(function () {
 
-    $j( "#binexpire" ).datepicker();
+    $j("#binexpire").datepicker();
 
 });
 getDrugFilter();
 
 binTable = $j('#thighbincard').dataTable({
-    bJQueryUI : true,
-    bRetrieve : true,
-    bAutoWidth : false,
-    bServerSide : true,
-    bProcessing : true,
-    fnDrawCallback: function( oSettings ) {
-        for ( var i=0, iLen=oSettings.aoData.length ; i<iLen ; i++ ) {
+    bJQueryUI:true,
+    bRetrieve:true,
+    bAutoWidth:false,
+    bServerSide:true,
+    bProcessing:true,
+    fnDrawCallback:function (oSettings) {
+        for (var i = 0, iLen = oSettings.aoData.length; i < iLen; i++) {
             var status = oSettings.aoData[i]._aData[2];
-            var colorCSS=null;
+            var colorCSS = null;
 
             colorCSS = 'statusRed';
 
-            oSettings.aoData[i].nTr.className += " "+colorCSS;
+            oSettings.aoData[i].nTr.className += " " + colorCSS;
 
         }
     },
-    sAjaxSource : 'highBincard.form',
-    "fnServerData": fnDataTablesPipeline,
-    "aoColumnDefs" : [ {
-        "bVisible" : false,
-        "aTargets" : [ 1 ]
-    }, {
-        "bVisible" : false,
-        "aTargets" : [ 11 ]
-    }, {
-        "bVisible" : false,
-        "aTargets" : [ 0 ]
-    }]
+    sAjaxSource:'highBincard.form',
+    "fnServerData":fnDataTablesPipeline,
+    "aoColumnDefs":[
+        {
+            "bVisible":false,
+            "aTargets":[ 1 ]
+        },
+        {
+            "bVisible":false,
+            "aTargets":[ 11 ]
+        },
+        {
+            "bVisible":false,
+            "aTargets":[ 0 ]
+        }
+    ]
 });
 
 
-
 getFilter();
-$j(function() {
+$j(function () {
 
-    $j( "#date" ).datepicker();
+    $j("#date").datepicker();
 
 });
 //$j('#tbincard tbody td img').live('click', function() {
@@ -96,7 +99,7 @@ $j(function() {
 //
 //});
 
-$j('#thighbincard tbody td img').live('click', function() {
+$j('#thighbincard tbody td img').live('click', function () {
 
     var nTr = this.parentNode.parentNode;
 
@@ -110,16 +113,16 @@ $j('#thighbincard tbody td img').live('click', function() {
 
 });
 
-$j("form#bincard").submit(function() {
+$j("form#bincard").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
     if ($j("#bincard").valid()) {
         dataString = $j("#bincard").serialize();
 
         $j.ajax({
-            type : "POST",
-            url : "highBincard.form",
-            data : dataString,
-            success : function() {
+            type:"POST",
+            url:"highBincard.form",
+            data:dataString,
+            success:function () {
 
                 AutoReload();
 
@@ -138,16 +141,16 @@ $j("form#bincard").submit(function() {
         return false;
     }
 });
-$j("form#highvoid").submit(function() {
+$j("form#highvoid").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
     if ($j("#highvoid").valid()) {
         dataString = $j("#highvoid").serialize();
 
         $j.ajax({
-            type : "POST",
-            url : "highBincard.form",
-            data : dataString,
-            success : function() {
+            type:"POST",
+            url:"highBincard.form",
+            data:dataString,
+            success:function () {
                 var fbject = document.forms['highvoid'];
 
                 fbject.elements["binuuidvoid"].value = "";
@@ -160,7 +163,7 @@ $j("form#highvoid").submit(function() {
     }
 });
 
-$j("#bincardform").click(function() {
+$j("#bincardform").click(function () {
 
     getData();
     getDataLocation();
@@ -171,7 +174,7 @@ function getData() {
     $j
         .getJSON(
         "drugDetails.form?drop=drop",
-        function(result) {
+        function (result) {
 
             $j("#bindrug").get(0).options.length = 0;
             $j("#bindrug").get(0).options[0] = new Option("Select",
@@ -179,7 +182,7 @@ function getData() {
             $j
                 .each(
                 result,
-                function(index, value) { //bincard"stateList
+                function (index, value) { //bincard"stateList
 
                     $j("#bindrug").get(0).options[$j(
                         "#bindrug").get(0).options.length] = new Option(
@@ -194,53 +197,48 @@ function getData() {
 function getFilter() {
 
 
-
 }
 
 
-
-
-
 $j("#filterdrughigh").autocomplete({
-    search : function() {
+    search:function () {
         $j(this).addClass('working');
     },
 
-    source : function(request, response) {
+    source:function (request, response) {
 
         dataString = "searchDrug=" + request.term;
 
-        $j.getJSON("drugDetails.form?drop=drop&" + dataString, function(result) {
+        $j.getJSON("drugDetails.form?drop=drop&" + dataString, function (result) {
 
             $j("#filterdrughigh").removeClass('working');
 
-            response($j.each(result, function(index, item) {
+            response($j.each(result, function (index, item) {
 
                 return {
-                    label : item,
-                    value : item
+                    label:item,
+                    value:item
                 }
             }));
 
         });
 
     },
-    minLength : 3,
-    select : function(event, ui) {
-        binTable.fnFilter( ui.item.label );
+    minLength:3,
+    select:function (event, ui) {
+        binTable.fnFilter(ui.item.label);
         // log( ui.item ?
         // "Selected: " + ui.item.label :
         // "Nothing selected, input was " + this.value);
     },
-    open : function() {
+    open:function () {
         $j(this).removeClass("ui-corner-all").addClass("ui-corner-top");
     },
-    close : function() {
+    close:function () {
         $j(this).removeClass("ui-corner-top").addClass("ui-corner-all");
     }
 });
 function getDrugFilter() {
-
 
 
 }
@@ -250,7 +248,7 @@ function getDataLocation() {
     $j
         .getJSON(
         "drugDetails.form?drop=location",
-        function(result) {
+        function (result) {
 
             $j("#location").get(0).options.length = 0;
             $j("#location").get(0).options[0] = new Option("Select",
@@ -258,7 +256,7 @@ function getDataLocation() {
             $j
                 .each(
                 result,
-                function(index, value) { //bincard"stateList
+                function (index, value) { //bincard"stateList
 
                     $j("#location").get(0).options[$j(
                         "#location").get(0).options.length] = new Option(

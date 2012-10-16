@@ -125,8 +125,7 @@ public class MaxMinController {
             }
             response.flushBuffer();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             log.error("Error generated", e);
         }
@@ -158,7 +157,7 @@ public class MaxMinController {
         List<DrugMaxMin> list = service.getDrugMaxMin();
         int size = list.size();
 
-      /*  if (size == 0) {
+        /*  if (size == 0) {
             DrugMaxMin drugMaxMin = new DrugMaxMin();
 
             drugMaxMin.setMax(Integer.parseInt(max));
@@ -208,9 +207,7 @@ public class MaxMinController {
                 }
             }
 
-        }
-
-        else if (uuidvoid != null) {
+        } else if (uuidvoid != null) {
 
             DrugMaxMin drugMaxMin = new DrugMaxMin();
 
@@ -231,7 +228,7 @@ public class MaxMinController {
         Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
         for (Role rl : xvc) {
 
-            if((rl.getRole().equals("System Developer"))||(rl.getRole().equals("Provider"))||(rl.getRole().equals("	Authenticated "))){
+            if ((rl.getRole().equals("System Developer")) || (rl.getRole().equals("Provider")) || (rl.getRole().equals("	Authenticated "))) {
 
                 editPharmacy = true;
                 deletePharmacy = true;

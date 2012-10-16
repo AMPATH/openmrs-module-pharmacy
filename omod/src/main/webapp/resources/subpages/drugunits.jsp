@@ -16,9 +16,11 @@
                 <legend>Units Void reason</legend>
 
                 <label>Reason</label> <input type="text" name="unitsreason"
-                                             id="unitsreason" class="required" /> <input type="hidden"
-                                                                                         name="unitsuuidvoid" id="unitsuuidvoid" /> <input class="submit"
-                                                                                                                                           type="submit" value="Submit" />
+                                             id="unitsreason" class="required"/> <input type="hidden"
+                                                                                        name="unitsuuidvoid"
+                                                                                        id="unitsuuidvoid"/> <input
+                    class="submit"
+                    type="submit" value="Submit"/>
             </fieldset>
         </form>
         <form id="units" action="">
@@ -27,10 +29,11 @@
                 <legend>strength</legend>
 
                 <label for="engine">Strength name</label> <input type="text"
-                                                                 name="unitsname" id="unitsname" class="required" /> <input
-                    type="hidden" name="unitsedit" id="unitsedit" value="false" /> <input
-                    type="hidden" name="unitsuuid" id="unitsuuid" /> <input
-                    class="submit" type="submit" value="Submit" />
+                                                                 name="unitsname" id="unitsname" class="required"/>
+                <input
+                        type="hidden" name="unitsedit" id="unitsedit" value="false"/> <input
+                    type="hidden" name="unitsuuid" id="unitsuuid"/> <input
+                    class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
     </DIV>

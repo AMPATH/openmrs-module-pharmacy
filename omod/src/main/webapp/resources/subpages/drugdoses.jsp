@@ -11,35 +11,38 @@
 <DIV id="ddoses">
     <DIV id="incss">
         <a href="#" id="adddoses">Add doses </a>
+
         <form id="dosesvoid" action="#">
             <fieldset>
 
                 <legend>Doses Void reason</legend>
 
                 <label>Reason</label> <input type="text" name="dosesreason"
-                                             id="dosesreason" class="required" /> <input type="hidden"
-                                                                                         name="dosesuuidvoid" id="dosesuuidvoid" /> <input class="submit"
-                                                                                                                                           type="submit" value="Submit" />
+                                             id="dosesreason" class="required"/> <input type="hidden"
+                                                                                        name="dosesuuidvoid"
+                                                                                        id="dosesuuidvoid"/> <input
+                    class="submit"
+                    type="submit" value="Submit"/>
             </fieldset>
         </form>
-        <form id="doses" " action="#">
+        <form id="doses"
+        " action="#">
         <fieldset>
 
             <legend>doses"</legend>
 
 
-            <input type="hidden" name="dosesedit" id="dosesedit" value="false" />
-            <input type="hidden" name="dosesuuid" id="dosesuuid" /> <label>Drug</label>
+            <input type="hidden" name="dosesedit" id="dosesedit" value="false"/>
+            <input type="hidden" name="dosesuuid" id="dosesuuid"/> <label>Drug</label>
             <select id="dosesdrug" name="dosesdrug">
 
 
-            </select> <br /> 	<label>Frequency</label> <select id="dosesfrequency"
-                                                                  name="dosesfrequency">
+            </select> <br/> <label>Frequency</label> <select id="dosesfrequency"
+                                                             name="dosesfrequency">
 
 
-        </select> <br /> 	<label>Quantity</label> <input type="text" name="dosequantity"
-                                                            id="dosequantity" class="required" />
-
+        </select> <br/> <label>Quantity</label> <input type="text" name="dosequantity"
+                                                       id="dosequantity" class="required"/>
 
 
             <button class="button positive">Add</button>

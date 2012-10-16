@@ -19,9 +19,7 @@
 
                 <label>Drug</label>
                 <input type="text"
-                       name="filterdrugtran" id="filterdrugtran" />
-
-
+                       name="filterdrugtran" id="filterdrugtran"/>
 
 
             </fieldset>

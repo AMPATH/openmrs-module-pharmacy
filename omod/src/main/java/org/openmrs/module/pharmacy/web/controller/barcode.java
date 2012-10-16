@@ -13,9 +13,8 @@ public class barcode {
     private static final Log log = LogFactory.getLog(barcode.class);
 
 
-
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/barcode")
-    public  synchronized void pageLoad(ModelMap map) {
+    public synchronized void pageLoad(ModelMap map) {
 
     }
 

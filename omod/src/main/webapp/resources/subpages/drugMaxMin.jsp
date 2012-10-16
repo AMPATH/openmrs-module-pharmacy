@@ -17,9 +17,10 @@
                 <legend>Name Void reason</legend>
 
                 <label for="engine">Reason</label> <input type="text"
-                                                          name="maxminreason" id="maxminreason" class="required" /> <input
-                    type="hidden" name="maxminuuidvoid" id="maxminuuidvoid" /> <input
-                    class="submit" type="submit" value="Submit" />
+                                                          name="maxminreason" id="maxminreason" class="required"/>
+                <input
+                        type="hidden" name="maxminuuidvoid" id="maxminuuidvoid"/> <input
+                    class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
         <form id="maxminform" action="#">
@@ -29,18 +30,18 @@
 
 
                 <label>Drug</label>
-                <input type="text" 	name="maxmindrug" id="maxmindrug"/>
-                <br />
+                <input type="text" name="maxmindrug" id="maxmindrug"/>
+                <br/>
 
                 <label for="engine">Min level</label>
-                <input type="text" 	name="max" id="max" class="required" /> <br />
+                <input type="text" name="max" id="max" class="required"/> <br/>
                 <label for="engine">Max level</label>
-                <input type="text" 	name="min" id="min"/>  <br />
-                <input type="hidden" name="maxmineedit" id="maxminedit" value="false" />
+                <input type="text" name="min" id="min"/> <br/>
+                <input type="hidden" name="maxmineedit" id="maxminedit" value="false"/>
 
                 <input
-                        type="hidden" name="maxminuuid" id="maxminuuid" /> <input
-                    class="submit" type="submit" value="Submit" />
+                        type="hidden" name="maxminuuid" id="maxminuuid"/> <input
+                    class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
     </DIV>
@@ -54,7 +55,8 @@
             <th>Drug</th>
 
             <th>Min level</th>
-            <th>Max level</th>MaxMinController
+            <th>Max level</th>
+            MaxMinController
             <th>Void</th>
         </tr>
         </thead>
@@ -67,7 +69,6 @@
             <td></td>
             <td></td>
             <td></td>
-
 
 
         </tr>

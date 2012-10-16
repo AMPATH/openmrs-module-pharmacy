@@ -1,4 +1,4 @@
-$j("#psychiatryform").delegate("#btnDel", "click", function() {
+$j("#psychiatryform").delegate("#btnDel", "click", function () {
     var id = "#" + $j(this).attr("name");
 
     $j("" + id + "").remove();
@@ -8,7 +8,7 @@ set();
 
 $j(document)
     .keydown(
-    function(e) {
+    function (e) {
         if (e.keyCode == 13) {
 
             var drugId;
@@ -27,9 +27,9 @@ $j(document)
                 }
 
                 $j.getJSON("drugDetails.form?drop=drug&id="
-                    + drugId, function(result) {
+                    + drugId, function (result) {
 
-                    $j.each(result, function(index, value) { // bincard"stateList
+                    $j.each(result, function (index, value) { // bincard"stateList
                         if (index == 0) {
 
                             name = value;
@@ -79,7 +79,7 @@ function set() {
 
 }
 
-$j("#psychiatryform").delegate("input[type='checkbox']", "click", function() {
+$j("#psychiatryform").delegate("input[type='checkbox']", "click", function () {
 
 
     // if you want to add on checked
@@ -119,7 +119,7 @@ $j("#psychiatryform").delegate("input[type='checkbox']", "click", function() {
 });
 
 
-$j("#psychiatryform").delegate("#dose", "change", function() {
+$j("#psychiatryform").delegate("#dose", "change", function () {
     $j('#frequency').attr('disabled', '');
 
     var e = document.getElementById("dose");
@@ -131,8 +131,8 @@ $j("#psychiatryform").delegate("#dose", "change", function() {
     } else {
         $j.getJSON("drugDispense.form?dose="
             + str.substring(str.indexOf('#') + 1),
-            function(result) {
-                $j.each(result, function(index, value) {
+            function (result) {
+                $j.each(result, function (index, value) {
 
                     // bincard"stateList
                     if (index == 0) {
@@ -153,7 +153,7 @@ $j("#psychiatryform").delegate("#dose", "change", function() {
 });
 
 
-$j("#psychiatryform").delegate("#dose1", "change", function() {
+$j("#psychiatryform").delegate("#dose1", "change", function () {
 
     $j('#frequency1').attr('disabled', '');
     var e = document.getElementById("dose");
@@ -165,8 +165,8 @@ $j("#psychiatryform").delegate("#dose1", "change", function() {
     } else {
         $j.getJSON("drugDispense.form?dose="
             + str.substring(str.indexOf('#') + 1),
-            function(result) {
-                $j.each(result, function(index, value) { // bincard"stateList
+            function (result) {
+                $j.each(result, function (index, value) { // bincard"stateList
                     if (index == 0) {
 
                         methodOne = value;
@@ -187,7 +187,7 @@ $j("#psychiatryform").delegate("#dose1", "change", function() {
 });
 
 
-$j("#psychiatryform").delegate("#frequency", "change", function() {
+$j("#psychiatryform").delegate("#frequency", "change", function () {
 
     var e = document.getElementById("frequency");
     var str = e.options[e.selectedIndex].value;
@@ -212,7 +212,7 @@ $j("#psychiatryform").delegate("#frequency", "change", function() {
             }
             var inputTags = document.getElementsByTagName('INPUT');
 
-            for ( var i = 0; i < inputTags.length; i++) {
+            for (var i = 0; i < inputTags.length; i++) {
 
                 if (inputTags[i].id == "QD") {
                     inputTags[i].value = tot;
@@ -233,7 +233,7 @@ $j("#psychiatryform").delegate("#frequency", "change", function() {
             }
             var inputTags = document.getElementsByTagName('INPUT');
 
-            for ( var i = 0; i < inputTags.length; i++) {
+            for (var i = 0; i < inputTags.length; i++) {
 
                 if (inputTags[i].id == "QD") {
                     inputTags[i].value = tot;
@@ -248,8 +248,7 @@ $j("#psychiatryform").delegate("#frequency", "change", function() {
 });
 
 
-
-$j("#psychiatryform").delegate("#frequency1", "change", function() {
+$j("#psychiatryform").delegate("#frequency1", "change", function () {
 
     var e = document.getElementById("frequency");
     var str = e.options[e.selectedIndex].value;
@@ -273,7 +272,7 @@ $j("#psychiatryform").delegate("#frequency1", "change", function() {
             }
             var inputTags = document.getElementsByTagName('INPUT');
 
-            for ( var i = 0; i < inputTags.length; i++) {
+            for (var i = 0; i < inputTags.length; i++) {
 
                 if (inputTags[i].id == "QD1") {
                     inputTags[i].value = tot;
@@ -295,7 +294,7 @@ $j("#psychiatryform").delegate("#frequency1", "change", function() {
             }
             var inputTags = document.getElementsByTagName('INPUT');
 
-            for ( var i = 0; i < inputTags.length; i++) {
+            for (var i = 0; i < inputTags.length; i++) {
 
                 if (inputTags[i].id == "QD1") {
                     inputTags[i].value = tot;
@@ -308,7 +307,7 @@ $j("#psychiatryform").delegate("#frequency1", "change", function() {
 
     return false;
 });
-$j("#psychiatryform").delegate("#WA1", "change", function() {
+$j("#psychiatryform").delegate("#WA1", "change", function () {
 
 
     var val = document.getElementById("WA1").value;
@@ -320,7 +319,7 @@ $j("#psychiatryform").delegate("#WA1", "change", function() {
 });
 
 
-$j("#psychiatryform").delegate("#WA2", "change", function() {
+$j("#psychiatryform").delegate("#WA2", "change", function () {
 
 
     var val = document.getElementById("WA2").value;
@@ -330,7 +329,7 @@ $j("#psychiatryform").delegate("#WA2", "change", function() {
 
 });
 
-$j("#psychiatryform").delegate("#nextvisit", "change", function() {
+$j("#psychiatryform").delegate("#nextvisit", "change", function () {
 
 
     // alert('Handler for .change()
@@ -369,7 +368,7 @@ $j("#psychiatryform").delegate("#nextvisit", "change", function() {
 
     if (_Diff <= 7) {
 
-        for ( var i = 0; i < inputTags.length; i++) {
+        for (var i = 0; i < inputTags.length; i++) {
 
             if (inputTags[i].id == "NUMBER OF DAYS|1892") {
                 inputTags[i].value = _Diff;
@@ -392,7 +391,7 @@ $j("#psychiatryform").delegate("#nextvisit", "change", function() {
 
         if (week < 4) {
 
-            for ( var i = 0; i < inputTags.length; i++) {
+            for (var i = 0; i < inputTags.length; i++) {
 
                 if (inputTags[i].id == "NUMBER OF DAYS|1892") {
                     inputTags[i].value = "";
@@ -409,7 +408,7 @@ $j("#psychiatryform").delegate("#nextvisit", "change", function() {
 
         } else if (week >= 4) {
             var numb = months_between(date2, dateGiven);
-            for ( var i = 0; i < inputTags.length; i++) {
+            for (var i = 0; i < inputTags.length; i++) {
 
                 if (numb == 0) {
                     if (inputTags[i].id == "NUMBER OF MONTHS|1894") {
@@ -444,11 +443,9 @@ $j("#psychiatryform").delegate("#nextvisit", "change", function() {
 });
 
 
-
-
 $j('#noofmonths')
     .change(
-    function() {
+    function () {
         var inputTags = document.getElementsByTagName('INPUT');
         var givenDays = document.getElementById("noofmonths").value;
         quantity = givenDays;
@@ -456,7 +453,7 @@ $j('#noofmonths')
         if (givenDays <= 6) {
             // week
 
-            for ( var i = 0; i < inputTags.length; i++) {
+            for (var i = 0; i < inputTags.length; i++) {
 
                 if (inputTags[i].id == "NUMBER OF DAYS|1892") {
                     inputTags[i].value = givenDays;
@@ -487,7 +484,7 @@ $j('#noofmonths')
 
             if (week <= 4) {
                 // document.getElementById("noofmonths").value=parseInt(givenDays)+2;
-                for ( var i = 0; i < inputTags.length; i++) {
+                for (var i = 0; i < inputTags.length; i++) {
 
                     if (inputTags[i].id == "NUMBER OF DAYS|1892") {
                         inputTags[i].value = "";
@@ -507,7 +504,7 @@ $j('#noofmonths')
                 var months = months_between(dateGiven, addDays(
                     dateGiven, givenDays));
 
-                for ( var i = 0; i < inputTags.length; i++) {
+                for (var i = 0; i < inputTags.length; i++) {
 
                     if (inputTags[i].id == "NUMBER OF DAYS|1892") {
                         inputTags[i].value = "";
@@ -548,24 +545,24 @@ function addDays(myDate, days) {
 // //////////////////////////////////////////////////////////////////////////////////
 
 $j("#prescriber").autocomplete({
-    search : function() {
+    search:function () {
         $j(this).addClass('working');
     },
 
-    source : function(request, response) {
+    source:function (request, response) {
         // http://localhost:8080/openmrs/module/htmlwidgets/conceptSearch.form
 
         dataString = "q=" + request.term;
 
-        $j.getJSON("dispense.form?" + dataString, function(result) {
+        $j.getJSON("dispense.form?" + dataString, function (result) {
 
             $j("#prescriber").removeClass('working');
 
-            response($j.each(result, function(index, item) {
+            response($j.each(result, function (index, item) {
 
                 return {
-                    label : item,
-                    value : item
+                    label:item,
+                    value:item
 
                 }
             }));
@@ -573,17 +570,17 @@ $j("#prescriber").autocomplete({
         });
 
     },
-    minLength : 2,
-    select : function(event, ui) {
+    minLength:2,
+    select:function (event, ui) {
 
         // log( ui.item ?
         // "Selected: " + ui.item.label :
         // "Nothing selected, input was " + this.value);
     },
-    open : function() {
+    open:function () {
         $j(this).removeClass("ui-corner-all").addClass("ui-corner-top");
     },
-    close : function() {
+    close:function () {
         $j(this).removeClass("ui-corner-top").addClass("ui-corner-all");
     }
 });

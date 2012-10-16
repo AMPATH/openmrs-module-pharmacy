@@ -1,6 +1,6 @@
 var ooTable;
 var oCache = {
-    iCacheLower: -1
+    iCacheLower:-1
 };
 
 $j("#nameform").validate(); //
@@ -35,28 +35,30 @@ function fnFormatDetails(nTr) {
 }
 
 oooTable = $j('#tname').dataTable({
-    bJQueryUI : true,
-    bRetrieve : true,
-    bServerSide : true,
-    bProcessing : true,
-    sAjaxSource : 'drugName.form',
-    "fnServerData": fnDataTablesPipeline,
-    "aoColumnDefs" : [ {
-        "bVisible" : false,
-        "aTargets" : [ 1 ]
-    } ]
+    bJQueryUI:true,
+    bRetrieve:true,
+    bServerSide:true,
+    bProcessing:true,
+    sAjaxSource:'drugName.form',
+    "fnServerData":fnDataTablesPipeline,
+    "aoColumnDefs":[
+        {
+            "bVisible":false,
+            "aTargets":[ 1 ]
+        }
+    ]
 });
 
 //						ooTable.fnSetColumnVis( 1, false );
 
-$j('#tname tbody td img').live('click', function() {
+$j('#tname tbody td img').live('click', function () {
     var nTr = this.parentNode.parentNode;
 
     fnFormatDetails(nTr);
 
 });
 
-$j('#tname tbody td a').live('click', function() {
+$j('#tname tbody td a').live('click', function () {
     var nTr = this.parentNode.parentNode;
 
     var aData = oooTable.fnGetData(nTr);
@@ -67,17 +69,17 @@ $j('#tname tbody td a').live('click', function() {
     $j("#namevoid").show();//
 });
 
-$j("form#nameform").submit(function() {
+$j("form#nameform").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
 
     if ($j("#nameform").valid()) {
         dataString = $j("#nameform").serialize();
 
         $j.ajax({
-            type : "POST",
-            url : "drugName.form",
-            data : dataString,
-            success : function() {
+            type:"POST",
+            url:"drugName.form",
+            data:dataString,
+            success:function () {
                 AutoReload();
                 var oFormObject = document.forms['nameform'];
 
@@ -91,16 +93,16 @@ $j("form#nameform").submit(function() {
     }
 });
 
-$j("form#namevoid").submit(function() {
+$j("form#namevoid").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
     if ($j("#namevoid").valid()) {
         dataString = $j("#namevoid").serialize();
 
         $j.ajax({
-            type : "POST",
-            url : "drugName.form",
-            data : dataString,
-            success : function() {
+            type:"POST",
+            url:"drugName.form",
+            data:dataString,
+            success:function () {
                 AutoReload();
                 $j("#namevoid").hide();//
                 var oFormObject = document.forms['namevoid'];

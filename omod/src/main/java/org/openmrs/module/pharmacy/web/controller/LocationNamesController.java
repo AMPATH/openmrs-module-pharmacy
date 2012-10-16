@@ -57,14 +57,11 @@ public class LocationNamesController {
         List<PharmacyLocations> list = service.getPharmacyLocations();
 
 
-
-
         userService = Context.getUserContext();
         String drop = request.getParameter("drop");
         String drug = request.getParameter("drug");
         String user = request.getParameter("user");
         int psize;
-
 
 
         int size = list.size();
@@ -108,30 +105,25 @@ public class LocationNamesController {
                 }
 
 
-            }
-
-            else if (user != null) {
+            } else if (user != null) {
 
 
+                List<User> p = Context.getUserService().getUsers(user, Context.getUserService().getRoles(), true);
 
-
-                List<User> p= Context.getUserService().getUsers(user, Context.getUserService().getRoles(), true);
-
-                psize=p.size();
+                psize = p.size();
 
 
                 JSONArray temp = new JSONArray();
                 for (int i = 0; i < psize; i++) {
 
 
-                    temp.put(p.get(i).getUsername() );
+                    temp.put(p.get(i).getUsername());
 
 
                 }
 
                 response.getWriter().print(temp);
-            }
-            else {
+            } else {
 
 
                 if (size != 0) {
@@ -165,8 +157,7 @@ public class LocationNamesController {
             }
             response.flushBuffer();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             log.error("Error generated", e);
         }
@@ -214,7 +205,7 @@ public class LocationNamesController {
 
                 pharmacyLocations = service.getPharmacyLocationsByUuid(uuid);
 
-                if (userService.getAuthenticatedUser().getUserId().equals( pharmacyLocations.getCreator().getUserId())) {
+                if (userService.getAuthenticatedUser().getUserId().equals(pharmacyLocations.getCreator().getUserId())) {
 
                     // saving/updating a record
                     pharmacyLocations.setName(locationName);
@@ -224,9 +215,7 @@ public class LocationNamesController {
                 }
             }
 
-        }
-
-        else if (uuidvoid != null) {
+        } else if (uuidvoid != null) {
 
             PharmacyLocations pharmacyLocations = new PharmacyLocations();
 
@@ -247,7 +236,7 @@ public class LocationNamesController {
         Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
         for (Role rl : xvc) {
 
-            if((rl.equals("System Developer"))||(rl.equals("Provider"))){
+            if ((rl.equals("System Developer")) || (rl.equals("Provider"))) {
 
                 editPharmacy = true;
                 deletePharmacy = true;

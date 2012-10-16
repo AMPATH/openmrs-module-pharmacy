@@ -89,8 +89,7 @@ public class DrugNamesController {
             }
             response.flushBuffer();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             log.error("Error generated", e);
         }
@@ -135,7 +134,7 @@ public class DrugNamesController {
                 DrugName drugNamee = new DrugName();
 
                 drugNamee = service.getDrugNameByUuid(uuid);
-                if (userService.getAuthenticatedUser().getUserId().equals( drugNamee.getCreator().getUserId())) {
+                if (userService.getAuthenticatedUser().getUserId().equals(drugNamee.getCreator().getUserId())) {
 
                     // saving/updating a record
                     drugNamee.setDrugName(drugName);//(drugName);
@@ -144,9 +143,7 @@ public class DrugNamesController {
                 }
             }
 
-        }
-
-        else if (uuidvoid != null) {
+        } else if (uuidvoid != null) {
 
             DrugName drugNamee = new DrugName();
 
@@ -167,7 +164,7 @@ public class DrugNamesController {
         Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
         for (Role rl : xvc) {
 
-            if((rl.getRole().equals("System Developer"))||(rl.getRole().equals("Provider"))||(rl.getRole().equals("	Authenticated "))){
+            if ((rl.getRole().equals("System Developer")) || (rl.getRole().equals("Provider")) || (rl.getRole().equals("	Authenticated "))) {
 
                 editPharmacy = true;
                 deletePharmacy = true;

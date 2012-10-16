@@ -57,22 +57,17 @@ public class TransactionNamesController {
         String drug = request.getParameter("drug");
         service = Context.getService(PharmacyService.class);
 
-        String locationVal=null;
+        String locationVal = null;
 
-        List<PharmacyLocationUsers> listUsers= service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        int sizeUsers =listUsers.size();
-
-
+        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
+        int sizeUsers = listUsers.size();
 
 
+        if (sizeUsers > 1) {
+            locationVal = request.getSession().getAttribute("location").toString();
 
-        if(sizeUsers>1){
-            locationVal=request.getSession().getAttribute("location").toString();
-
-        }
-        else if(sizeUsers==1)
-        {
-            locationVal=listUsers.get(0).getLocation();
+        } else if (sizeUsers == 1) {
+            locationVal = listUsers.get(0).getLocation();
 
 
         }
@@ -98,8 +93,6 @@ public class TransactionNamesController {
                 } else if (drop.equalsIgnoreCase("total")) {
 
 
-
-
                     List<PharmacyStore> listSize = service.getPharmacyInventory();
                     int sizeList = listSize.size();
 
@@ -121,12 +114,11 @@ public class TransactionNamesController {
                         jsons.put("" + null);
 
                     response.getWriter().print(jsons);
-                }
-                else if(drop.equalsIgnoreCase("totalTwo")){
+                } else if (drop.equalsIgnoreCase("totalTwo")) {
                     List<PharmacyStore> listSize = service.getPharmacyInventory();
                     int sizeList = listSize.size();
 
-                    int total=0;
+                    int total = 0;
                     for (int i = 0; i < sizeList; i++) {
 
 
@@ -178,8 +170,7 @@ public class TransactionNamesController {
             }
             response.flushBuffer();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             log.error("Error generated", e);
         }
@@ -225,7 +216,7 @@ public class TransactionNamesController {
 
                 transactionName = service.getPharmacyTransactionTypesByUuid(uuid);
 
-                if (userService.getAuthenticatedUser().getUserId().equals( transactionName.getCreator().getUserId())) {
+                if (userService.getAuthenticatedUser().getUserId().equals(transactionName.getCreator().getUserId())) {
 
                     // saving/updating a record
                     transactionName.setName(transactionsName);
@@ -235,9 +226,7 @@ public class TransactionNamesController {
                 }
             }
 
-        }
-
-        else if (uuidvoid != null) {
+        } else if (uuidvoid != null) {
 
             PharmacyTransactionTypes transactionNamev = new PharmacyTransactionTypes();
 
@@ -258,7 +247,7 @@ public class TransactionNamesController {
         Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
         for (Role rl : xvc) {
 
-            if((rl.getRole().equals("System Developer"))||(rl.getRole().equals("Provider"))||(rl.getRole().equals("	Authenticated "))){
+            if ((rl.getRole().equals("System Developer")) || (rl.getRole().equals("Provider")) || (rl.getRole().equals("	Authenticated "))) {
 
                 editPharmacy = true;
                 deletePharmacy = true;

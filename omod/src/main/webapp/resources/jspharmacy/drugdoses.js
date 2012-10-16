@@ -12,7 +12,7 @@ function RefreshTable(tableId, urlData) {
     table.fnDraw();
 }
 var oCache = {
-    iCacheLower: -1
+    iCacheLower:-1
 };
 
 function AutoReload() {
@@ -21,14 +21,13 @@ function AutoReload() {
 }
 function getData() {
 
-    $j.getJSON("drugDetails.form?drop=drop", function(
-        result) {
+    $j.getJSON("drugDetails.form?drop=drop", function (result) {
 
         $j("#dosesdrug").get(0).options.length = 0;
         $j("#dosesdrug").get(0).options[0] = new Option("Select", "-1");
         $j
             .each(result,
-            function(index, value) { //bincard"stateList
+            function (index, value) { //bincard"stateList
 
                 $j("#dosesdrug").get(0).options[$j("#dosesdrug").get(
                     0).options.length] = new Option(value,
@@ -38,12 +37,12 @@ function getData() {
     });
 
     $j.getJSON("drugFrequency.form?drop=drop",
-        function(result) {
+        function (result) {
 
             $j("#dosesfrequency").get(0).options.length = 0;
             $j("#dosesfrequency").get(0).options[0] = new Option("Select",
                 "-1");
-            $j.each(result, function(index, value) { //bincard"stateList
+            $j.each(result, function (index, value) { //bincard"stateList
 
                 $j("#dosesfrequency").get(0).options[$j("#dosesfrequency")
                     .get(0).options.length] = new Option(value, value);
@@ -68,26 +67,28 @@ function fnFormatDetails(nTr) {
 }
 
 doTable = $j('#tdoses').dataTable({
-    bJQueryUI : true,
-    bRetrieve : true,
-    bServerSide : true,
-    bProcessing : true,
-    sAjaxSource : 'drugDoses.form',
-    "fnServerData": fnDataTablesPipeline,
-    "aoColumnDefs" : [ {
-        "bVisible" : false,
-        "aTargets" : [ 1 ]
-    } ]
+    bJQueryUI:true,
+    bRetrieve:true,
+    bServerSide:true,
+    bProcessing:true,
+    sAjaxSource:'drugDoses.form',
+    "fnServerData":fnDataTablesPipeline,
+    "aoColumnDefs":[
+        {
+            "bVisible":false,
+            "aTargets":[ 1 ]
+        }
+    ]
 });
 
-$j('#tdoses tbody td img').live('click', function() {
+$j('#tdoses tbody td img').live('click', function () {
     var nTr = this.parentNode.parentNode;
     getData();
     fnFormatDetails(nTr);
 
 });
 
-$j('#tdoses tbody td a').live('click', function() {
+$j('#tdoses tbody td a').live('click', function () {
     var nTr = this.parentNode.parentNode;
 
     var aData = doTable.fnGetData(nTr);
@@ -99,17 +100,17 @@ $j('#tdoses tbody td a').live('click', function() {
     $j("#dosesvoid").show();//
 });
 
-$j("form#doses").submit(function() {
+$j("form#doses").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
 
     if ($j("#doses").valid()) {
         dataString = $j("#doses").serialize();
 
         $j.ajax({
-            type : "POST",
-            url : "drugDoses.form",
-            data : dataString,
-            success : function() {
+            type:"POST",
+            url:"drugDoses.form",
+            data:dataString,
+            success:function () {
                 $j("#doses").hide();//
                 AutoReload();
                 var oFormObject = document.forms['doses'];
@@ -124,16 +125,16 @@ $j("form#doses").submit(function() {
     }
 });
 
-$j("form#dosesvoid").submit(function() {
+$j("form#dosesvoid").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
     if ($j("#dosesvoid").valid()) {
         dataString = $j("#dosesvoid").serialize();
 
         $j.ajax({
-            type : "POST",
-            url : "drugDoses.form",
-            data : dataString,
-            success : function() {
+            type:"POST",
+            url:"drugDoses.form",
+            data:dataString,
+            success:function () {
                 $j("#dosesvoid").hide();//
                 AutoReload();
             }
@@ -142,7 +143,7 @@ $j("form#dosesvoid").submit(function() {
     }
 });
 
-$j("#adddoses").click(function() {
+$j("#adddoses").click(function () {
 
     getData();
 });

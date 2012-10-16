@@ -30,12 +30,12 @@ public class hivController {
     private String[][] encdata;
     private ConceptService conceptService;
     private PharmacyService service;
-    private String patientID=null;
-    private String prescriber=null;
-    private String pharmacyUser=null;
+    private String patientID = null;
+    private String prescriber = null;
+    private String pharmacyUser = null;
     private String question;
     private String question_ans;
-    private boolean morethanOne=false;
+    private boolean morethanOne = false;
     private String questionTwo;
     private String question_ansTwo;
     private String questionThree;
@@ -51,47 +51,42 @@ public class hivController {
     private String userName;
 
     private String dispensedBy;
-    private 	PharmacyEncounter pEncounter;
+    private PharmacyEncounter pEncounter;
 
-    PharmacyOrders ppharmacyOrders=null;
-    PharmacyObs ppharmacyObs=null;
-    List<PharmacyOrders> pharmacyOrders ;
+    PharmacyOrders ppharmacyOrders = null;
+    PharmacyObs ppharmacyObs = null;
+    List<PharmacyOrders> pharmacyOrders;
     List<PharmacyObs> pharmacyObs;
     List<PharmacyExtra> pharmacyExt;
     private int two;
     private int three;
     private int four;
     private int one;
-    private int  currentRegimen;
+    private int currentRegimen;
+
     @Authorized("Manage Pharmacy")
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/hiv")
-    public  synchronized void pageLoad(ModelMap map) {
+    public synchronized void pageLoad(ModelMap map) {
 
     }
+
     @RequestMapping(method = RequestMethod.POST, value = "module/pharmacy/hiv")
-    public  synchronized void pageLoadd(HttpServletRequest request, HttpServletResponse response) {
-        conceptService =Context.getConceptService();
+    public synchronized void pageLoadd(HttpServletRequest request, HttpServletResponse response) {
+        conceptService = Context.getConceptService();
 
 
-
-
-        String locationVal=null;
+        String locationVal = null;
 
         service = Context.getService(PharmacyService.class);
-        List<PharmacyLocationUsers> listUsers= service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        int sizeUsers =listUsers.size();
+        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
+        int sizeUsers = listUsers.size();
 
 
+        if (sizeUsers > 1) {
+            locationVal = request.getSession().getAttribute("location").toString();
 
-
-
-        if(sizeUsers>1){
-            locationVal=request.getSession().getAttribute("location").toString();
-
-        }
-        else if(sizeUsers==1)
-        {
-            locationVal=listUsers.get(0).getLocation();
+        } else if (sizeUsers == 1) {
+            locationVal = listUsers.get(0).getLocation();
 
 
         }
@@ -101,42 +96,38 @@ public class hivController {
 
         JSONParser parser = new JSONParser();
 
-        String[][] obsExtra=  ArrayExtra(  parser,  jsonText);
+        String[][] obsExtra = ArrayExtra(parser, jsonText);
 
-        String[][] obsEnc=  ArrayEnc(  parser,  jsonText);
+        String[][] obsEnc = ArrayEnc(parser, jsonText);
 
 //		 
 
 
-        pEncounter =  new PharmacyEncounter();
+        pEncounter = new PharmacyEncounter();
 
 
-        for(int i=2;i<obsEnc.length;i++){
-            if(obsEnc[i][1].equals("2")){
+        for (int i = 2; i < obsEnc.length; i++) {
+            if (obsEnc[i][1].equals("2")) {
                 pEncounter.setPerson(Context.getPatientService().getPatient(Integer.parseInt(obsEnc[i][2])));
 
-                patientID=obsEnc[i][2];
+                patientID = obsEnc[i][2];
 
-            }
-            else  if(obsEnc[i][1].equals("3")){
+            } else if (obsEnc[i][1].equals("3")) {
 
                 pEncounter.setEncounter(Context.getEncounterService().getEncounterType(obsEnc[i][2]));
-            }
-            else  if(obsEnc[i][1].equals("4")){
+            } else if (obsEnc[i][1].equals("4")) {
                 pEncounter.setDateTime(DateHelper(obsEnc[i][2]));
 
 
-            }else  if(obsEnc[i][1].equals("5")){
+            } else if (obsEnc[i][1].equals("5")) {
 
-                nextVisitDate=obsEnc[i][2];
+                nextVisitDate = obsEnc[i][2];
 
-            }
-            else  if(obsEnc[i][1].equals("6")){
+            } else if (obsEnc[i][1].equals("6")) {
 
-                noOfMonths=obsEnc[i][2];
+                noOfMonths = obsEnc[i][2];
 
-            }
-            else  if(obsEnc[i][1].equals("0.1")){
+            } else if (obsEnc[i][1].equals("0.1")) {
                 pEncounter.setFormName("Pediatric ARV Prescription");
             }
 
@@ -144,79 +135,51 @@ public class hivController {
             pEncounter.setLocation(service.getPharmacyLocationsByName(locationVal));
 
 
-
-
         }
 
 
-        String[][] obsObs=  ArrayObs(  parser,  jsonText,locationVal);
-
+        String[][] obsObs = ArrayObs(parser, jsonText, locationVal);
 
 
     }
 
 
-    public synchronized String[][] ArrayEnc( JSONParser parser, String jsonText){
+    public synchronized String[][] ArrayEnc(JSONParser parser, String jsonText) {
 
-        String[][] encdata=null;
-
+        String[][] encdata = null;
 
 
         try {
 
 
-            Object obj=parser.parse(jsonText);
-            JSONArray array=(JSONArray)obj;
-
-
+            Object obj = parser.parse(jsonText);
+            JSONArray array = (JSONArray) obj;
 
 
             encdata = new String[8][3];
 
-            for(int i=2;i<=7;i++){
+            for (int i = 2; i <= 7; i++) {
 
 
                 String value = ArrayDataOne(array.get(i).toString());
-                String name =value.substring(0,value.indexOf("#"));
+                String name = value.substring(0, value.indexOf("#"));
 
 
+                if (i <= 7) {
 
 
+                    encdata[i][0] = value.substring(value.indexOf("#"), value.indexOf("#|")).substring(1);
+                    encdata[i][1] = value.substring(0, value.indexOf("#"));
 
-
-
-
-                if(i<=7){
-
-
-                    encdata[i][0]=value.substring(value.indexOf("#"),value.indexOf("#|")).substring(1);
-                    encdata[i][1]=value.substring(0,value.indexOf("#"));
-
-                    encdata[i][2]=value.substring(value.indexOf("#|")).substring(2);
+                    encdata[i][2] = value.substring(value.indexOf("#|")).substring(2);
 
                 }
-
-
-
-
-
 
 
             }
 
 
-
-
-
-
-
-        }
-
-
-
-
-
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("Error generated", e);
         }
 
@@ -224,126 +187,113 @@ public class hivController {
     }
 
 
-
-
-    public synchronized String[][] ArrayObs( JSONParser parser, String jsonText, String locationVal){
-        String[][] obsdata=null;
+    public synchronized String[][] ArrayObs(JSONParser parser, String jsonText, String locationVal) {
+        String[][] obsdata = null;
 
         pharmacyOrders = new ArrayList<PharmacyOrders>();
 
         pharmacyObs = new ArrayList<PharmacyObs>();
 
 
-
         drugAll = new ArrayList<ArrayList<String>>();
-
 
 
         try {
 
 
-            Object obj=parser.parse(jsonText);
-            JSONArray array=(JSONArray)obj;
+            Object obj = parser.parse(jsonText);
+            JSONArray array = (JSONArray) obj;
 
             obsdata = new String[array.size()][3];
 
-            for(int i=0;i<array.size();i++){
+            for (int i = 0; i < array.size(); i++) {
 
                 String value = ArrayDataOne(array.get(i).toString());
 
 
-                String name =value.substring(0,value.indexOf("#"));
-                if(name.equals("prescriber")){
+                String name = value.substring(0, value.indexOf("#"));
+                if (name.equals("prescriber")) {
 
-                    obsdata[i][1]= "909003";
-                    obsdata[i][2]= value.substring(value.indexOf("#|")).substring(2);
-                    userName=value.substring(value.indexOf("#|")).substring(2);
-                }
-                else if(name.equals("memberDet#2")){
+                    obsdata[i][1] = "909003";
+                    obsdata[i][2] = value.substring(value.indexOf("#|")).substring(2);
+                    userName = value.substring(value.indexOf("#|")).substring(2);
+                } else if (name.equals("memberDet#2")) {
 
-                    obsdata[i][1]= "909004";
-                    obsdata[i][2]= value.substring(value.indexOf("#|")).substring(2);
+                    obsdata[i][1] = "909004";
+                    obsdata[i][2] = value.substring(value.indexOf("#|")).substring(2);
 
-                }else if(name.equals("dispensedby")){
+                } else if (name.equals("dispensedby")) {
 
-                    dispensedBy=value.substring(value.indexOf("#|")).substring(2);
+                    dispensedBy = value.substring(value.indexOf("#|")).substring(2);
 
-                }
-
-                else{
+                } else {
 
 
+                    if (i > 7) {
 
-                    if(i>7){
+                        log.info("1==" + value);
 
-                        log.info("1=="+value);
-
-                        if(!value.startsWith("reg")){
-                            obsdata[i][0]=value.substring(value.indexOf("#"),value.indexOf("#|")).substring(1);
+                        if (!value.startsWith("reg")) {
+                            obsdata[i][0] = value.substring(value.indexOf("#"), value.indexOf("#|")).substring(1);
 
                             //concept id
-                            obsdata[i][1]=value.substring(0,value.indexOf("#"));
+                            obsdata[i][1] = value.substring(0, value.indexOf("#"));
                             //answer id
-                            obsdata[i][2]=value.substring(value.indexOf("#|")).substring(2);
-                        }
-                        else{
+                            obsdata[i][2] = value.substring(value.indexOf("#|")).substring(2);
+                        } else {
 
-                            System.out.println("<<<<<<<<<<<<<<<<<<<<<<111111<<<<<<<<<<<<<<<<<<<<<<<"+value.substring(value.indexOf("#|")).substring(2));
+                            System.out.println("<<<<<<<<<<<<<<<<<<<<<<111111<<<<<<<<<<<<<<<<<<<<<<<" + value.substring(value.indexOf("#|")).substring(2));
 
-                            currentRegimen=Integer.parseInt(value.substring(value.indexOf("#|")).substring(2));
+                            currentRegimen = Integer.parseInt(value.substring(value.indexOf("#|")).substring(2));
                         }
 
                     }
 
 
                 }
-
 
 
             }
 
 
-            for(int i=0;i<obsdata.length;i++){
-                if( obsdata[i][1]!=null){
-                    if( obsdata[i][1].equals("5089")){
+            for (int i = 0; i < obsdata.length; i++) {
+                if (obsdata[i][1] != null) {
+                    if (obsdata[i][1].equals("5089")) {
 
 
-                        obsSave=true;
+                        obsSave = true;
                     }
 
 
-                    if( obsdata[i][1].equals("1895")){
+                    if (obsdata[i][1].equals("1895")) {
 
-                        if(obsdata[i][2]!=null | !obsdata[i][2].isEmpty()){
-                            ppharmacyOrders= new PharmacyOrders();
+                        if (obsdata[i][2] != null | !obsdata[i][2].isEmpty()) {
+                            ppharmacyOrders = new PharmacyOrders();
                             drugDispensed = new ArrayList<String>();
-                            obsSave=false;
-                            drugsSave=true;
+                            obsSave = false;
+                            drugsSave = true;
                         }
 
                     }
 
 
-
                 }
 
 
-                if(obsSave){
+                if (obsSave) {
 
 
-                    if(obsdata[i][2]!=null){
-                        if(!obsdata[i][2].isEmpty()){
+                    if (obsdata[i][2] != null) {
+                        if (!obsdata[i][2].isEmpty()) {
 
-                            if(obsdata[i][1].equals("5089")){
-                                ppharmacyObs= new PharmacyObs();
+                            if (obsdata[i][1].equals("5089")) {
+                                ppharmacyObs = new PharmacyObs();
 
                                 ppharmacyObs.setConcept(obsdata[i][1]);
                                 ppharmacyObs.setValueCoded(Integer.parseInt(obsdata[i][2]));
 
 
-
-                                if(!userName.equals("null")){
-
+                                if (!userName.equals("null")) {
 
 
                                     ppharmacyObs.setPrescriberId(Context.getUserService().getUserByUsername(userName).getUuid());
@@ -351,7 +301,7 @@ public class hivController {
 
                                 ppharmacyObs.setLocation(service.getPharmacyLocationsByName(locationVal));
 
-                                if(patientID!=null)
+                                if (patientID != null)
                                     ppharmacyObs.setPerson(Context.getPatientService().getPatient(Integer.parseInt(patientID)));
 
 
@@ -373,22 +323,16 @@ public class hivController {
                                 ppharmacyObs.setDateStopped(null);
 
 
-
-
-
                                 pharmacyObs.add(ppharmacyObs);
 
 
-
-
-                            }else if (obsdata[i][1].equals("1724")){
-                                ppharmacyObs= new PharmacyObs();
-                                ppharmacyObs.setConcept(obsdata[i][1]) ;
+                            } else if (obsdata[i][1].equals("1724")) {
+                                ppharmacyObs = new PharmacyObs();
+                                ppharmacyObs.setConcept(obsdata[i][1]);
                                 ppharmacyObs.setValueCoded(Integer.parseInt(obsdata[i][2]));
 
 
-                                if(!userName.equals("null")){
-
+                                if (!userName.equals("null")) {
 
 
                                     ppharmacyObs.setPrescriberId(Context.getUserService().getUserByUsername(userName).getUuid());
@@ -396,7 +340,7 @@ public class hivController {
 
                                 ppharmacyObs.setLocation(service.getPharmacyLocationsByName(locationVal));
 
-                                if(patientID!=null)
+                                if (patientID != null)
                                     ppharmacyObs.setPerson(Context.getPatientService().getPatient(Integer.parseInt(patientID)));
 
 
@@ -421,16 +365,14 @@ public class hivController {
                                 pharmacyObs.add(ppharmacyObs);
 
 
-                            }
-                            else if (obsdata[i][1].equals("1705")){
-                                ppharmacyObs= new PharmacyObs();
+                            } else if (obsdata[i][1].equals("1705")) {
+                                ppharmacyObs = new PharmacyObs();
 
-                                ppharmacyObs.setConcept(obsdata[i][1]) ;
+                                ppharmacyObs.setConcept(obsdata[i][1]);
                                 ppharmacyObs.setValueCoded(Integer.parseInt(obsdata[i][2]));
 
 
-                                if(!userName.equals("null")){
-
+                                if (!userName.equals("null")) {
 
 
                                     ppharmacyObs.setPrescriberId(Context.getUserService().getUserByUsername(userName).getUuid());
@@ -438,7 +380,7 @@ public class hivController {
 
                                 ppharmacyObs.setLocation(service.getPharmacyLocationsByName(locationVal));
 
-                                if(patientID!=null)
+                                if (patientID != null)
                                     ppharmacyObs.setPerson(Context.getPatientService().getPatient(Integer.parseInt(patientID)));
 
 
@@ -464,16 +406,14 @@ public class hivController {
                                 pharmacyObs.add(ppharmacyObs);
 
 
-                            }
-                            else if (obsdata[i][1].equals("1252")){
-                                ppharmacyObs= new PharmacyObs();
+                            } else if (obsdata[i][1].equals("1252")) {
+                                ppharmacyObs = new PharmacyObs();
 
-                                ppharmacyObs.setConcept(obsdata[i][1]) ;
+                                ppharmacyObs.setConcept(obsdata[i][1]);
                                 ppharmacyObs.setValueCoded(Integer.parseInt(obsdata[i][2]));
 
 
-                                if(!userName.equals("null")){
-
+                                if (!userName.equals("null")) {
 
 
                                     ppharmacyObs.setPrescriberId(Context.getUserService().getUserByUsername(userName).getUuid());
@@ -481,7 +421,7 @@ public class hivController {
 
                                 ppharmacyObs.setLocation(service.getPharmacyLocationsByName(locationVal));
 
-                                if(patientID!=null)
+                                if (patientID != null)
                                     ppharmacyObs.setPerson(Context.getPatientService().getPatient(Integer.parseInt(patientID)));
 
 
@@ -504,12 +444,7 @@ public class hivController {
                                 ppharmacyObs.setDateStopped(null);
 
 
-
-
-
                                 pharmacyObs.add(ppharmacyObs);
-
-
 
 
                             }
@@ -523,69 +458,58 @@ public class hivController {
                 }
 
 
-                if (drugsSave){
+                if (drugsSave) {
 
 
+                    if (!obsdata[i][2].isEmpty()) {
 
-                    if(!obsdata[i][2].isEmpty()){
-
-                        if(obsdata[i][1].equals("1895")){
+                        if (obsdata[i][1].equals("1895")) {
 
 
-                            if( !obsdata[i][2].isEmpty()){
+                            if (!obsdata[i][2].isEmpty()) {
                                 ppharmacyOrders.setConcept(obsdata[i][2].substring(0, obsdata[i][2].indexOf("#")));
                                 ppharmacyOrders.setMedication(obsdata[i][1]);
 
                             }
 
 
+                            int age = Context.getPatientService().getPatient(Integer.parseInt(patientID)).getAge();
 
-                            int age =Context.getPatientService().getPatient(Integer.parseInt(patientID)).getAge();
+                            System.out.println("obsdata[i][2]obsdata[i][2]obsdata[i][2]===" + age);
+                            System.out.println("obsdata[i][2]obsdata[i][2]obsdata[i][2]===" + obsdata[i][2].substring(obsdata[i][2].indexOf("#") + 1));
 
-                            System.out.println("obsdata[i][2]obsdata[i][2]obsdata[i][2]==="+age);
-                            System.out.println("obsdata[i][2]obsdata[i][2]obsdata[i][2]==="+obsdata[i][2].substring(obsdata[i][2].indexOf("#")+1));
+                            if (age >= 16) {
 
-                            if(age>=16){
-
-                                if(!obsdata[i][2].isEmpty()){
-                                    ppharmacyOrders.setDrugId(Context.getConceptService().getDrugByNameOrId(obsdata[i][2].substring(obsdata[i][2].indexOf("#")+1)));
+                                if (!obsdata[i][2].isEmpty()) {
+                                    ppharmacyOrders.setDrugId(Context.getConceptService().getDrugByNameOrId(obsdata[i][2].substring(obsdata[i][2].indexOf("#") + 1)));
                                     //drugDispensed.add()
-                                    drugDispensed.add(""+obsdata[i][2].substring(obsdata[i][2].indexOf("#")+1));
-                                }else
-                                    ppharmacyOrders.setDrugId(null) ;
-
+                                    drugDispensed.add("" + obsdata[i][2].substring(obsdata[i][2].indexOf("#") + 1));
+                                } else
+                                    ppharmacyOrders.setDrugId(null);
 
 
                             }
 
 
-
-                        }else if (obsdata[i][1].equals("90901")){
+                        } else if (obsdata[i][1].equals("90901")) {
 
 //										  if( !obsdata[i][2].isEmpty()){
 //											  ppharmacyOrders.setWeightRange(obsdata[i][2]);
 //											  
 //											  }
 
-                        }
-                        else if (obsdata[i][1].equals("1939")){
+                        } else if (obsdata[i][1].equals("1939")) {
 
 
+                            if (!obsdata[i][2].isEmpty()) {
+
+                                ppharmacyObs = new PharmacyObs();
+
+                                ppharmacyObs.setConcept(obsdata[i][1]);
+                                ppharmacyObs.setValueCoded(Integer.parseInt(obsdata[i][2].substring(obsdata[i][2].indexOf(",") + 1)));
 
 
-
-
-
-                            if( !obsdata[i][2].isEmpty()){
-
-                                ppharmacyObs= new PharmacyObs();
-
-                                ppharmacyObs.setConcept(obsdata[i][1]) ;
-                                ppharmacyObs.setValueCoded(Integer.parseInt(obsdata[i][2].substring(obsdata[i][2].indexOf(",")+1)));
-
-
-                                if(!userName.equals("null")){
-
+                                if (!userName.equals("null")) {
 
 
                                     ppharmacyObs.setPrescriberId(Context.getUserService().getUserByUsername(userName).getUuid());
@@ -593,7 +517,7 @@ public class hivController {
 
                                 ppharmacyObs.setLocation(service.getPharmacyLocationsByName(locationVal));
 
-                                if(patientID!=null)
+                                if (patientID != null)
                                     ppharmacyObs.setPerson(Context.getPatientService().getPatient(Integer.parseInt(patientID)));
 
 
@@ -616,126 +540,104 @@ public class hivController {
                                 ppharmacyObs.setDateStopped(null);
 
 
-
-
-
                                 pharmacyObs.add(ppharmacyObs);
 
 
-
                             }
 
 
-                            if(!obsdata[i][2].isEmpty()){
-                                ppharmacyOrders.setDrugId(Context.getConceptService().getDrugByNameOrId(obsdata[i][2].substring(obsdata[i][2].indexOf(",")+1)));
+                            if (!obsdata[i][2].isEmpty()) {
+                                ppharmacyOrders.setDrugId(Context.getConceptService().getDrugByNameOrId(obsdata[i][2].substring(obsdata[i][2].indexOf(",") + 1)));
                                 //drugDispensed.add()
-                                drugDispensed.add(""+obsdata[i][2].substring(obsdata[i][2].indexOf(",")+1));
-                            }else
-                                ppharmacyOrders.setDrugId(null) ;
+                                drugDispensed.add("" + obsdata[i][2].substring(obsdata[i][2].indexOf(",") + 1));
+                            } else
+                                ppharmacyOrders.setDrugId(null);
 
 
+                        } else if (obsdata[i][1].equals("1900")) {
 
-
-
-
-
-
-                        }
-                        else if (obsdata[i][1].equals("1900")){
-
-                            if( !obsdata[i][2].isEmpty()){
-                                ppharmacyOrders.setDoseId(obsdata[i][1]) ;
+                            if (!obsdata[i][2].isEmpty()) {
+                                ppharmacyOrders.setDoseId(obsdata[i][1]);
 
                             }
 
 
-
-
-                        }
-                        else if (obsdata[i][1].equals("90902")){
-                            if( !obsdata[i][2].isEmpty()){
-                                one =Integer.parseInt(obsdata[i][2]);
+                        } else if (obsdata[i][1].equals("90902")) {
+                            if (!obsdata[i][2].isEmpty()) {
+                                one = Integer.parseInt(obsdata[i][2]);
 
                             }
-                        }
-                        else if (obsdata[i][1].equals("90903")){
-                            if( !obsdata[i][2].isEmpty()){
-                                two =Integer.parseInt(obsdata[i][2]);
+                        } else if (obsdata[i][1].equals("90903")) {
+                            if (!obsdata[i][2].isEmpty()) {
+                                two = Integer.parseInt(obsdata[i][2]);
                             }
 
 
-                        }
-                        else if (obsdata[i][1].equals("90904")){
+                        } else if (obsdata[i][1].equals("90904")) {
 
-                            if( !obsdata[i][2].isEmpty()){
-                                three =Integer.parseInt(obsdata[i][2]);
+                            if (!obsdata[i][2].isEmpty()) {
+                                three = Integer.parseInt(obsdata[i][2]);
 
                             }
 
 
-                        }
-                        else if (obsdata[i][1].equals("90905")){
+                        } else if (obsdata[i][1].equals("90905")) {
 
-                            if( !obsdata[i][2].isEmpty()){
-                                four =Integer.parseInt(obsdata[i][2]);
+                            if (!obsdata[i][2].isEmpty()) {
+                                four = Integer.parseInt(obsdata[i][2]);
                             }
 
-                        }
-                        else if (obsdata[i][1].equals("90906")){
+                        } else if (obsdata[i][1].equals("90906")) {
 
-                            if( !obsdata[i][2].isEmpty()){
-                                ppharmacyOrders.setPillCount(Integer.parseInt(obsdata[i][2])) ;
+                            if (!obsdata[i][2].isEmpty()) {
+                                ppharmacyOrders.setPillCount(Integer.parseInt(obsdata[i][2]));
 
                             }
 
-                        }
-                        else if (obsdata[i][1].equals("90907")){
+                        } else if (obsdata[i][1].equals("90907")) {
 
-                            if( !obsdata[i][2].isEmpty()){
-                                ppharmacyOrders.setQuantity(Integer.parseInt(obsdata[i][2])) ;
+                            if (!obsdata[i][2].isEmpty()) {
+                                ppharmacyOrders.setQuantity(Integer.parseInt(obsdata[i][2]));
 
 
                             }
 
 
-
-                            drugsSave=false;
-                            int totalVal=0;
-                            if(one!=0){
-                                totalVal +=one;
-
-                            }
-
-                            if(two!=0){
-                                totalVal +=one;
+                            drugsSave = false;
+                            int totalVal = 0;
+                            if (one != 0) {
+                                totalVal += one;
 
                             }
 
-                            if(three!=0){
-                                totalVal +=one;
+                            if (two != 0) {
+                                totalVal += one;
 
                             }
-                            if(four!=0){
-                                totalVal +=one;
+
+                            if (three != 0) {
+                                totalVal += one;
+
+                            }
+                            if (four != 0) {
+                                totalVal += one;
 
                             }
                             ppharmacyOrders.setQuantityRequested(totalVal);
-                            drugDispensed.add(""+totalVal);
+                            drugDispensed.add("" + totalVal);
 
-                            if(nextVisitDate!=null)
+                            if (nextVisitDate != null)
                                 ppharmacyOrders.setNextVisitDate(DateHelper(nextVisitDate));
                             else
                                 ppharmacyOrders.setNextVisitDate(null);
 
 
-
-                            if(!noOfMonths.isEmpty()){
+                            if (!noOfMonths.isEmpty()) {
 
 
                                 ppharmacyOrders.setMonthsNo(Integer.parseInt(noOfMonths));
 
-                            }
-                            else
+                            } else
                                 ppharmacyOrders.setMonthsNo(0);
 
 
@@ -748,7 +650,7 @@ public class hivController {
                             ppharmacyOrders.setDiscontinuedReason(null);
                             ppharmacyOrders.setPlan(null);
 
-                            if(!dispensedBy.isEmpty()){
+                            if (!dispensedBy.isEmpty()) {
                                 ppharmacyOrders.setDispensedBy(dispensedBy);
                             }
                             ppharmacyOrders.setRegimenId(currentRegimen);
@@ -762,13 +664,12 @@ public class hivController {
                             pharmacyOrders.add(ppharmacyOrders);
 
 
-
                         }
-                    };
+                    }
+                    ;
 
 
                 }
-
 
 
             }
@@ -781,15 +682,15 @@ public class hivController {
             service.savePharmacyOrders(pharmacyOrders);
             //remove from store if there
 
-            for(int i=0;i<drugAll.size();i++){
+            for (int i = 0; i < drugAll.size(); i++) {
 
                 PharmacyStore pharmacyStore = new PharmacyStore();
 
 
                 // get from drug dispense settings
-                pharmacyStore= service.getPharmacyInventoryByDrugUuid(Context.getConceptService().getDrug(drugAll.get(i).get(0)),service.getPharmacyLocationsByName(locationVal).getUuid());
-                if(pharmacyStore!=null && pharmacyStore.getQuantity() > Integer.parseInt(drugAll.get(i).get(1)) ){
-                    pharmacyStore.setQuantity( (pharmacyStore.getQuantity()-Integer.parseInt(drugAll.get(i).get(1))));
+                pharmacyStore = service.getPharmacyInventoryByDrugUuid(Context.getConceptService().getDrug(drugAll.get(i).get(0)), service.getPharmacyLocationsByName(locationVal).getUuid());
+                if (pharmacyStore != null && pharmacyStore.getQuantity() > Integer.parseInt(drugAll.get(i).get(1))) {
+                    pharmacyStore.setQuantity((pharmacyStore.getQuantity() - Integer.parseInt(drugAll.get(i).get(1))));
                     service.savePharmacyInventory(pharmacyStore);
 
 
@@ -797,66 +698,49 @@ public class hivController {
             }
 
 
-        }
-
-
-
-
-
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("Error generated", e);
         }
 
         return obsdata;
     }
 
-    public synchronized String[][] ArrayExtra( JSONParser parser, String jsonText){
-        String[][] obsExtra=null;
-
-
+    public synchronized String[][] ArrayExtra(JSONParser parser, String jsonText) {
+        String[][] obsExtra = null;
 
 
         try {
 
 
-            Object obj=parser.parse(jsonText);
-            JSONArray array=(JSONArray)obj;
+            Object obj = parser.parse(jsonText);
+            JSONArray array = (JSONArray) obj;
 
             obsExtra = new String[2][2];
 
-            for(int i=0;i<array.size();i++){
+            for (int i = 0; i < array.size(); i++) {
 
                 String value = ArrayDataOne(array.get(i).toString());
-                String name =value.substring(0,value.indexOf("#"));
+                String name = value.substring(0, value.indexOf("#"));
                 //System.out.println("value="+ value);
 
-                if(name.equals("prescriber")){
+                if (name.equals("prescriber")) {
 
-                    obsExtra[0][0]= "909003";
-                    obsExtra[0][1]= value.substring(value.indexOf("#|")).substring(2);
+                    obsExtra[0][0] = "909003";
+                    obsExtra[0][1] = value.substring(value.indexOf("#|")).substring(2);
 
-                    userName=value.substring(value.indexOf("#|")).substring(2);
+                    userName = value.substring(value.indexOf("#|")).substring(2);
+                } else if (name.equals("dispensedby")) {
+
+                    obsExtra[1][0] = "909004";
+                    obsExtra[1][1] = value.substring(value.indexOf("#|")).substring(2);
+                    dispensedBy = value.substring(value.indexOf("#|")).substring(2);
+
                 }
-                else if(name.equals("dispensedby")){
-
-                    obsExtra[1][0]= "909004";
-                    obsExtra[1][1]= value.substring(value.indexOf("#|")).substring(2);
-                    dispensedBy=value.substring(value.indexOf("#|")).substring(2);
-
-                }
-
-
 
 
             }
 
-        }
-
-
-
-
-
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("Error generated", e);
         }
 
@@ -864,12 +748,12 @@ public class hivController {
     }
 
 
-    public synchronized String ArrayDataOne(String jsonText){
-        String value="";
+    public synchronized String ArrayDataOne(String jsonText) {
+        String value = "";
         JSONParser parser = new JSONParser();
 
 
-        containerFactory = new ContainerFactory(){
+        containerFactory = new ContainerFactory() {
             public List creatArrayContainer() {
                 return new LinkedList();
             }
@@ -881,35 +765,34 @@ public class hivController {
         };
 
 
-        try{
-            Map json = (Map)parser.parse(jsonText,containerFactory);
+        try {
+            Map json = (Map) parser.parse(jsonText, containerFactory);
             Iterator iter = json.entrySet().iterator();
 
-            while(iter.hasNext()){
-                Map.Entry entry = (Map.Entry)iter.next();
+            while (iter.hasNext()) {
+                Map.Entry entry = (Map.Entry) iter.next();
 
-                if(entry.getValue().toString().contains("|"))
-                    value+="#"+entry.getValue().toString().substring(entry.getValue().toString().indexOf("|"));
+                if (entry.getValue().toString().contains("|"))
+                    value += "#" + entry.getValue().toString().substring(entry.getValue().toString().indexOf("|"));
                 else
-                    value+="#|"+entry.getValue().toString();
+                    value += "#|" + entry.getValue().toString();
             }
-        }
-        catch(Exception pe){
+        } catch (Exception pe) {
             log.info(pe);
         }
         return value.substring(2);
 
     }
-    public synchronized Date DateHelper(String  outgoingexpire){
+
+    public synchronized Date DateHelper(String outgoingexpire) {
 
 
         Date date2 = null;
         try {
-            if(outgoingexpire!=null){
+            if (outgoingexpire != null) {
                 date2 = new SimpleDateFormat("MM/dd/yyyy").parse(outgoingexpire.substring(0, 9));
             }
-        }
-        catch (ParseException e) {
+        } catch (ParseException e) {
             // TODO Auto-generated catch block
             log.error("Error generated", e);
         }

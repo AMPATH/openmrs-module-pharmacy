@@ -8,7 +8,7 @@ $j('#dose1').attr('disabled', 'disabled');
 $j('#frequency1').attr('disabled', 'disabled');
 $j('#indication1').attr('disabled', 'disabled');
 
-$j("input[type='checkbox']").click(function() {
+$j("input[type='checkbox']").click(function () {
 
     //if you want to add on checked
     if ($j(this).val() == "2281") {
@@ -47,11 +47,11 @@ $j("input[type='checkbox']").click(function() {
 });
 
 $j('#dose').change(
-    function() {
+    function () {
         $j('#frequency').attr('disabled', '');
 
         var e = document.getElementById("dose");
-        if(str!="null"){
+        if (str != "null") {
             var str = e.options[e.selectedIndex].value;
 
             if (str == "Select") {
@@ -60,8 +60,8 @@ $j('#dose').change(
             } else {
                 $j.getJSON("drugDispense.form?dose="
                     + str.substring(str.indexOf('#') + 1),
-                    function(result) {
-                        $j.each(result, function(index, value) {
+                    function (result) {
+                        $j.each(result, function (index, value) {
 
                             //bincard"stateList
                             if (index == 0) {
@@ -85,20 +85,20 @@ $j('#dose').change(
     });
 
 $j('#dose1').change(
-    function() {
+    function () {
         $j('#frequency1').attr('disabled', '');
         var e = document.getElementById("dose");
 
         var str = e.options[e.selectedIndex].value;
-        if(str!="null"){
+        if (str != "null") {
             if (str == "Select") {
 
                 alert("Must choose the right one");
             } else {
                 $j.getJSON("drugDispense.form?dose="
                     + str.substring(str.indexOf('#') + 1),
-                    function(result) {
-                        $j.each(result, function(index, value) { //bincard"stateList
+                    function (result) {
+                        $j.each(result, function (index, value) { //bincard"stateList
                             if (index == 0) {
 
                                 methodOne = value;
@@ -120,10 +120,10 @@ $j('#dose1').change(
     });
 
 $j('#frequency').change(
-    function() {
+    function () {
         var e = document.getElementById("frequency");
         var str = e.options[e.selectedIndex].value;
-        if(str!="null"){
+        if (str != "null") {
             if (str == "Select") {
 
                 alert("Must choose the right one");
@@ -144,7 +144,7 @@ $j('#frequency').change(
                     }
                     var inputTags = document.getElementsByTagName('INPUT');
 
-                    for ( var i = 0; i < inputTags.length; i++) {
+                    for (var i = 0; i < inputTags.length; i++) {
 
                         if (inputTags[i].id == "QD") {
                             inputTags[i].value = tot;
@@ -165,7 +165,7 @@ $j('#frequency').change(
                     }
                     var inputTags = document.getElementsByTagName('INPUT');
 
-                    for ( var i = 0; i < inputTags.length; i++) {
+                    for (var i = 0; i < inputTags.length; i++) {
 
                         if (inputTags[i].id == "QD") {
                             inputTags[i].value = tot;
@@ -181,10 +181,10 @@ $j('#frequency').change(
     });
 
 $j('#frequency1').change(
-    function() {
+    function () {
         var e = document.getElementById("frequency");
         var str = e.options[e.selectedIndex].value;
-        if(str!="null"){
+        if (str != "null") {
             if (str == "Select") {
 
                 alert("Must choose the right one");
@@ -204,7 +204,7 @@ $j('#frequency1').change(
                     }
                     var inputTags = document.getElementsByTagName('INPUT');
 
-                    for ( var i = 0; i < inputTags.length; i++) {
+                    for (var i = 0; i < inputTags.length; i++) {
 
                         if (inputTags[i].id == "QD1") {
                             inputTags[i].value = tot;
@@ -226,7 +226,7 @@ $j('#frequency1').change(
                     }
                     var inputTags = document.getElementsByTagName('INPUT');
 
-                    for ( var i = 0; i < inputTags.length; i++) {
+                    for (var i = 0; i < inputTags.length; i++) {
 
                         if (inputTags[i].id == "QD1") {
                             inputTags[i].value = tot;
@@ -239,7 +239,7 @@ $j('#frequency1').change(
         }
     });
 
-$j('#WA1').change(function() {
+$j('#WA1').change(function () {
 
     var val = document.getElementById("WA1").value;
 
@@ -247,14 +247,14 @@ $j('#WA1').change(function() {
     document.getElementById("AM1").value = val2 - val;
 });
 
-$j('#WA2').change(function() {
+$j('#WA2').change(function () {
     var val = document.getElementById("WA2").value;
     var val2 = document.getElementById("AM2").value
     document.getElementById("AM2").value = val2 - val;
 
 });
 $j('#nextvisit').change(
-    function() {
+    function () {
 
         //alert('Handler for .change() called.'+document.getElementById("nextvisit").value);
         var givenDate = document.getElementById("nextvisit").value;
@@ -291,7 +291,7 @@ $j('#nextvisit').change(
 
         if (_Diff <= 7) {
 
-            for ( var i = 0; i < inputTags.length; i++) {
+            for (var i = 0; i < inputTags.length; i++) {
 
                 if (inputTags[i].id == "NUMBER OF DAYS|1892") {
                     inputTags[i].value = _Diff;
@@ -314,7 +314,7 @@ $j('#nextvisit').change(
 
             if (week < 4) {
 
-                for ( var i = 0; i < inputTags.length; i++) {
+                for (var i = 0; i < inputTags.length; i++) {
 
                     if (inputTags[i].id == "NUMBER OF DAYS|1892") {
                         inputTags[i].value = "";
@@ -331,7 +331,7 @@ $j('#nextvisit').change(
 
             } else if (week >= 4) {
                 var numb = months_between(date2, dateGiven);
-                for ( var i = 0; i < inputTags.length; i++) {
+                for (var i = 0; i < inputTags.length; i++) {
 
                     if (numb == 0) {
                         if (inputTags[i].id == "NUMBER OF MONTHS|1894") {
@@ -367,7 +367,7 @@ $j('#nextvisit').change(
 
 $j('#noofmonths')
     .change(
-    function() {
+    function () {
         var inputTags = document.getElementsByTagName('INPUT');
         var givenDays = document.getElementById("noofmonths").value;
         quantity = givenDays;
@@ -375,7 +375,7 @@ $j('#noofmonths')
         if (givenDays <= 6) {
             //week
 
-            for ( var i = 0; i < inputTags.length; i++) {
+            for (var i = 0; i < inputTags.length; i++) {
 
                 if (inputTags[i].id == "NUMBER OF DAYS|1892") {
                     inputTags[i].value = givenDays;
@@ -406,7 +406,7 @@ $j('#noofmonths')
 
             if (week <= 4) {
                 // document.getElementById("noofmonths").value=parseInt(givenDays)+2;
-                for ( var i = 0; i < inputTags.length; i++) {
+                for (var i = 0; i < inputTags.length; i++) {
 
                     if (inputTags[i].id == "NUMBER OF DAYS|1892") {
                         inputTags[i].value = "";
@@ -426,7 +426,7 @@ $j('#noofmonths')
                 var months = months_between(dateGiven, addDays(
                     dateGiven, givenDays));
 
-                for ( var i = 0; i < inputTags.length; i++) {
+                for (var i = 0; i < inputTags.length; i++) {
 
                     if (inputTags[i].id == "NUMBER OF DAYS|1892") {
                         inputTags[i].value = "";
@@ -465,24 +465,24 @@ function addDays(myDate, days) {
 }
 
 $j("#prescriber").autocomplete({
-    search : function() {
+    search:function () {
         $j(this).addClass('working');
     },
 
-    source : function(request, response) {
+    source:function (request, response) {
         //   http://localhost:8080/openmrs/module/htmlwidgets/conceptSearch.form
 
         dataString = "q=" + request.term;
 
-        $j.getJSON("dispense.form?" + dataString, function(result) {
+        $j.getJSON("dispense.form?" + dataString, function (result) {
 
             $j("#prescriber").removeClass('working');
 
-            response($j.each(result, function(index, item) {
+            response($j.each(result, function (index, item) {
 
                 return {
-                    label : item,
-                    value : item
+                    label:item,
+                    value:item
 
                 }
             }));
@@ -490,17 +490,17 @@ $j("#prescriber").autocomplete({
         });
 
     },
-    minLength : 2,
-    select : function(event, ui) {
+    minLength:2,
+    select:function (event, ui) {
 
         //											log( ui.item ?
         //												"Selected: " + ui.item.label :
         //												"Nothing selected, input was " + this.value);
     },
-    open : function() {
+    open:function () {
         $j(this).removeClass("ui-corner-all").addClass("ui-corner-top");
     },
-    close : function() {
+    close:function () {
         $j(this).removeClass("ui-corner-top").addClass("ui-corner-all");
     }
 });

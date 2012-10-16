@@ -16,9 +16,11 @@
                 <legend>Strength Void reason</legend>
 
                 <label>Reason</label> <input type="text" name="strengthreason"
-                                             id="strengthreason" class="required" /> <input type="hidden"
-                                                                                            name="strengthuuidvoid" id="strengthuuidvoid" /> <input
-                    class="submit" type="submit" value="Submit" />
+                                             id="strengthreason" class="required"/> <input type="hidden"
+                                                                                           name="strengthuuidvoid"
+                                                                                           id="strengthuuidvoid"/>
+                <input
+                        class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
         <form id="strength" action="#">
@@ -27,10 +29,11 @@
                 <legend>strength</legend>
 
                 <label for="engine">Strength name</label> <input type="text"
-                                                                 name="strengthname" id="strengthname" class="required" /> <input
-                    type="hidden" name="strengthedit" id="strengthedit" value="false" />
-                <input type="hidden" name="strengthuuid" id="strengthuuid" /> <input
-                    class="submit" type="submit" value="Submit" />
+                                                                 name="strengthname" id="strengthname"
+                                                                 class="required"/> <input
+                    type="hidden" name="strengthedit" id="strengthedit" value="false"/>
+                <input type="hidden" name="strengthuuid" id="strengthuuid"/> <input
+                    class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
     </DIV>

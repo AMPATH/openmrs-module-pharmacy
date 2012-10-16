@@ -9,10 +9,6 @@
 <DIV id="dtotal">
 
 
-
-
-
-
     <form id="categoryfiltertotal" action="#">
         <hr color=#1aad9b width="100%">
 
@@ -34,10 +30,7 @@
     </form>
 
 
-
-
-
-    <div id ="drugtotaldiv">
+    <div id="drugtotaldiv">
 
 
         <table cellpadding="0" cellspacing="0" border="0" class="display"
@@ -65,17 +58,10 @@
                 <th></th>
 
 
-
-
-
-
-
             </tr>
             </tbody>
 
         </table>
-
-
 
 
     </div>

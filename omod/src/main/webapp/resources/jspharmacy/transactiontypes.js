@@ -26,7 +26,6 @@ function AutoReload() {
 function fnFormatDetails(nTr) {
 
 
-
     var oFormObject = document.forms['transactionsform'];
 
     oFormObject.elements["transactionsname"].value = typeaData[3];
@@ -37,79 +36,75 @@ function fnFormatDetails(nTr) {
 }
 
 TypesTable = $j('#ttransactions').dataTable({
-    bJQueryUI : true,
-    bRetrieve : true,
-    bServerSide : true,
-    bAutoWidth: false,
-    bProcessing : true,
-    "fnRowCallback": function( nRow, typeaData, iDisplayIndex ) {
+    bJQueryUI:true,
+    bRetrieve:true,
+    bServerSide:true,
+    bAutoWidth:false,
+    bProcessing:true,
+    "fnRowCallback":function (nRow, typeaData, iDisplayIndex) {
 
 
-        var htm= '<ul class="popTransaction">	<li> <img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/items.png" alt="" /><ul class="popTransaction" id='+"popTransaction"+typeaData[2]+'>';
+        var htm = '<ul class="popTransaction">	<li> <img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/items.png" alt="" /><ul class="popTransaction" id=' + "popTransaction" + typeaData[2] + '>';
 
 
-        if(typeaData[0]=="edit"){
-            htm +=	'<li> <a href="#"  id="edit"><img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/edit2.png" />Edit</a></li>';
+        if (typeaData[0] == "edit") {
+            htm += '<li> <a href="#"  id="edit"><img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/edit2.png" />Edit</a></li>';
 
         }
 
-        if(typeaData[5]=="void"){
-            htm +=	'<li> <a href="#" id="void" ><img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/delete.png" />Void</a></li>';
+        if (typeaData[5] == "void") {
+            htm += '<li> <a href="#" id="void" ><img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/delete.png" />Void</a></li>';
         }
 
 
-
-        htm +='<li> <a href="#" id="cancel"><img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/cancel.png" />Back</a></li>';
-
-
+        htm += '<li> <a href="#" id="cancel"><img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/cancel.png" />Back</a></li>';
 
 
         htm += '</ul></li></ul>';
-
-
 
 
         $j('td:eq(0)', nRow).html(htm);
 
         return nRow;
     },
-    sAjaxSource : 'transactionsName.form',
-    "fnServerData": fnDataTablesPipeline,
-    "aoColumnDefs" : [ {
-        "bVisible" : false,
-        "aTargets" : [ 0 ]
-    },
+    sAjaxSource:'transactionsName.form',
+    "fnServerData":fnDataTablesPipeline,
+    "aoColumnDefs":[
         {
-            "bVisible" : false,
-            "aTargets" : [ 2 ]
+            "bVisible":false,
+            "aTargets":[ 0 ]
         },
         {
-            "bVisible" : false,
-            "aTargets" : [ 5 ]
-        } ]
+            "bVisible":false,
+            "aTargets":[ 2 ]
+        },
+        {
+            "bVisible":false,
+            "aTargets":[ 5 ]
+        }
+    ]
 });
 
 //						TypesTable.fnSetColumnVis( 1, false );
 
-$j('#edit').live('click', function() {
+$j('#edit').live('click', function () {
     $j("ul .popTransaction").hide();
     fnFormatDetails(typeEditTr);
 
 });
 
-$j('#cancel').live('click', function() {
+$j('#cancel').live('click', function () {
     $j("ul .popTransaction").hide();
 
 });
 
 
-$j('#ttransactions tbody td ul').live('click', function() {
-
+$j('#ttransactions tbody td ul').live('click', function () {
 
 
     typeEditTr = this.parentNode.parentNode;
-     typeaData = TypesTable.fnGetData(typeEditTr);
-    linkType="#popTransaction"+typeaData[2];
+    typeaData = TypesTable.fnGetData(typeEditTr);
+    linkType = "#popTransaction" + typeaData[2];
 
 
     $j(linkType).show();
@@ -119,7 +114,7 @@ $j('#ttransactions tbody td ul').live('click', function() {
 });
 
 
-$j('#void').live('click', function() {
+$j('#void').live('click', function () {
     $j("ul .popTransaction").hide();
 
     var oFormObjectmm = document.forms['transactionsvoid'];
@@ -130,17 +125,17 @@ $j('#void').live('click', function() {
 
 });
 
-$j("form#transactionsform").submit(function() {
+$j("form#transactionsform").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
 
     if ($j("#transactionsform").valid()) {
         dataString = $j("#transactionsform").serialize();
 
         $j.ajax({
-            type : "POST",
-            url : "transactionsName.form",
-            data : dataString,
-            success : function() {
+            type:"POST",
+            url:"transactionsName.form",
+            data:dataString,
+            success:function () {
                 AutoReload();
                 var oFormObject = document.forms['transactionsform'];
 
@@ -155,16 +150,16 @@ $j("form#transactionsform").submit(function() {
     }
 });
 
-$j("form#transactionsvoid").submit(function() {
+$j("form#transactionsvoid").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
     if ($j("#transactionsvoid").valid()) {
         dataString = $j("#transactionsvoid").serialize();
 
         $j.ajax({
-            type : "POST",
-            url : "transactionsName.form",
-            data : dataString,
-            success : function() {
+            type:"POST",
+            url:"transactionsName.form",
+            data:dataString,
+            success:function () {
                 AutoReload();
                 $j("#transactionsvoid").hide();//
                 var oFormObject = document.forms['transactionsvoid'];
@@ -178,22 +173,20 @@ $j("form#transactionsvoid").submit(function() {
 });
 
 
-
 $j("#transactionsreason").autocomplete({
-    minLength : 0,
+    minLength:0,
 
-    source : formReasons,
+    source:formReasons,
 
-    select : function(event, ui) {
+    select:function (event, ui) {
 
         $j("#transactionsreason").removeClass("highlight");
         $j(this).autocomplete('close');
 
 
+    },
 
-    } ,
-
-    change: function(event, ui) {
+    change:function (event, ui) {
         if (!ui.item) {
 
             $j('#transactionsreason').addClass('highlight');

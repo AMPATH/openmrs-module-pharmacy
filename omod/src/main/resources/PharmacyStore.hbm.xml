@@ -1,90 +1,89 @@
 <?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
     <class name="org.openmrs.module.pharmacy.model.PharmacyStore"
            table="pharmacy_inventory">
-        <cache usage="read-write" />
+        <cache usage="read-write"/>
 
         <id name="id" type="int" column="pharmacy_inventory_id" unsaved-value="0">
             <generator
-                    class="org.openmrs.api.db.hibernate.NativeIfNotAssignedIdentityGenerator" />
+                    class="org.openmrs.api.db.hibernate.NativeIfNotAssignedIdentityGenerator"/>
         </id>
-        <discriminator column="pharmacy_inventory_id" insert="false" />
+        <discriminator column="pharmacy_inventory_id" insert="false"/>
 
         <many-to-one name="drugs"
-                     property-ref="uuid" column="pharmacy_drug_uuid" />
+                     property-ref="uuid" column="pharmacy_drug_uuid"/>
 
         <property name="quantity" type="java.lang.Integer" column="quantity"
-                  length="255" />
+                  length="255"/>
         <property name="quantityIn" type="java.lang.Integer" column="quantity_in"
-                  length="255" />
+                  length="255"/>
         <property name="quantityOut" type="java.lang.Integer" column="quantity_out"
-                  length="255" />
+                  length="255"/>
 
         <property name="maxLevel" type="java.lang.Integer" column="maxlevel"
-                  length="255" />
+                  length="255"/>
 
         <property name="minLevel" type="java.lang.Integer" column="minlevel"
-                  length="255" />
+                  length="255"/>
 
         <property name="location" type="java.lang.String" column="location_uuid"
-                  length="1000" />
+                  length="1000"/>
 
         <many-to-one name="outgoing"
-                     property-ref="uuid" column="pharmacy_inventory_outgoing_uuid" />
-
+                     property-ref="uuid" column="pharmacy_inventory_outgoing_uuid"/>
 
 
         <many-to-one name="category"
-                     property-ref="uuid" column="pharmacy_category_uuid" />
-
+                     property-ref="uuid" column="pharmacy_category_uuid"/>
 
 
         <many-to-one name="incoming"
-                     property-ref="uuid" column="pharmacy_inventory_incoming_uuid" />
+                     property-ref="uuid" column="pharmacy_inventory_incoming_uuid"/>
 
 
         <property name="batchNo" type="java.lang.Integer" column="batch_no"
-                  length="255" />
+                  length="255"/>
 
         <property name="s11" type="java.lang.Integer" column="s11_no"
-                  length="255" />
+                  length="255"/>
         <property name="deliveryNo" type="java.lang.Integer" column="delivery_no"
-                  length="255" />
+                  length="255"/>
 
 
         <many-to-one name="supplier"
-                     property-ref="uuid" column="supplier_uuid" />
+                     property-ref="uuid" column="supplier_uuid"/>
 
         <many-to-one name="transaction"
-                     property-ref="uuid" column="transaction_uuid" />
+                     property-ref="uuid" column="transaction_uuid"/>
 
         <property name="expireDate" type="java.util.Date" column="expiredate"
-                  not-null="true" />
+                  not-null="true"/>
         <property name="changeReason" type="java.lang.String" column="change_reason"
-                  length="255" />
+                  length="255"/>
 
         <many-to-one name="creator" class="org.openmrs.User"
-                     column="creator" not-null="true" />
+                     column="creator" not-null="true"/>
 
         <property name="dateCreated" type="java.util.Date" column="datecreated"
-                  not-null="true" />
+                  not-null="true"/>
 
-        <property name="voided" type="boolean" not-null="true" />
+        <property name="voided" type="boolean" not-null="true"/>
 
 
         <many-to-one name="voidedBy" class="org.openmrs.User"
-                     column="voided_by" />
+                     column="voided_by"/>
 
-        <property name="dateVoided" type="java.util.Date" column="date_voided" />
+        <property name="dateVoided" type="java.util.Date" column="date_voided"/>
         <property name="voidReason" type="java.lang.String" column="void_reason"
-                  length="255" />
+                  length="255"/>
 
         <property name="uuid" type="string" length="38" not-null="true"
-                  unique="true" />
+                  unique="true"/>
 
         <property name="stockReason" type="java.lang.String" column="stock_reason"
-                  length="255" />
+                  length="255"/>
 
     </class>
 </hibernate-mapping>

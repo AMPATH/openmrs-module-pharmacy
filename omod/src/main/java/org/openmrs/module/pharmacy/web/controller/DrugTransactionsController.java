@@ -64,24 +64,19 @@ public class DrugTransactionsController {
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
 
 
-        String locationVal=null;
+        String locationVal = null;
 
 
         service = Context.getService(PharmacyService.class);
-        List<PharmacyLocationUsers> listUsers= service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        int sizeUsers =listUsers.size();
+        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
+        int sizeUsers = listUsers.size();
 
 
+        if (sizeUsers > 1) {
+            locationVal = request.getSession().getAttribute("location").toString();
 
-
-
-        if(sizeUsers>1){
-            locationVal=request.getSession().getAttribute("location").toString();
-
-        }
-        else if(sizeUsers==1)
-        {
-            locationVal=listUsers.get(0).getLocation();
+        } else if (sizeUsers == 1) {
+            locationVal = listUsers.get(0).getLocation();
 
 
         }
@@ -117,9 +112,9 @@ public class DrugTransactionsController {
                 if (List.get(i).getLocation() != null) {
                     if (service.getPharmacyLocationsByUuid(List.get(i).getLocation()).getName()
                             .equalsIgnoreCase(locationVal)) {
-                        JSONArray val =getArray(List,i,locationVal) ;
-                        if (val!= null)
-                            json.accumulate("aaData",val);
+                        JSONArray val = getArray(List, i, locationVal);
+                        if (val != null)
+                            json.accumulate("aaData", val);
                     }
                 }
                 if (exit)
@@ -155,8 +150,7 @@ public class DrugTransactionsController {
 
             response.flushBuffer();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             log.error("Error generated", e);
         }
@@ -168,7 +162,7 @@ public class DrugTransactionsController {
 
     }
 
-    public synchronized JSONArray getArray(List<DrugTransactions> pharmacyStore, int size,String location) {
+    public synchronized JSONArray getArray(List<DrugTransactions> pharmacyStore, int size, String location) {
 
         if (filter.length() > 2) {
 
@@ -183,7 +177,7 @@ public class DrugTransactionsController {
                         Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
                         for (Role rl : xvc) {
 
-                            if((rl.getRole().equals("System Developer"))||(rl.getRole().equals("Provider"))||(rl.getRole().equals("	Authenticated "))){
+                            if ((rl.getRole().equals("System Developer")) || (rl.getRole().equals("Provider")) || (rl.getRole().equals("	Authenticated "))) {
 
                                 editPharmacy = true;
                                 deletePharmacy = true;
@@ -239,7 +233,7 @@ public class DrugTransactionsController {
                     Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
                     for (Role rl : xvc) {
 
-                        if((rl.getRole().equals("System Developer"))||(rl.getRole().equals("Provider"))||(rl.getRole().equals("	Authenticated "))){
+                        if ((rl.getRole().equals("System Developer")) || (rl.getRole().equals("Provider")) || (rl.getRole().equals("	Authenticated "))) {
 
                             editPharmacy = true;
                             deletePharmacy = true;

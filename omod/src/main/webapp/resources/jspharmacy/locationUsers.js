@@ -1,12 +1,11 @@
-
 var oCache = {
-    iCacheLower: -1
+    iCacheLower:-1
 };
 
 var usersTable;
 var userEditTr;
 var userLink;
-var  uuid;
+var uuid;
 var useraData;
 $j("#locationformusers").validate(); //
 $j("#locationvoidusers").validate(); //
@@ -23,37 +22,37 @@ function RefreshTable(tableId, urlData) {
 }
 
 $j("#username").autocomplete({
-    search : function() {
+    search:function () {
         $j(this).addClass('working');
     },
 
-    source : function(request, response) {
+    source:function (request, response) {
 
         dataString = "user=" + request.term;
 
-        $j.getJSON("locationUsers.form?" + dataString, function(result) {
+        $j.getJSON("locationUsers.form?" + dataString, function (result) {
 
             $j("#username").removeClass('working');
 
-            response($j.each(result, function(index, item) {
+            response($j.each(result, function (index, item) {
 
                 return {
-                    label : item,
-                    value : item
+                    label:item,
+                    value:item
                 }
             }));
 
         });
 
     },
-    minLength : 2,
-    select : function(event, ui) {
+    minLength:2,
+    select:function (event, ui) {
 
         // log( ui.item ?
         // "Selected: " + ui.item.label :
         // "Nothing selected, input was " + this.value);
     },
-    change: function(event, ui) {
+    change:function (event, ui) {
         if (!ui.item) {
 
 
@@ -64,38 +63,38 @@ $j("#username").autocomplete({
 
 
 $j("#locationname").autocomplete({
-    search : function() {
+    search:function () {
         $j(this).addClass('working');
     },
 
-    source : function(request, response) {
+    source:function (request, response) {
 
         dataString = "locations=" + request.term;
 
-        $j.getJSON("locationUsers.form?" + dataString, function(result) {
+        $j.getJSON("locationUsers.form?" + dataString, function (result) {
 
             $j("#locationname").removeClass('working');
 
-            response($j.each(result, function(index, item) {
+            response($j.each(result, function (index, item) {
 
                 return {
-                    label : item,
-                    value : item
+                    label:item,
+                    value:item
                 }
             }));
 
         });
 
     },
-    minLength : 2,
-    select : function(event, ui) {
+    minLength:2,
+    select:function (event, ui) {
 
         // log( ui.item ?
         // "Selected: " + ui.item.label :
         // "Nothing selected, input was " + this.value);
     },
 
-    change: function(event, ui) {
+    change:function (event, ui) {
         if (!ui.item) {
 
 
@@ -122,72 +121,68 @@ function fnFormatDetails(nTr) {
 }
 
 usersTable = $j('#tlocationusers').dataTable({
-    bJQueryUI : true,
-    bRetrieve : true,
-    bServerSide: true,
-    bAutoWidth: false,
-    bProcessing : true,
-    sAjaxSource : 'locationUsers.form',
-    "fnServerData": fnDataTablesPipeline,
-    fnRowCallback: function( nRow, useraData, iDisplayIndex ) {
+    bJQueryUI:true,
+    bRetrieve:true,
+    bServerSide:true,
+    bAutoWidth:false,
+    bProcessing:true,
+    sAjaxSource:'locationUsers.form',
+    "fnServerData":fnDataTablesPipeline,
+    fnRowCallback:function (nRow, useraData, iDisplayIndex) {
 
 
-        var htm= '<ul class="popLocationUsers">	<li> <img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/items.png" alt="" /><ul class="popLocationUsers" id='+"popLocationUsers"+useraData[2]+'>';
+        var htm = '<ul class="popLocationUsers">	<li> <img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/items.png" alt="" /><ul class="popLocationUsers" id=' + "popLocationUsers" + useraData[2] + '>';
 
 
-        if(useraData[0]=="edit"){
-            htm +=	'<li> <a href=""  id="edit"><img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/edit2.png" />Edit</a></li>';
+        if (useraData[0] == "edit") {
+            htm += '<li> <a href=""  id="edit"><img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/edit2.png" />Edit</a></li>';
 
         }
 
-        if(useraData[5]=="void"){
-            htm +=	'<li> <a href="" id="deleteUser" ><img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/delete.png" />Void</a></li>';
+        if (useraData[5] == "void") {
+            htm += '<li> <a href="" id="deleteUser" ><img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/delete.png" />Void</a></li>';
         }
 
 
-
-        htm +='<li> <a href="" id="cancelUser"><img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/cancel.png" />Back</a></li>';
-
-
+        htm += '<li> <a href="" id="cancelUser"><img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/cancel.png" />Back</a></li>';
 
 
         htm += '</ul></li></ul>';
-
-
 
 
         $j('td:eq(0)', nRow).html(htm);
 
         return nRow;
     },
-    "aoColumnDefs" : [ {
-        "bVisible" : false,
-        "aTargets" : [0,2,5 ]
-    } ]
-}).rowGrouping({    bHideGroupingColumn: false,
-        iGroupingColumnIndex: 3,
-        bExpandableGrouping: true,
-        bExpandSingleGroup: true,
-        iExpandGroupOffset: -1 });
+    "aoColumnDefs":[
+        {
+            "bVisible":false,
+            "aTargets":[0, 2, 5 ]
+        }
+    ]
+}).rowGrouping({    bHideGroupingColumn:false,
+        iGroupingColumnIndex:3,
+        bExpandableGrouping:true,
+        bExpandSingleGroup:true,
+        iExpandGroupOffset:-1 });
 
 
-
-$j('#tlocationusers tbody tr').live('click', function() {
-    var data = usersTable.fnGetData( this );
-    uuid=data[2];
+$j('#tlocationusers tbody tr').live('click', function () {
+    var data = usersTable.fnGetData(this);
+    uuid = data[2];
 
     // ... do something with the array / object of data for the row
-} );
+});
 //						usersTable.fnSetColumnVis( 1, false );
 
-$j('#edit').live('click', function() {
+$j('#edit').live('click', function () {
     $j("ul .popLocationUsers").hide();
     fnFormatDetails(userEditTr);
     return false;
 });
 
 
-$j('#cancelUser').live('click', function() {
+$j('#cancelUser').live('click', function () {
 
 
     $j("ul .popLocationUsers").hide();
@@ -195,13 +190,12 @@ $j('#cancelUser').live('click', function() {
 });
 
 
-$j('#tlocationusers tbody td ul').live('click', function() {
-
+$j('#tlocationusers tbody td ul').live('click', function () {
 
 
     userEditTr = this.parentNode.parentNode;
-     useraData = usersTable.fnGetData(userEditTr);
-    userLink="#popLocationUsers"+useraData[2];
+    useraData = usersTable.fnGetData(userEditTr);
+    userLink = "#popLocationUsers" + useraData[2];
 
 
     $j(userLink).show();
@@ -209,7 +203,7 @@ $j('#tlocationusers tbody td ul').live('click', function() {
 //
 
 });
-$j('#deleteUser').live('click', function() {
+$j('#deleteUser').live('click', function () {
 
     $j("ul .popLocationUsers").hide();
     var oFormObjectUser = document.forms['locationvoidusers'];
@@ -222,17 +216,17 @@ $j('#deleteUser').live('click', function() {
 
 });
 
-$j("form#locationformusers").submit(function() {
+$j("form#locationformusers").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
 
     if ($j("#locationformusers").valid()) {
         dataString = $j("#locationformusers").serialize();
 
         $j.ajax({
-            type : "POST",
-            url : "locationUsers.form",
-            data : dataString,
-            success : function() {
+            type:"POST",
+            url:"locationUsers.form",
+            data:dataString,
+            success:function () {
                 AutoReload();
                 var oFormObject = document.forms['locationformusers'];
 
@@ -247,16 +241,16 @@ $j("form#locationformusers").submit(function() {
     }
 });
 
-$j("form#locationvoidusers").submit(function() {
+$j("form#locationvoidusers").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
     if ($j("#locationvoidusers").valid()) {
         dataString = $j("#locationvoidusers").serialize();
 
         $j.ajax({
-            type : "POST",
-            url : "locationUsers.form",
-            data : dataString,
-            success : function() {
+            type:"POST",
+            url:"locationUsers.form",
+            data:dataString,
+            success:function () {
                 AutoReload();
                 $j("#locationvoid").hide();//
                 var oFormObject = document.forms['locationvoidusers'];
@@ -270,23 +264,20 @@ $j("form#locationvoidusers").submit(function() {
 });
 
 
-
-
 $j("#locationreason").autocomplete({
-    minLength : 0,
+    minLength:0,
 
-    source : formReasons,
+    source:formReasons,
 
-    select : function(event, ui) {
+    select:function (event, ui) {
 
         $j("#locationreason").removeClass("highlight");
         $j(this).autocomplete('close');
 
 
+    },
 
-    } ,
-
-    change: function(event, ui) {
+    change:function (event, ui) {
         if (!ui.item) {
 
             $j('#locationreason').addClass('highlight');

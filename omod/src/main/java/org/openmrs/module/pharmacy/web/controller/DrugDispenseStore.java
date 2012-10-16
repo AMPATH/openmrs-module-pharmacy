@@ -95,23 +95,18 @@ public class DrugDispenseStore {
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/drugDispenseStore")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
-        String locationVal=null;
+        String locationVal = null;
 
         service = Context.getService(PharmacyService.class);
-        List<PharmacyLocationUsers> listUsers= service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        int sizeUsers =listUsers.size();
+        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
+        int sizeUsers = listUsers.size();
 
 
+        if (sizeUsers > 1) {
+            locationVal = request.getSession().getAttribute("location").toString();
 
-
-
-        if(sizeUsers>1){
-            locationVal=request.getSession().getAttribute("location").toString();
-
-        }
-        else if(sizeUsers==1)
-        {
-            locationVal=listUsers.get(0).getLocation();
+        } else if (sizeUsers == 1) {
+            locationVal = listUsers.get(0).getLocation();
 
 
         }
@@ -151,7 +146,7 @@ public class DrugDispenseStore {
 
                         datadFrm = new JSONArray();
 
-                        datadFrm = getArray(listStore, i, dialog,locationVal);
+                        datadFrm = getArray(listStore, i, dialog, locationVal);
                         if (datadFrm != null)
                             json.accumulate("aaData", datadFrm);
                     }
@@ -183,8 +178,7 @@ public class DrugDispenseStore {
 
             response.flushBuffer();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             log.error("Error generated", e);
         }
@@ -193,23 +187,18 @@ public class DrugDispenseStore {
 
     @RequestMapping(method = RequestMethod.POST, value = "module/pharmacy/drugDispenseStore")
     public synchronized void pageLoadd(HttpServletRequest request, HttpServletResponse response) {
-        String locationVal=null;
+        String locationVal = null;
 
         service = Context.getService(PharmacyService.class);
-        List<PharmacyLocationUsers> listUsers= service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        int sizeUsers =listUsers.size();
+        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
+        int sizeUsers = listUsers.size();
 
 
+        if (sizeUsers > 1) {
+            locationVal = request.getSession().getAttribute("location").toString();
 
-
-
-        if(sizeUsers>1){
-            locationVal=request.getSession().getAttribute("location").toString();
-
-        }
-        else if(sizeUsers==1)
-        {
-            locationVal=listUsers.get(0).getLocation();
+        } else if (sizeUsers == 1) {
+            locationVal = listUsers.get(0).getLocation();
 
 
         }
@@ -310,7 +299,7 @@ public class DrugDispenseStore {
 
     }
 
-    public synchronized JSONArray getArrayDialog(List<DrugDispenseSettings> drugDispenseSettings, int size, String dialogShow,String locatin) {
+    public synchronized JSONArray getArrayDialog(List<DrugDispenseSettings> drugDispenseSettings, int size, String dialogShow, String locatin) {
 
         if (service.getPharmacyLocationsByUuid(drugDispenseSettings.get(size).getLocation().getUuid()).getName()
                 .equalsIgnoreCase(locatin)) {
@@ -322,7 +311,7 @@ public class DrugDispenseStore {
                     Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
                     for (Role rl : xvc) {
 
-                        if((rl.getRole().equals("System Developer"))||(rl.getRole().equals("Provider"))||(rl.getRole().equals("	Authenticated "))){
+                        if ((rl.getRole().equals("System Developer")) || (rl.getRole().equals("Provider")) || (rl.getRole().equals("	Authenticated "))) {
 
                             editPharmacy = true;
                             deletePharmacy = true;
@@ -373,7 +362,7 @@ public class DrugDispenseStore {
         }
     }
 
-    public synchronized JSONArray getArray(List<PharmacyStore> pharmacyStore, int size, String id,String location) {
+    public synchronized JSONArray getArray(List<PharmacyStore> pharmacyStore, int size, String id, String location) {
 
         if (service.getPharmacyLocationsByUuid(pharmacyStore.get(size).getLocation()).getName()
                 .equalsIgnoreCase(location)) {

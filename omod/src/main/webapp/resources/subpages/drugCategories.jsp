@@ -17,9 +17,10 @@
                 <legend>Name Void reason</legend>
 
                 <label for="engine">Reason</label> <input type="text"
-                                                          name="categoryreason" id="categoryreason" class="required" /> <input
-                    type="hidden" name="categoryuuidvoid" id="categoryuuidvoid" /> <input
-                    class="submit" type="submit" value="Submit" />
+                                                          name="categoryreason" id="categoryreason" class="required"/>
+                <input
+                        type="hidden" name="categoryuuidvoid" id="categoryuuidvoid"/> <input
+                    class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
         <form id="categoryform" action="#">
@@ -28,14 +29,15 @@
                 <legend>Name</legend>
 
                 <label for="engine">category name</label> <input type="text"
-                                                                 name="categoryname" id="categoryname" class="required" /><br />
+                                                                 name="categoryname" id="categoryname"
+                                                                 class="required"/><br/>
 
 
                 <label for="engine">description</label> <input type="text"
-                                                               name="description" id="description"  /> <input
-                    type="hidden" name="categoryedit" id="categoryedit" value="false" /> <input
-                    type="hidden" name="categoryuuid" id="categoryuuid" /> <input
-                    class="submit" type="submit" value="Submit" />
+                                                               name="description" id="description"/> <input
+                    type="hidden" name="categoryedit" id="categoryedit" value="false"/> <input
+                    type="hidden" name="categoryuuid" id="categoryuuid"/> <input
+                    class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
     </DIV>
@@ -61,7 +63,6 @@
             <td></td>
             <td></td>
             <td></td>
-
 
 
         </tr>

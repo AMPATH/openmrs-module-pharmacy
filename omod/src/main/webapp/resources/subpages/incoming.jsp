@@ -15,17 +15,14 @@
 <div id="detailsformValin" title="Are you sure ?">
 
 
-
 </div>
 
 
 <div id="encountformDet" title="Information">
 
 
-
 </div>
 <div id="detailsformValinT" title="Are you sure ?">
-
 
 
 </div>
@@ -40,99 +37,101 @@
         <fieldset>
 
             <legend>Extra information</legend>
-            <br />
+            <br/>
             <label>Supplier</label>
             <select id="supplier" name="supplier" class="required">
 
 
-            </select> 		<br />
+            </select> <br/>
             <label>Quantity in</label>
-            <input type="text" name="incomingnumber" id="incomingnumber"  class="required"/> 		<br /> 	<br />
+            <input type="text" name="incomingnumber" id="incomingnumber" class="required"/> <br/> <br/>
             <label>Batch No</label>
-            <input type="text" name="incomingbatch" id="incomingbatch"  class="required"/> 			<br /> 	<br />
+            <input type="text" name="incomingbatch" id="incomingbatch" class="required"/> <br/> <br/>
 
             <label for="incomingexpire">Expire date</label>
-            <input type="text" name="incomingexpire" id="incomingexpire" class="required" /> 			<br /> 	<br />
+            <input type="text" name="incomingexpire" id="incomingexpire" class="required"/> <br/> <br/>
             <label>Delivery No</label>
-            <input type="text" name="delivery" id="delivery" class="required"  /> <br />
+            <input type="text" name="delivery" id="delivery" class="required"/> <br/>
 
 
-            </select> 		<br />
-            <input type="hidden" name="incomingdrugg" id="incomingdrugg" class="required" />
-            <input type="hidden" name="incominguuidextra" id="incominguuidextra" class="required" />
-            <input class="submit" type="submit" value="Submit" />
+            </select>         <br/>
+            <input type="hidden" name="incomingdrugg" id="incomingdrugg" class="required"/>
+            <input type="hidden" name="incominguuidextra" id="incominguuidextra" class="required"/>
+            <input class="submit" type="submit" value="Submit"/>
         </fieldset>
         <hr color=#1aad9b width="100%">
 
     </form>
 
     </form>
-        <form id="s11">
-            <fieldset>
+    <form id="s11">
+        <fieldset>
 
             <label>S11 No.</label>
-            <input type="text" 	name="incomings11" id="incomings11" class="required" />  <br />
+            <input type="text" name="incomings11" id="incomings11" class="required"/> <br/>
 
-            <input type="hidden" 	name="dateCreated" id="dateCreated" class="required" /> <br />
+            <input type="hidden" name="dateCreated" id="dateCreated" class="required"/> <br/>
             <label>Transactions Type</label>
-            <select id="transactions" name="transactions" class="required">	</select>  <br />
+            <select id="transactions" name="transactions" class="required"> </select> <br/>
             <label>Your location</label>
-            <input type="text" 	name="fromLocation" id="fromLocation" disabled="disabled" /> <br />
+            <input type="text" name="fromLocation" id="fromLocation" disabled="disabled"/> <br/>
 
             <label>Requesting from</label>
             <select id="location" name="location" class="required">
 
             </select>
 
-            <br />
-            <label>Drug</label>  <label>Category</label> <label>Quantity</label><br />
+            <br/>
+            <label>Drug</label> <label>Category</label> <label>Quantity</label><br/>
+
             <div id="input1" style="margin-bottom:4px;" class="clonedInput">
-                <input type="text" name="incomingdrug" id="incomingdrug"  class="required" /></select>
-                <select id="incomingcategory" class="datavalues"  name="incomingcategory" class="required"> </select>
-                <input type="text" 	class="datavalues"  name="incomingquantityin" id="incomingquantityin" class="required" />
+                <input type="text" name="incomingdrug" id="incomingdrug" class="required"/></select>
+                <select id="incomingcategory" class="datavalues" name="incomingcategory" class="required"> </select>
+                <input type="text" class="datavalues" name="incomingquantityin" id="incomingquantityin"
+                       class="required"/>
 
 
             </div>
 
-            <input type="button" id="btnAdd" value="Add Drug" />
-            <input type="button" id="btnDel" value="Remove Drug" />
+            <input type="button" id="btnAdd" value="Add Drug"/>
+            <input type="button" id="btnDel" value="Remove Drug"/>
 
 
-            <br />
+            <br/>
 
-                <input class="submit" type="submit" value="Submit" />
-    </fieldset>
+            <input class="submit" type="submit" value="Submit"/>
+        </fieldset>
 
-        </form>
+    </form>
 
     <form id="incoming">
         <fieldset>
 
             <label>S11 No.</label>
-            <input type="text" 	name="incomings11" id="incomings111" class="required" />  <br />
+            <input type="text" name="incomings11" id="incomings111" class="required"/> <br/>
 
             <label>Transactions Type</label>
-            <select id="transactions1" name="transactions" class="required">	</select>  <br />
+            <select id="transactions1" name="transactions" class="required"> </select> <br/>
 
             <label>Requesting from</label>
             <select id="location1" name="location" class="required">
 
-            </select>                                  <br />
+            </select> <br/>
             <label>Drug </label>
-            <input type="text" name="incomingdrug" id="incomingdrug" class="required" />     <br />
+            <input type="text" name="incomingdrug" id="incomingdrug" class="required"/> <br/>
             <label>category </label>
-            <select id="incomingcategory1" class="datavalues"  name="incomingcategory" class="required"> </select>    <br />
+            <select id="incomingcategory1" class="datavalues" name="incomingcategory" class="required"> </select> <br/>
             <label>Quantity </label>
-            <input type="text" name="incomingquantityin" id="incomingquantityin1" class="required" />     <br />
+            <input type="text" name="incomingquantityin" id="incomingquantityin1" class="required"/> <br/>
 
-            <input type="text" name="incomingedit" id="incomingedit" value="" class="required" />        <br />
-            <input type="text" name="incominguuid" id="incominguuid" value="" class="required" />        <br />
+            <input type="text" name="incomingedit" id="incomingedit" value="" class="required"/> <br/>
+            <input type="text" name="incominguuid" id="incominguuid" value="" class="required"/> <br/>
 
-            <input class="submit" type="submit" value="Submit"  />
+            <input class="submit" type="submit" value="Submit"/>
 
-            <br />
+            <br/>
 
-            <br />
+            <br/>
 
 
         </fieldset>
@@ -147,9 +146,11 @@
             <legend> Void reason</legend>
 
             <label>Reason</label> <input type="text" name="incomingreason"
-                                         id="incomingreason" class="required" /> <input type="hidden"
-                                                                                        name="incominguuidvoid" id="incominguuidvoid" /> <input class="submit"
-                                                                                                                                                type="submit" value="Submit" />
+                                         id="incomingreason" class="required"/> <input type="hidden"
+                                                                                       name="incominguuidvoid"
+                                                                                       id="incominguuidvoid"/> <input
+                class="submit"
+                type="submit" value="Submit"/>
         </fieldset>
         <hr color=#1aad9b width="100%">
 
@@ -159,30 +160,26 @@
     <div id='parent_div_1out'>
 
 
-    <form id="filterincoming" action="#">
-        <hr color=#1aad9b width="100%">
+        <form id="filterincoming" action="#">
+            <hr color=#1aad9b width="100%">
 
-        <fieldset>
+            <fieldset>
 
-            <legend> Filter</legend>
+                <legend> Filter</legend>
 
-            <label>Drug</label>
-            <input type="text"
-                   name="filterdrug" id="filterdrug" />
-
-
+                <label>Drug</label>
+                <input type="text"
+                       name="filterdrug" id="filterdrug"/>
 
 
+            </fieldset>
+            <hr color=#1aad9b width="100%">
+
+        </form>
+    </div>
 
 
-        </fieldset>
-        <hr color=#1aad9b width="100%">
-
-    </form>
-        </div>
-
-
-    </DIV>
+</DIV>
 <table cellpadding="0" cellspacing="0" border="0" class="display"
        id="tincoming">
     <thead>
@@ -232,7 +229,6 @@
         <th></th>
 
 
-
         <th></th>
         <th></th>
         <th></th>
@@ -244,8 +240,6 @@
 
 
 </table>
-
-
 
 
 </DIV>

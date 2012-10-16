@@ -18,7 +18,7 @@ function AutoReload() {
 
 }
 var oCache = {
-    iCacheLower: -1
+    iCacheLower:-1
 };
 
 /* Formating function for row details */
@@ -34,14 +34,13 @@ function fnFormatDetails(nTr) {
 }
 function getData() {
 
-    $j.getJSON("drugName.form?drop=drop", function(
-        result) {
+    $j.getJSON("drugName.form?drop=drop", function (result) {
 
         $j("#drugsname").get(0).options.length = 0;
         $j("#drugsname").get(0).options[0] = new Option("Select", "-1");
         $j
             .each(result,
-            function(index, value) { //bincard"stateList
+            function (index, value) { //bincard"stateList
 
                 $j("#drugsname").get(0).options[$j("#drugsname").get(
                     0).options.length] = new Option(value,
@@ -52,7 +51,7 @@ function getData() {
     $j
         .getJSON(
         "drugFormulation.form?drop=drop",
-        function(result) {
+        function (result) {
 
             $j("#drugsformulation").get(0).options.length = 0;
             $j("#drugsformulation").get(0).options[0] = new Option(
@@ -60,7 +59,7 @@ function getData() {
             $j
                 .each(
                 result,
-                function(index, value) { //bincard"stateList
+                function (index, value) { //bincard"stateList
 
                     $j("#drugsformulation").get(0).options[$j(
                         "#drugsformulation").get(0).options.length] = new Option(
@@ -69,27 +68,25 @@ function getData() {
 
         });
 
-    $j.getJSON("drugStrength.form?drop=drop", function(
-        result) {
+    $j.getJSON("drugStrength.form?drop=drop", function (result) {
 
         $j("#drugsstrength").get(0).options.length = 0;
         $j("#drugsstrength").get(0).options[0] = new Option("Select", "-1");
         $j.each(result,
-            function(index, value) { //bincard"stateList
+            function (index, value) { //bincard"stateList
 
                 $j("#drugsstrength").get(0).options[$j("#drugsstrength").get(
                     0).options.length] = new Option(value, value);
             });
 
     });
-    $j.getJSON("drugUnit.form?drop=drop", function(
-        result) {
+    $j.getJSON("drugUnit.form?drop=drop", function (result) {
 
         $j("#drugsunits").get(0).options.length = 0;
         $j("#drugsunits").get(0).options[0] = new Option("Select", "-1");
         $j
             .each(result,
-            function(index, value) { //bincard"stateList
+            function (index, value) { //bincard"stateList
 
                 $j("#drugsunits").get(0).options[$j("#drugsunits")
                     .get(0).options.length] = new Option(value,
@@ -103,26 +100,28 @@ function getData() {
 }
 
 droTable = $j('#tdrugs').dataTable({
-    bJQueryUI : true,
-    bServerSide : true,
-    bRetrieve : true,
-    bProcessing : true,
-    sAjaxSource : 'drugDetails.form',
-    "fnServerData": fnDataTablesPipeline,
-    "aoColumnDefs" : [ {
-        "bVisible" : false,
-        "aTargets" : [ 1 ]
-    } ]
+    bJQueryUI:true,
+    bServerSide:true,
+    bRetrieve:true,
+    bProcessing:true,
+    sAjaxSource:'drugDetails.form',
+    "fnServerData":fnDataTablesPipeline,
+    "aoColumnDefs":[
+        {
+            "bVisible":false,
+            "aTargets":[ 1 ]
+        }
+    ]
 });
 
-$j('#tdrugs tbody td img').live('click', function() {
+$j('#tdrugs tbody td img').live('click', function () {
     var nTr = this.parentNode.parentNode;
     getData();
     fnFormatDetails(nTr);
 
 });
 
-$j('#tdrugs tbody td a').live('click', function() {
+$j('#tdrugs tbody td a').live('click', function () {
     var nTr = this.parentNode.parentNode;
 
     var aData = droTable.fnGetData(nTr);
@@ -134,7 +133,7 @@ $j('#tdrugs tbody td a').live('click', function() {
     $j("#drugsvoid").show();//
 });
 
-$j("form#drugs").submit(function() {
+$j("form#drugs").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
 
     if ($j("#drugs").valid()) {
@@ -142,10 +141,10 @@ $j("form#drugs").submit(function() {
         dataString = $j("#drugs").serialize();
 
         $j.ajax({
-            type : "POST",
-            url : "drugDetails.form",
-            data : dataString,
-            success : function() {
+            type:"POST",
+            url:"drugDetails.form",
+            data:dataString,
+            success:function () {
 
                 $j("#drugs").hide("slow");
 
@@ -162,17 +161,17 @@ $j("form#drugs").submit(function() {
     }
 });
 
-$j("form#drugsvoid").submit(function() {
+$j("form#drugsvoid").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
 
     if ($j("#drugsvoid").valid()) {
         dataString = $j("#drugsvoid").serialize();
 
         $j.ajax({
-            type : "POST",
-            url : "drugDetails.form",
-            data : dataString,
-            success : function() {
+            type:"POST",
+            url:"drugDetails.form",
+            data:dataString,
+            success:function () {
                 $j("#drugsvoid").hide();//
                 AutoReload();
             }
@@ -181,7 +180,7 @@ $j("form#drugsvoid").submit(function() {
     }
 });
 
-$j("#adddrug").click(function() {
+$j("#adddrug").click(function () {
 
     getData();
 

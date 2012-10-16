@@ -1,89 +1,83 @@
 <?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
     <class name="org.openmrs.module.pharmacy.model.PharmacyObs" table="pharmacy_obs">
-        <cache usage="read-write" />
+        <cache usage="read-write"/>
 
         <id name="id" type="int" column="pharmacy_obs_id" unsaved-value="0">
             <generator
-                    class="org.openmrs.api.db.hibernate.NativeIfNotAssignedIdentityGenerator" />
+                    class="org.openmrs.api.db.hibernate.NativeIfNotAssignedIdentityGenerator"/>
         </id>
-        <discriminator column="pharmacy_obs_id" insert="false" />
+        <discriminator column="pharmacy_obs_id" insert="false"/>
 
-        <many-to-one name="person"    property-ref="patientId"
-                     column="patient_uuid" not-null="false" />
+        <many-to-one name="person" property-ref="patientId"
+                     column="patient_uuid" not-null="false"/>
 
         <property name="concept" type="java.lang.String" column="concept_uuid"
-                  length="255" />
-        <many-to-one name="pharmacyEncounter"  property-ref="uuid"  column="pharmacy_encounter_uuid" not-null="false" />
+                  length="255"/>
+        <many-to-one name="pharmacyEncounter" property-ref="uuid" column="pharmacy_encounter_uuid" not-null="false"/>
 
 
-
-        <many-to-one  name="location" property-ref="uuid"   column="location_uuid" />
-
-
-        <many-to-one  name="valueCodedName" class="org.openmrs.ConceptName" column="value_coded_name" />
+        <many-to-one name="location" property-ref="uuid" column="location_uuid"/>
 
 
-        <property name="valueBoolen" type="java.lang.Boolean" column="value_boolen" />
+        <many-to-one name="valueCodedName" class="org.openmrs.ConceptName" column="value_coded_name"/>
+
+
+        <property name="valueBoolen" type="java.lang.Boolean" column="value_boolen"/>
 
         <property name="valueCoded" type="int" column="value_coded"
-                  length="255" />
+                  length="255"/>
         <property name="valueGroupId" type="java.lang.Integer"
-                  column="value_group_id" length="11" />
+                  column="value_group_id" length="11"/>
 
         <property name="valueDatetime" type="java.util.Date"
-                  column="value_datetime" length="19" />
+                  column="value_datetime" length="19"/>
 
         <property name="valueNumeric" type="double"
-                  column="value_numeric" length="22" />
+                  column="value_numeric" length="22"/>
 
         <property name="valueModifier" type="java.lang.String"
-                  column="value_modifier" length="2" />
+                  column="value_modifier" length="2"/>
         <property name="valueText" type="java.lang.String"
-                  column="value_text" length="50" />
-
+                  column="value_text" length="50"/>
 
 
         <property name="comment" type="java.lang.String"
-                  column="comment" length="255" />
+                  column="comment" length="255"/>
 
 
         <property name="dateStarted" type="java.util.Date"
-                  column="datetime_started" length="19" />
+                  column="datetime_started" length="19"/>
         <property name="dateStopped" type="java.util.Date"
-                  column="datetime_stopped" length="19" />
-
+                  column="datetime_stopped" length="19"/>
 
 
         <property name="dateCreated" type="java.util.Date"
-                  column="datecreated" not-null="true" length="19" />
+                  column="datecreated" not-null="true" length="19"/>
 
         <property name="voided" type="java.lang.Boolean" column="voided"
-                  length="1" not-null="true" />
+                  length="1" not-null="true"/>
 
         <property name="dateVoided" type="java.util.Date"
-                  column="date_voided" length="19" />
+                  column="date_voided" length="19"/>
         <property name="voidReason" type="java.lang.String"
-                  column="void_reason" length="255" />
-
-
+                  column="void_reason" length="255"/>
 
 
         <many-to-one name="creator" class="org.openmrs.User"
-                     column="creator" not-null="true" />
-
-
+                     column="creator" not-null="true"/>
 
 
         <many-to-one name="voidedBy" class="org.openmrs.User"
-                     column="voided_by" />
+                     column="voided_by"/>
 
 
         <property name="uuid" type="string" length="38" not-null="true"
-                  unique="true" />
+                  unique="true"/>
 
-        <property name="prescriberId" type="string" length="38" column="prescriberId" />
+        <property name="prescriberId" type="string" length="38" column="prescriberId"/>
 
     </class>
 </hibernate-mapping>

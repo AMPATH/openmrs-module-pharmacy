@@ -18,9 +18,10 @@
                 <legend>frequency Void reason</legend>
 
                 <label>Reason</label> <input type="text" name="regimenreason"
-                                             id="regimenreason" class="required" /> <input type="hidden"
-                                                                                           name="regimenuuidvoid" id="regimenuuidvoid" /> <input
-                    class="submit" type="submit" value="Submit" />
+                                             id="regimenreason" class="required"/> <input type="hidden"
+                                                                                          name="regimenuuidvoid"
+                                                                                          id="regimenuuidvoid"/> <input
+                    class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
 
@@ -31,16 +32,16 @@
                 <legend>Regimen creation</legend>
 
                 <input type="hidden" name="regimenedit" id="regimenedit"
-                       value="false" /> <input type="hidden" name="regimenuuid"
-                                               id="regimenuuid" /> <label>Regimen name</label> <select
+                       value="false"/> <input type="hidden" name="regimenuuid"
+                                              id="regimenuuid"/> <label>Regimen name</label> <select
                     id="regimennamecomplete" name="regimennamecomplete">
 
 
-            </select> <br /> 	<label>Complete drug </label>
+            </select> <br/> <label>Complete drug </label>
 
 
                 <input type="text" name="complete"
-                       id="complete" />
+                       id="complete"/>
                 </br>
 
 
@@ -48,32 +49,24 @@
                                                        name="optionss" onchange="show_value(this.value);">
 
 
-
-
             </select> </br> <label>Two options Drugs</label>
                 <input type="text" name="option1"
-                       id="option1" />
+                       id="option1"/>
 
                 <input type="text" name="option2"
-                       id="option2" />
-
-
-
-
+                       id="option2"/>
 
 
                 </select>         </br>  <label>Three options Drugs</label>
                 <input type="text" name="regimendrug1"
-                       id="regimendrug1" />
+                       id="regimendrug1"/>
 
                 <input type="text" name="regimendrug2"
-                       id="regimendrug2" />
-
+                       id="regimendrug2"/>
 
 
                 <input type="text" name="regimendrug3"
-                       id="regimendrug3" />
-
+                       id="regimendrug3"/>
 
 
                 </select>         </br>
@@ -86,8 +79,7 @@
             </select>
 
 
-
-                <input class="submit" type="submit" value="Submit" />
+                <input class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
     </DIV>

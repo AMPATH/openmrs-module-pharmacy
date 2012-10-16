@@ -17,18 +17,22 @@
             <list>
                 <value>org.openmrs.module.pharmacy.service.PharmacyService</value>
                 <bean class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-                    <property name="transactionManager"><ref bean="transactionManager"/></property>
+                    <property name="transactionManager">
+                        <ref bean="transactionManager"/>
+                    </property>
                     <property name="target">
                         <bean class="org.openmrs.module.pharmacy.service.impl.PharmacyServiceImpl">
                             <property name="pharmacyDAO">
                                 <bean class="org.openmrs.module.pharmacy.dao.hibernate.HibernatePharmacyDAO">
-                                    <property name="sessionFactory"><ref bean="sessionFactory" /></property>
+                                    <property name="sessionFactory">
+                                        <ref bean="sessionFactory"/>
+                                    </property>
                                 </bean>
                             </property>
                         </bean>
                     </property>
                     <property name="preInterceptors">
-                        <ref bean="serviceInterceptors" />
+                        <ref bean="serviceInterceptors"/>
                     </property>
                     <property name="transactionAttributeSource">
                         <bean class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource"/>

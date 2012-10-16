@@ -15,14 +15,12 @@
     <updateURL>https://dev.openmrs.org/modules/download/@MODULE_ID@/update.rdf</updateURL>
 
 
-
     <require_modules>
 
         <require_module>org.openmrs.module.jsonforms</require_module>
     </require_modules>
 
     <require_version>1.6.2</require_version>
-
 
 
     <extension>
@@ -45,8 +43,6 @@
         <name>Set Location</name>
         <description>Set pharmacy location</description>
     </privilege>
-
-
 
 
     <privilege>
@@ -73,9 +69,6 @@
     </privilege>
 
 
-
-
-
     <privilege>
         <name>Pharmacy inventory</name>
         <description>Manage pharmacy inventory</description>
@@ -84,12 +77,6 @@
         <name>Approve Pharmacy</name>
         <description>Approve from suppliers</description>
     </privilege>
-
-
-
-
-
-
 
 
     <mappingFiles>
@@ -141,7 +128,6 @@
 
 
     </mappingFiles>
-
 
 
 </module>

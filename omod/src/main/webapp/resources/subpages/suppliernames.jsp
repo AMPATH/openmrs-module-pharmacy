@@ -17,9 +17,9 @@
                 <legend>Name Void reason</legend>
 
                 <label for="engine">Reason</label>
-                <input type="text" name="supplierreason" id="supplierreason" class="required" />
-                <input  type="hidden" name="supplieruuidvoid" id="supplieruuidvoid" />
-                <input class="submit" type="submit" value="Submit" />
+                <input type="text" name="supplierreason" id="supplierreason" class="required"/>
+                <input type="hidden" name="supplieruuidvoid" id="supplieruuidvoid"/>
+                <input class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
         <form id="supplierform" action="#">
@@ -28,14 +28,15 @@
                 <legend>Name</legend>
 
                 <label for="engine">supplier name</label> <input type="text"
-                                                                 name="suppliername" id="suppliername" class="required" /><br />
+                                                                 name="suppliername" id="suppliername"
+                                                                 class="required"/><br/>
 
 
                 <label for="engine">description</label> <input type="text"
-                                                               name="description" id="description"  /> <input
-                    type="hidden" name="supplieredit" id="supplieredit" value="false" /> <input
-                    type="hidden" name="supplieruuid" id="supplieruuid" /> <input
-                    class="submit" type="submit" value="Submit" />
+                                                               name="description" id="description"/> <input
+                    type="hidden" name="supplieredit" id="supplieredit" value="false"/> <input
+                    type="hidden" name="supplieruuid" id="supplieruuid"/> <input
+                    class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
     </DIV>
@@ -59,7 +60,6 @@
             <td></td>
             <td></td>
             <td></td>
-
 
 
         </tr>

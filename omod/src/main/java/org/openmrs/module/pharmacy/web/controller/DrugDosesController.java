@@ -64,8 +64,7 @@ public class DrugDosesController {
 
             response.getWriter().print(json);
             response.flushBuffer();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             log.error("Error generated", e);
         }
@@ -131,7 +130,7 @@ public class DrugDosesController {
             } else if (dosesedit.equalsIgnoreCase("true")) {
                 Dose dose = new Dose();
                 dose = service.getDosesByUuid(dosesuuid);
-                if (userService.getAuthenticatedUser().getUserId().equals( dose.getCreator().getUserId())) {
+                if (userService.getAuthenticatedUser().getUserId().equals(dose.getCreator().getUserId())) {
 
                     //dose.setPharmacyDrug(service.getDrugsByUuid(uuid));
                     dose.setFrequency(service.getDrugFrequencyByName(dosesfrequency));
@@ -141,9 +140,7 @@ public class DrugDosesController {
 
             }
 
-        }
-
-        else if (dosesuuidvoid != null) {
+        } else if (dosesuuidvoid != null) {
 
             Dose dose = new Dose();
             dose = service.getDosesByUuid(dosesuuidvoid);
@@ -164,7 +161,7 @@ public class DrugDosesController {
         Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
         for (Role rl : xvc) {
 
-            if((rl.getRole().equals("System Developer"))||(rl.getRole().equals("Provider"))||(rl.getRole().equals("	Authenticated "))){
+            if ((rl.getRole().equals("System Developer")) || (rl.getRole().equals("Provider")) || (rl.getRole().equals("	Authenticated "))) {
 
                 editPharmacy = true;
                 deletePharmacy = true;

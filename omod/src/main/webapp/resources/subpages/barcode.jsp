@@ -9,7 +9,6 @@
 <DIV id="dtab_1">
 
 
-
     <DIV id="incss">
         <div id='parent_div_1'>
 
@@ -21,23 +20,23 @@
                     <legend>Dispense name</legend>
 
                     <label>Drug</label>
-                    <select id="barcodedrug" name="barcodedrug" class="required" >
+                    <select id="barcodedrug" name="barcodedrug" class="required">
 
 
                     </select>
                     <label>Frequency</label>
-                    <select id="frequency" name="frequency" class="required" >
+                    <select id="frequency" name="frequency" class="required">
                         <option value="1">OD</option>
                         <option value="2">BD</option>
 
                     </select>
                     <label>Duration in days</label>
-                    <input type="text" name="duration" id="duration"   class="required"/>
+                    <input type="text" name="duration" id="duration" class="required"/>
 
                     <label>Quantity</label>
-                    <input type="text" name="quantity" id="quantity"  class="required" />
+                    <input type="text" name="quantity" id="quantity" class="required"/>
 
-                    <input  type="submit" id="generate" value="Generate Barcode" />
+                    <input type="submit" id="generate" value="Generate Barcode"/>
 
                 </fieldset>
 
@@ -53,16 +52,15 @@
                 <legend>Dispense name</legend>
 
 
-                <div id="barcodeImg" >
+                <div id="barcodeImg">
 
                 </div>
-                <div id="cmdPrintDiv"><input type="button" value="Print Barcode" onclick="showPrint()" ></div>
+                <div id="cmdPrintDiv"><input type="button" value="Print Barcode" onclick="showPrint()"></div>
 
                 <div id="cmdDownDiv"></div>
             </fieldset>
         </div>
     </DIV>
-
 
 
 </body>

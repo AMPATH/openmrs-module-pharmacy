@@ -17,9 +17,10 @@
                 <legend>Name Void reason</legend>
 
                 <label for="engine">Reason</label> <input type="text"
-                                                          name="locationreason" id="locationreason" class="required" /> <input
-                    type="hidden" name="locationuuidvoid" id="locationuuidvoid" /> <input
-                    class="submit" type="submit" value="Submit" />
+                                                          name="locationreason" id="locationreason" class="required"/>
+                <input
+                        type="hidden" name="locationuuidvoid" id="locationuuidvoid"/> <input
+                    class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
         <form id="locationform" action="#">
@@ -35,14 +36,14 @@
 
 
                 <label for="engine">Location name</label>
-                <input type="text" 	name="locationname" id="locationname" class="required" /> <br />
+                <input type="text" name="locationname" id="locationname" class="required"/> <br/>
                 <label for="engine">description</label>
-                <input type="text" 	name="description" id="description"/>
-                <input type="hidden" name="locationeedit" id="locationedit" value="false" />
+                <input type="text" name="description" id="description"/>
+                <input type="hidden" name="locationeedit" id="locationedit" value="false"/>
 
                 <input
-                        type="hidden" name="locationuuid" id="locationuuid" /> <input
-                    class="submit" type="submit" value="Submit" />
+                        type="hidden" name="locationuuid" id="locationuuid"/> <input
+                    class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
     </DIV>
@@ -71,7 +72,6 @@
             <td></td>
             <td></td>
             <td></td>
-
 
 
         </tr>

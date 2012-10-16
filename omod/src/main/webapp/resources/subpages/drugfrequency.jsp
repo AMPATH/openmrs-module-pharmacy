@@ -16,21 +16,25 @@
                 <legend>frequency Void reason</legend>
 
                 <label>Reason</label> <input type="text" name="frequencyreason"
-                                             id="frequencyreason" class="required" /> <input type="hidden"
-                                                                                             name="frequencyuuidvoid" id="frequencyuuidvoid" /> <input
-                    class="submit" type="submit" value="Submit" />
+                                             id="frequencyreason" class="required"/> <input type="hidden"
+                                                                                            name="frequencyuuidvoid"
+                                                                                            id="frequencyuuidvoid"/>
+                <input
+                        class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
-        <form id="frequency" " action="#">
+        <form id="frequency"
+        " action="#">
         <fieldset>
 
             <legend>Frequency"</legend>
 
             <label for="engine">frequency name</label> <input type="text"
-                                                              name="frequencyname" id="frequencyname" class="required" /> <input
-                type="hidden" name="frequencyedit" id="frequencyedit" value="false" />
-            <input type="hidden" name="frequencyuuid" id="frequencyuuid" /> <input
-                class="submit" type="submit" value="Submit" />
+                                                              name="frequencyname" id="frequencyname" class="required"/>
+            <input
+                    type="hidden" name="frequencyedit" id="frequencyedit" value="false"/>
+            <input type="hidden" name="frequencyuuid" id="frequencyuuid"/> <input
+                class="submit" type="submit" value="Submit"/>
         </fieldset>
         </form>
     </DIV>

@@ -3,7 +3,7 @@ var url;
 var min;
 var max;
 var dataString;
-var eSignCheck=false;
+var eSignCheck = false;
 var link;
 var editTr;
 
@@ -12,9 +12,8 @@ $j("#binvoid").hide();
 $j("#tbincard").hide();
 
 var oCache = {
-    iCacheLower: -1
+    iCacheLower:-1
 };
-
 
 
 $j("#parent_field").hide();
@@ -25,39 +24,33 @@ $j("#incss").hide();
 $j("#check").validate({});
 
 $j("#bincard").validate({
-    rules : {
-        bindrug : {
-            selectNone : true
+    rules:{
+        bindrug:{
+            selectNone:true
         }
     }
 });
 
 
 var currentTime = new Date();
-var month = currentTime.getMonth()+ 1;
+var month = currentTime.getMonth() + 1;
 var day = currentTime.getDate();
 var year = currentTime.getFullYear();
 
 //compare to get the diffrence
 
-t2=day+"/"+month+"/"+year;
+t2 = day + "/" + month + "/" + year;
 
 
-
-var y=t2.split("/");
-
+var y = t2.split("/");
 
 
-
-var dateCurrent=new Date(y[2],(y[1]-1),y[0]);
-
+var dateCurrent = new Date(y[2], (y[1] - 1), y[0]);
 
 
 $j("#binvoid").validate();
 
 getDrugCategory();
-
-
 
 
 function RefreshTable(tableId, urlData) {
@@ -95,23 +88,22 @@ function fnFormatDetails(nTr) {
 
 }
 
-$j( "#binexpire" ).datepicker();
+$j("#binexpire").datepicker();
 
-$j(function() {
+$j(function () {
 
-    $j( "#binexpire" ).datepicker();
+    $j("#binexpire").datepicker();
 
 });
 
 
-
-function det(aData){
+function det(aData) {
 
 
     $j.ajax({
-        type : "GET",
-        url : "drugBincard.form?druguuidshow="+aData,
-        success : function() {
+        type:"GET",
+        url:"drugBincard.form?druguuidshow=" + aData,
+        success:function () {
 //            alert("zz"+data);
 //			alert("zz"+result);
 //			for(u=0;u<result.length;u++){
@@ -124,17 +116,15 @@ function det(aData){
     });
 
 }
-$j.fn.dataTableExt.oApi.fnReloadAjax = function(oSettings, sNewSource)
-{
+$j.fn.dataTableExt.oApi.fnReloadAjax = function (oSettings, sNewSource) {
     oSettings.sAjaxSource = sNewSource;
     this.fnClearTable(this);
-    this.oApi._fnProcessingDisplay(oSettings, true );
+    this.oApi._fnProcessingDisplay(oSettings, true);
     var that = this;
 
-    $j.getJSON(oSettings.sAjaxSource, null, function(json){
+    $j.getJSON(oSettings.sAjaxSource, null, function (json) {
         /* Got the data - add it to the table */
-        for (var i=0; i<json.aaData.length; i++)
-        {
+        for (var i = 0; i < json.aaData.length; i++) {
             that.oApi._fnAddData(oSettings, json.aaData[i]);
         }
 
@@ -144,11 +134,11 @@ $j.fn.dataTableExt.oApi.fnReloadAjax = function(oSettings, sNewSource)
     });
 }
 
-function tableSetUp(category){
+function tableSetUp(category) {
 
-    url='drugBincard.form?category='+category;
+    url = 'drugBincard.form?category=' + category;
 
-    if( $j('#incss').is(':visible') ) {
+    if ($j('#incss').is(':visible')) {
 
 
         oCache.iCacheLower = -1;
@@ -156,96 +146,90 @@ function tableSetUp(category){
         $j('#tbincard').dataTable().fnReloadAjax(url);
 
     }
-    else
-    {
+    else {
 
         binTable = $j('#tbincard').dataTable({
-            bJQueryUI : true,
-            bRetrieve : true,
-            bAutoWidth : false,
-            bServerSide : true,
-            bProcessing : true,
-            bLengthChange: false,
-            bPaginate: true,
+            bJQueryUI:true,
+            bRetrieve:true,
+            bAutoWidth:false,
+            bServerSide:true,
+            bProcessing:true,
+            bLengthChange:false,
+            bPaginate:true,
 
-            "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
-
-
-                t1=aData[7];
+            "fnRowCallback":function (nRow, aData, iDisplayIndex) {
 
 
+                t1 = aData[7];
 
-                var y=t1.split("-");
+
+                var y = t1.split("-");
 
 
-                var dateGiven=new Date(y[0],(y[1]),y[2]);
-                var num =months_between(dateGiven,dateCurrent);
-                if(num > 4 && num <= 6)
+                var dateGiven = new Date(y[0], (y[1]), y[2]);
+                var num = months_between(dateGiven, dateCurrent);
+                if (num > 4 && num <= 6)
                     $j('td:eq(5)', nRow).css("background-color", "#FFCC00");
-                else if(num > 2 && num <=4)
+                else if (num > 2 && num <= 4)
                     $j('td:eq(5)', nRow).css("background-color", "#FF9900");
-                else if(num<=2)
+                else if (num <= 2)
                     $j('td:eq(5)', nRow).css("background-color", "#FF0000");
 
 
-                if(aData[4] <= aData[6])
+                if (aData[4] <= aData[6])
                     $j('td:eq(4)', nRow).css("background-color", "#FFCC00");
 
-                var htm= '<ul class="popMenu">	<li> <img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/items.png" alt="" /><ul class="popOut" id='+"popOut"+aData[9]+'>';
+                var htm = '<ul class="popMenu">	<li> <img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/items.png" alt="" /><ul class="popOut" id=' + "popOut" + aData[9] + '>';
 
 
-                if(aData[0]=="edit"){
-                    htm +=	'<li> <a href="#"  id="edit"><img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/edit2.png" />Edit</a></li>';
+                if (aData[0] == "edit") {
+                    htm += '<li> <a href="#"  id="edit"><img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/edit2.png" />Edit</a></li>';
 
                 }
 
-                if(aData[13]=="void"){
-                    htm +=	'<li> <a href="#" id="void" ><img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/delete.png" />Void</a></li>';
+                if (aData[13] == "void") {
+                    htm += '<li> <a href="#" id="void" ><img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/delete.png" />Void</a></li>';
                 }
 
 
-
-                htm +='<li> <a href="#" id="cancel"><img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/cancel.png" />Back</a></li>';
-
-
+                htm += '<li> <a href="#" id="cancel"><img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/cancel.png" />Back</a></li>';
 
 
                 htm += '</ul></li></ul>';
-
-
 
 
                 $j('td:eq(0)', nRow).html(htm);
 
                 return nRow;
             },
-            bInfo: false,
-            sAjaxSource : url,
-            "fnServerData": fnDataTablesPipeline,
-            "aoColumnDefs" : [ {
-                "bVisible" : false,
-                "aTargets" : [ 2 ]
-            },
+            bInfo:false,
+            sAjaxSource:url,
+            "fnServerData":fnDataTablesPipeline,
+            "aoColumnDefs":[
                 {
-                    "bVisible" : false,
-                    "aTargets" : [ 8 ]
+                    "bVisible":false,
+                    "aTargets":[ 2 ]
                 },
                 {
-                    "bVisible" : false,
-                    "aTargets" : [ 0 ]
+                    "bVisible":false,
+                    "aTargets":[ 8 ]
                 },
                 {
-                    "bVisible" : false,
-                    "aTargets" : [ 13 ]
+                    "bVisible":false,
+                    "aTargets":[ 0 ]
+                },
+                {
+                    "bVisible":false,
+                    "aTargets":[ 13 ]
                 }
 
 
             ]
-        }).rowGrouping({    bHideGroupingColumn: false,
-    iGroupingColumnIndex: 10,
-    bExpandableGrouping: true,
-	bExpandSingleGroup: true,
-	iExpandGroupOffset: -1 })
+        }).rowGrouping({    bHideGroupingColumn:false,
+                iGroupingColumnIndex:10,
+                bExpandableGrouping:true,
+                bExpandSingleGroup:true,
+                iExpandGroupOffset:-1 })
     }
 
     $j("#incss").show();
@@ -265,46 +249,29 @@ function tableSetUp(category){
 //	iExpandGroupOffset: -1 })
 
 
-
-
-
-
-
-$j('select#filtercategory').change( function() {
-
-
+$j('select#filtercategory').change(function () {
 
 
     var e = document.getElementById("filtercategory");
     var str = e.options[e.selectedIndex].value;
 
 
-
-    if(str!=="-1"){
+    if (str !== "-1") {
         tableSetUp(str);
     }
-} );
+});
 
 getDrugFilter();
 
 
+$j(function () {
 
-
-
-
-
-
-
-$j(function() {
-
-    $j( "#date" ).datepicker();
+    $j("#date").datepicker();
 
 });
 
 
-
-
-$j("#edit").live('click', function() {
+$j("#edit").live('click', function () {
     $j("ul .popOut").hide();
 
     getData();
@@ -312,16 +279,16 @@ $j("#edit").live('click', function() {
     getUserPass();
     fnFormatDetails(editTr);
 
-    eSignCheck=true;
+    eSignCheck = true;
 
 });
 
-$j("#cancel").live('click', function() {
+$j("#cancel").live('click', function () {
 
     $j("ul .popOut").hide();
 });
 
-$j("#void").live('click', function() {
+$j("#void").live('click', function () {
 
     $j("ul .popOut").hide();
     var aData = binTable.fnGetData(editTr);
@@ -333,10 +300,10 @@ $j("#void").live('click', function() {
     $j("#binvoid").show();//
 });
 
-$j('#tbincard').delegate('tbody td ul','click', function() {
+$j('#tbincard').delegate('tbody td ul', 'click', function () {
     editTr = this.parentNode.parentNode;
     var aData = binTable.fnGetData(editTr);
-    link="#popOut"+aData[9];
+    link = "#popOut" + aData[9];
 
     $j(link).show();
 
@@ -344,36 +311,34 @@ $j('#tbincard').delegate('tbody td ul','click', function() {
 });
 
 
-
-$j("#detailsformCheck" ).dialog({
-    autoOpen: false,
-    height: 250,
+$j("#detailsformCheck").dialog({
+    autoOpen:false,
+    height:250,
     width:300,
-    cache: false,
-    modal: true,
-    buttons: {
-        "Ok": function() {
+    cache:false,
+    modal:true,
+    buttons:{
+        "Ok":function () {
 
 
             if ($j("#check").valid()) {
-                $j(this).dialog( 'close');
+                $j(this).dialog('close');
                 var oFormObject = document.forms['check'];
 
-                var val =oFormObject.elements["pass"].value;
-                var valt =oFormObject.elements["password"].value;
-                if(val==valt){
+                var val = oFormObject.elements["pass"].value;
+                var valt = oFormObject.elements["password"].value;
+                if (val == valt) {
 
                     $j.ajax({
-                        type : "POST",
-                        url : "drugBincard.form",
-                        data : dataString,
-                        success : function() {
-
+                        type:"POST",
+                        url:"drugBincard.form",
+                        data:dataString,
+                        success:function () {
 
 
                             var oFormcheck = document.forms['check'];
 
-                            oFormcheck.elements["password"].value="";
+                            oFormcheck.elements["password"].value = "";
 
 
                             var oFormObject = document.forms['bincard'];
@@ -411,118 +376,103 @@ $j("#detailsformCheck" ).dialog({
                     alert("Wrong id try again");
 
 
-
             }
 
 
-
         },
-        Cancel: function() {
-            $j(this).dialog( 'close');
+        Cancel:function () {
+            $j(this).dialog('close');
         }
     }
 });
-$j('#password').change(function() {
-
+$j('#password').change(function () {
 
 
 });
 
-$j("#detailsformBin" ).dialog({
-    autoOpen: false,
-    height: 500,
+$j("#detailsformBin").dialog({
+    autoOpen:false,
+    height:500,
     width:600,
-    cache: false,
-    modal: true,
-    buttons: {
-        "Yes": function() {
+    cache:false,
+    modal:true,
+    buttons:{
+        "Yes":function () {
 
-            $j(this ).dialog( 'close');
-            if(eSignCheck){
+            $j(this).dialog('close');
+            if (eSignCheck) {
 
 
-                $j("#detailsformCheck").dialog("open" );
+                $j("#detailsformCheck").dialog("open");
 
             }
 
 
-
-
         },
-        Cancel: function() {
-            $j(this).dialog( 'close');
+        Cancel:function () {
+            $j(this).dialog('close');
         }
     }
 });
 
 
-
-
-
-
-$j("form#check").submit(function() {
+$j("form#check").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
     if ($j("#check").valid()) {
-        $j("#detailsformCheck" ).dialog( 'destroy');
+        $j("#detailsformCheck").dialog('destroy');
 
     }
 });
 
 
-
-$j("form#bincard").submit(function() {
+$j("form#bincard").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
     if ($j("#bincard").valid()) {
         dataString = $j("#bincard").serialize();
-
-
 
 
         var myResult = dataString.split("&");
 
         $j("#detailsformBin").empty();
 
-        for(i = 0; i < myResult.length; i++){
-            if(i==2)
-                $j('<dl><dt></dt><dd > -'+"Drug "+myResult[i].substring(myResult[i].indexOf("="))+'</dd></dl> ').appendTo('#detailsformBin');
-            else if(i==3)
-                $j('<dl><dt></dt><dd > -'+"Quantity "+myResult[i].substring(myResult[i].indexOf("="))+'</dd></dl> ').appendTo('#detailsformBin');
-            else if(i==4)
-                $j('<dl><dt></dt><dd > -'+"Max value "+myResult[i].substring(myResult[i].indexOf("="))+'</dd></dl> ').appendTo('#detailsformBin');
-            else if(i==5)
-                $j('<dl><dt></dt><dd > -'+"Min value "+myResult[i].substring(myResult[i].indexOf("="))+'</dd></dl> ').appendTo('#detailsformBin');
-            else if(i==6)
-                $j('<dl><dt></dt><dd > -'+"Batch Id "+myResult[i].substring(myResult[i].indexOf("="))+'</dd></dl> ').appendTo('#detailsformBin');
-            else if(i==7)
-                $j('<dl><dt></dt><dd > -'+"S11 No "+myResult[i].substring(myResult[i].indexOf("="))+'</dd></dl> ').appendTo('#detailsformBin');
-            else if(i==8)
-                $j('<dl><dt></dt><dd > -'+"Expire Date "+myResult[i].substring(myResult[i].indexOf("="))+'</dd></dl> ').appendTo('#detailsformBin');
-            else if(i==9)
-                $j('<dl><dt></dt><dd > -'+"Delivery No "+myResult[i].substring(myResult[i].indexOf("="))+'</dd></dl> ').appendTo('#detailsformBin');
-            else if(i==10)
-                $j('<dl><dt></dt><dd > -'+"Edit Reason"+myResult[i].substring(myResult[i].indexOf("="))+'</dd></dl> ').appendTo('#detailsformBin');
+        for (i = 0; i < myResult.length; i++) {
+            if (i == 2)
+                $j('<dl><dt></dt><dd > -' + "Drug " + myResult[i].substring(myResult[i].indexOf("=")) + '</dd></dl> ').appendTo('#detailsformBin');
+            else if (i == 3)
+                $j('<dl><dt></dt><dd > -' + "Quantity " + myResult[i].substring(myResult[i].indexOf("=")) + '</dd></dl> ').appendTo('#detailsformBin');
+            else if (i == 4)
+                $j('<dl><dt></dt><dd > -' + "Max value " + myResult[i].substring(myResult[i].indexOf("=")) + '</dd></dl> ').appendTo('#detailsformBin');
+            else if (i == 5)
+                $j('<dl><dt></dt><dd > -' + "Min value " + myResult[i].substring(myResult[i].indexOf("=")) + '</dd></dl> ').appendTo('#detailsformBin');
+            else if (i == 6)
+                $j('<dl><dt></dt><dd > -' + "Batch Id " + myResult[i].substring(myResult[i].indexOf("=")) + '</dd></dl> ').appendTo('#detailsformBin');
+            else if (i == 7)
+                $j('<dl><dt></dt><dd > -' + "S11 No " + myResult[i].substring(myResult[i].indexOf("=")) + '</dd></dl> ').appendTo('#detailsformBin');
+            else if (i == 8)
+                $j('<dl><dt></dt><dd > -' + "Expire Date " + myResult[i].substring(myResult[i].indexOf("=")) + '</dd></dl> ').appendTo('#detailsformBin');
+            else if (i == 9)
+                $j('<dl><dt></dt><dd > -' + "Delivery No " + myResult[i].substring(myResult[i].indexOf("=")) + '</dd></dl> ').appendTo('#detailsformBin');
+            else if (i == 10)
+                $j('<dl><dt></dt><dd > -' + "Edit Reason" + myResult[i].substring(myResult[i].indexOf("=")) + '</dd></dl> ').appendTo('#detailsformBin');
 
         }
-        $j("#detailsformBin").dialog("open" );
+        $j("#detailsformBin").dialog("open");
 
         return false;
     }
 });
 
 
-
-
-
-$j("form#binvoid").submit(function() {
+$j("form#binvoid").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
     if ($j("#binvoid").valid()) {
         dataString = $j("#binvoid").serialize();
 
         $j.ajax({
-            type : "POST",
-            url : "drugBincard.form",
-            data : dataString,
-            success : function() {
+            type:"POST",
+            url:"drugBincard.form",
+            data:dataString,
+            success:function () {
                 $j("#binvoid").hide();//
                 AutoReload();
             }
@@ -532,34 +482,23 @@ $j("form#binvoid").submit(function() {
 });
 
 
-$j("form#filter").submit(function() {
+$j("form#filter").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
-       dataString = "s11="+$j("#s11number").val();
+    dataString = "s11=" + $j("#s11number").val();
 
     binTable.fnFilter(dataString);
 
 
-        return false;
+    return false;
 
 });
 
 
-
-
-
-$j("#bincardform").click(function() {
+$j("#bincardform").click(function () {
 
     getData();
     getDataLocation();
 });
-
-
-
-
-
-
-
-
 
 
 function months_between(date1, date2) {
@@ -570,7 +509,7 @@ function getData() {
     $j
         .getJSON(
         "drugDetails.form?drop=drop",
-        function(result) {
+        function (result) {
 
             $j("#bindrug").get(0).options.length = 0;
             $j("#bindrug").get(0).options[0] = new Option("Select",
@@ -578,7 +517,7 @@ function getData() {
             $j
                 .each(
                 result,
-                function(index, value) { //bincard"stateList
+                function (index, value) { //bincard"stateList
 
                     $j("#bindrug").get(0).options[$j(
                         "#bindrug").get(0).options.length] = new Option(
@@ -595,13 +534,13 @@ function getUserPass() {
     $j
         .getJSON(
         "dispense.form?pass=pass",
-        function(result) {
+        function (result) {
 
 
             $j
                 .each(
                 result,
-                function(index, value) { //bincard"stateList
+                function (index, value) { //bincard"stateList
                     var oFormObject = document.forms['check'];
 
                     oFormObject.elements["pass"].value = value;
@@ -615,7 +554,7 @@ function getDrugCategory() {
     $j
         .getJSON(
         "categoryName.form?drop=drop",
-        function(result) {
+        function (result) {
 
             $j("#filtercategory").get(0).options.length = 0;
             $j("#filtercategory").get(0).options[0] = new Option("Select",
@@ -623,7 +562,7 @@ function getDrugCategory() {
             $j
                 .each(
                 result,
-                function(index, value) { //bincard"stateList
+                function (index, value) { //bincard"stateList
 
                     $j("#filtercategory").get(0).options[$j(
                         "#filtercategory").get(0).options.length] = new Option(
@@ -635,44 +574,41 @@ function getDrugCategory() {
 }
 
 
-
-
-
 $j("#filterdrugbin").autocomplete({
-    search : function() {
+    search:function () {
         $j(this).addClass('working');
     },
 
-    source : function(request, response) {
+    source:function (request, response) {
 
         dataString = "searchDrug=" + request.term;
 
-        $j.getJSON("drugDetails.form?drop=drop&" + dataString, function(result) {
+        $j.getJSON("drugDetails.form?drop=drop&" + dataString, function (result) {
 
             $j("#filterdrugbin").removeClass('working');
 
-            response($j.each(result, function(index, item) {
+            response($j.each(result, function (index, item) {
 
                 return {
-                    label : item,
-                    value : item
+                    label:item,
+                    value:item
                 }
             }));
 
         });
 
     },
-    minLength : 3,
-    select : function(event, ui) {
-        binTable.fnFilter( ui.item.label );
+    minLength:3,
+    select:function (event, ui) {
+        binTable.fnFilter(ui.item.label);
         // log( ui.item ?
         // "Selected: " + ui.item.label :
         // "Nothing selected, input was " + this.value);
     },
-    open : function() {
+    open:function () {
         $j(this).removeClass("ui-corner-all").addClass("ui-corner-top");
     },
-    close : function() {
+    close:function () {
         $j(this).removeClass("ui-corner-top").addClass("ui-corner-all");
     }
 });
@@ -681,21 +617,20 @@ $j("#filterdrugbin").autocomplete({
 function getDrugFilter() {
 
 
-
 }
 
 function getDataLocation() {
 
     $j.getJSON(
         "drugDetails.form?drop=location",
-        function(result) {
+        function (result) {
 
             $j("#location").get(0).options.length = 0;
             $j("#location").get(0).options[0] = new Option("Select",
                 "-1");
             $j.each(
                 result,
-                function(index, value) { //bincard"stateList
+                function (index, value) { //bincard"stateList
 
                     $j("#location").get(0).options[$j(
                         "#location").get(0).options.length] = new Option(

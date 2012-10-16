@@ -53,7 +53,7 @@ public class RegimenNameController {
         Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
         for (Role rl : xvc) {
 
-            if((rl.getRole().equals("System Developer"))||(rl.getRole().equals("Provider"))||(rl.getRole().equals("	Authenticated "))){
+            if ((rl.getRole().equals("System Developer")) || (rl.getRole().equals("Provider")) || (rl.getRole().equals("	Authenticated "))) {
 
                 editPharmacy = true;
                 deletePharmacy = true;
@@ -113,8 +113,7 @@ public class RegimenNameController {
             editPharmacy = false;
 
             deletePharmacy = false;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             log.error("Error generated", e);
         }
@@ -173,7 +172,7 @@ public class RegimenNameController {
             } else if (regimennameedit.equalsIgnoreCase("true")) {
                 RegimenNames regimenNames = new RegimenNames();
                 regimenNames = service.getRegimenNamesByUuid(regimennameuuid);
-                if (userService.getAuthenticatedUser().getUserId().equals( regimenNames.getCreator().getUserId())) {
+                if (userService.getAuthenticatedUser().getUserId().equals(regimenNames.getCreator().getUserId())) {
 
                     // saving/updating a record
                     regimenNames.setRegimenName(regimennamename);
@@ -183,9 +182,7 @@ public class RegimenNameController {
 
             }
 
-        }
-
-        else if (regimennameuuidvoid != null) {
+        } else if (regimennameuuidvoid != null) {
 
             RegimenNames regimenNames = new RegimenNames();
             regimenNames = service.getRegimenNamesByUuid(regimennameuuidvoid);
@@ -206,7 +203,7 @@ public class RegimenNameController {
         Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
         for (Role rl : xvc) {
 
-            if((rl.getRole().equals("System Developer"))||(rl.getRole().equals("Provider"))||(rl.getRole().equals("	Authenticated "))){
+            if ((rl.getRole().equals("System Developer")) || (rl.getRole().equals("Provider")) || (rl.getRole().equals("	Authenticated "))) {
 
                 editPharmacy = true;
                 deletePharmacy = true;

@@ -17,9 +17,9 @@
                 <legend>Name Void reason</legend>
 
                 <label for="engine">Reason</label> <input type="text"
-                                                          name="namereason" id="namereason" class="required" /> <input
-                    type="hidden" name="nameuuidvoid" id="nameuuidvoid" /> <input
-                    class="submit" type="submit" value="Submit" />
+                                                          name="namereason" id="namereason" class="required"/> <input
+                    type="hidden" name="nameuuidvoid" id="nameuuidvoid"/> <input
+                    class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
         <form id="nameform" action="#">
@@ -28,10 +28,10 @@
                 <legend>Name</legend>
 
                 <label for="engine">Drug name</label> <input type="text"
-                                                             name="namename" id="namename" class="required" /> <input
-                    type="hidden" name="nameedit" id="nameedit" value="false" /> <input
-                    type="hidden" name="nameuuid" id="nameuuid" /> <input
-                    class="submit" type="submit" value="Submit" />
+                                                             name="namename" id="namename" class="required"/> <input
+                    type="hidden" name="nameedit" id="nameedit" value="false"/> <input
+                    type="hidden" name="nameuuid" id="nameuuid"/> <input
+                    class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
     </DIV>

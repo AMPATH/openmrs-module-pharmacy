@@ -9,12 +9,7 @@
 <body>
 
 
-
 <DIV id="disp">
-
-
-
-
 
 
     <div id='parent_div_2'>
@@ -43,8 +38,6 @@
                 <th></th>
                 <th></th>
                 <th></th>
-
-
 
 
             </tr>

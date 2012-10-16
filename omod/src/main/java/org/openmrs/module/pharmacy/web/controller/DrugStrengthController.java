@@ -78,8 +78,7 @@ public class DrugStrengthController {
             editPharmacy = false;
 
             deletePharmacy = false;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             log.error("Error generated", e);
         }
@@ -132,9 +131,7 @@ public class DrugStrengthController {
                 }
             }
 
-        }
-
-        else if (strengthuuidvoid != null) {
+        } else if (strengthuuidvoid != null) {
 
             DrugStrength drugStrength = new DrugStrength();
             drugStrength = service.getDrugStrengthByUuid(strengthuuidvoid);
@@ -154,7 +151,7 @@ public class DrugStrengthController {
         Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
         for (Role rl : xvc) {
 
-            if((rl.getRole().equals("System Developer"))||(rl.getRole().equals("Provider"))||(rl.getRole().equals("	Authenticated "))){
+            if ((rl.getRole().equals("System Developer")) || (rl.getRole().equals("Provider")) || (rl.getRole().equals("	Authenticated "))) {
 
                 editPharmacy = true;
                 deletePharmacy = true;

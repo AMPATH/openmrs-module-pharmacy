@@ -1,29 +1,23 @@
-
-function fnSetKey( aoData, sKey, mValue )
-{
-    for ( var i=0, iLen=aoData.length ; i<iLen ; i++ )
-    {
-        if ( aoData[i].name == sKey )
-        {
+function fnSetKey(aoData, sKey, mValue) {
+    for (var i = 0, iLen = aoData.length; i < iLen; i++) {
+        if (aoData[i].name == sKey) {
             aoData[i].value = mValue;
         }
     }
 }
 
-function fnGetKey( aoData, sKey )
-{
-    for ( var i=0, iLen=aoData.length ; i<iLen ; i++ )
-    {
-        if ( aoData[i].name == sKey )
-        {
+function fnGetKey(aoData, sKey) {
+    for (var i = 0, iLen = aoData.length; i < iLen; i++) {
+        if (aoData[i].name == sKey) {
             return aoData[i].value;
         }
     }
     return null;
 }
 
-function fnDataTablesPipeline2 ( sSource, aoData, fnCallback ) {
-    var iPipe = 5; /* Ajust the pipe size */
+function fnDataTablesPipeline2(sSource, aoData, fnCallback) {
+    var iPipe = 5;
+    /* Ajust the pipe size */
 
     var bNeedServer = false;
     var sEcho = fnGetKey(aoData, "sEcho");
@@ -37,14 +31,10 @@ function fnDataTablesPipeline2 ( sSource, aoData, fnCallback ) {
 
 
     /* sorting etc changed? */
-    if ( oCache.lastRequest && !bNeedServer )
-    {
-        for( var i=0, iLen=aoData.length ; i<iLen ; i++ )
-        {
-            if ( aoData[i].name != "iDisplayStart" && aoData[i].name != "iDisplayLength" && aoData[i].name != "sEcho" )
-            {
-                if ( aoData[i].value != oCache.lastRequest[i].value )
-                {
+    if (oCache.lastRequest && !bNeedServer) {
+        for (var i = 0, iLen = aoData.length; i < iLen; i++) {
+            if (aoData[i].name != "iDisplayStart" && aoData[i].name != "iDisplayLength" && aoData[i].name != "sEcho") {
+                if (aoData[i].value != oCache.lastRequest[i].value) {
                     bNeedServer = true;
                     break;
                 }
@@ -55,42 +45,38 @@ function fnDataTablesPipeline2 ( sSource, aoData, fnCallback ) {
     /* Store the request for checking next time around */
     oCache.lastRequest = aoData.slice();
 
-    if ( bNeedServer )
-    {
-        if ( iRequestStart < oCache.iCacheLower )
-        {
-            iRequestStart = iRequestStart - (iRequestLength*(iPipe-1));
-            if ( iRequestStart < 0 )
-            {
+    if (bNeedServer) {
+        if (iRequestStart < oCache.iCacheLower) {
+            iRequestStart = iRequestStart - (iRequestLength * (iPipe - 1));
+            if (iRequestStart < 0) {
                 iRequestStart = 0;
             }
         }
 
         oCache.iCacheLower = iRequestStart;
         oCache.iCacheUpper = iRequestStart + (iRequestLength * iPipe);
-        oCache.iDisplayLength = fnGetKey( aoData, "iDisplayLength" );
-        fnSetKey( aoData, "iDisplayStart", iRequestStart );
-        fnSetKey( aoData, "iDisplayLength", iRequestLength*iPipe );
+        oCache.iDisplayLength = fnGetKey(aoData, "iDisplayLength");
+        fnSetKey(aoData, "iDisplayStart", iRequestStart);
+        fnSetKey(aoData, "iDisplayLength", iRequestLength * iPipe);
 
-        $j.getJSON( sSource, aoData, function (json) {
+        $j.getJSON(sSource, aoData, function (json) {
             /* Callback processing */
             oCache.lastJson = jQuery.extend(true, {}, json);
 
-            if ( oCache.iCacheLower != oCache.iDisplayStart )
-            {
-                json.aaData.splice( 0, oCache.iDisplayStart-oCache.iCacheLower );
+            if (oCache.iCacheLower != oCache.iDisplayStart) {
+                json.aaData.splice(0, oCache.iDisplayStart - oCache.iCacheLower);
             }
-            json.aaData.splice( oCache.iDisplayLength, json.aaData.length );
+            json.aaData.splice(oCache.iDisplayLength, json.aaData.length);
 
             fnCallback(json)
-        } );
+        });
     }
-    else
-    {
+    else {
         json = jQuery.extend(true, {}, oCache.lastJson);
-        json.sEcho = sEcho; /* Update the echo for each response */
-        json.aaData.splice( 0, iRequestStart-oCache.iCacheLower );
-        json.aaData.splice( iRequestLength, json.aaData.length );
+        json.sEcho = sEcho;
+        /* Update the echo for each response */
+        json.aaData.splice(0, iRequestStart - oCache.iCacheLower);
+        json.aaData.splice(iRequestLength, json.aaData.length);
         fnCallback(json);
         return;
     }
@@ -119,12 +105,12 @@ var urljson = '' + jQuery.Page.context + 'module/jsonforms/jsonforms.form?id='
     + id;
 
 
-$j.getJSON("dispense.form?age=" + id, function(result) {
-    $j.each(result, function(key, val) {
+$j.getJSON("dispense.form?age=" + id, function (result) {
+    $j.each(result, function (key, val) {
 
 
         jQuery.Age = {
-            age: val
+            age:val
         };
 
     });
@@ -132,40 +118,42 @@ $j.getJSON("dispense.form?age=" + id, function(result) {
 });
 
 
-
 uoTable = $j('#tunits').dataTable({
 
-    bJQueryUI : true,
-    bRetrieve : true,
-    bServerSide : true,
-    bProcessing : true,
+    bJQueryUI:true,
+    bRetrieve:true,
+    bServerSide:true,
+    bProcessing:true,
 
-    sAjaxSource : url,
-    "fnServerData": fnDataTablesPipeline2,
-    "aoColumnDefs" : [ {
-        "bVisible" : false,
-        "aTargets" : [ 1 ]
-    }, {
-        "fnRender" : function(oObj) {
-            return '<a href=#?uuid=' + oObj.aData[1] + '>' + 'View' + '</a>';
-
+    sAjaxSource:url,
+    "fnServerData":fnDataTablesPipeline2,
+    "aoColumnDefs":[
+        {
+            "bVisible":false,
+            "aTargets":[ 1 ]
         },
-        "aTargets" : [ 4 ]
-    } ]
+        {
+            "fnRender":function (oObj) {
+                return '<a href=#?uuid=' + oObj.aData[1] + '>' + 'View' + '</a>';
+
+            },
+            "aTargets":[ 4 ]
+        }
+    ]
 });
 
 binTable = $j('#tforms')
     .dataTable(
     {
 
-        bRetrieve : true,
-        bServerSide : true,
-        bProcessing : true,
-        bPaginate : false,
-        bFilter : false,
-        bInfo : false,
+        bRetrieve:true,
+        bServerSide:true,
+        bProcessing:true,
+        bPaginate:false,
+        bFilter:false,
+        bInfo:false,
 
-        "fnRowCallback" : function(nRow, aData, iDisplayIndex) {
+        "fnRowCallback":function (nRow, aData, iDisplayIndex) {
 
             $j('td:eq(0)', nRow)
                 .html(
@@ -177,17 +165,19 @@ binTable = $j('#tforms')
 
             return nRow;
         },
-        sAjaxSource : urljson,
-        "aoColumnDefs" : [ {
-            "bVisible" : false,
-            "aTargets" : [ 1 ]
-        } ]
+        sAjaxSource:urljson,
+        "aoColumnDefs":[
+            {
+                "bVisible":false,
+                "aTargets":[ 1 ]
+            }
+        ]
     });
 
 $j('#tforms').delegate(
     'tbody tr td img',
     'click',
-    function() {
+    function () {
 
         $j("#psychiatryform").empty();
         $j("#generalform").empty();
@@ -202,7 +192,7 @@ $j('#tforms').delegate(
 
         $j.getJSON("" + jQuery.Page.context
             + "module/jsonforms/jsonforms.form?datajson=" + aData[1],
-            function(result) {
+            function (result) {
 
                 getDataDispense(result, pid, formid);
 
@@ -215,18 +205,17 @@ $j('#tforms').delegate(
 $j('#tunits').delegate(
     'tbody td a',
     'click',
-    function() {
+    function () {
 
         var nTr = this.parentNode.parentNode;
         //getData(nTr);
         var aData = uoTable.fnGetData(nTr);
 
 
-        $j.getJSON("dispense.form?encounterDetails=" + aData[1], function(
-            result) {
+        $j.getJSON("dispense.form?encounterDetails=" + aData[1], function (result) {
             $j("#encountform").empty();
 
-            $j.each(result, function(index, value) { //bincard"stateList
+            $j.each(result, function (index, value) { //bincard"stateList
                 if (index == 1) {
 
                     $j("#encountform").dialog('option', 'title', value);
@@ -249,20 +238,20 @@ function RefreshTable(tableId) {
     table.fnDraw();
 }
 $j("#dispenseform").dialog({
-    autoOpen : false,
-    height : 600,
-    width : 1300,
-    cache : false,
-    modal : true
+    autoOpen:false,
+    height:600,
+    width:1300,
+    cache:false,
+    modal:true
 });
 $j("#encountform").dialog({
 
-    title : "Patient",
-    autoOpen : false,
-    height : 400,
-    width : 600,
-    cache : false,
-    modal : true
+    title:"Patient",
+    autoOpen:false,
+    height:400,
+    width:600,
+    cache:false,
+    modal:true
 });
 function months_between(date1, date2) {
     return date2.getMonth() - date1.getMonth()
@@ -271,9 +260,9 @@ function months_between(date1, date2) {
 
 function getDrugDispense(drug) {
 
-    $j.getJSON("drugDetails.form?drop=drug&id=" + drug, function(result) {
+    $j.getJSON("drugDetails.form?drop=drug&id=" + drug, function (result) {
 
-        $j.each(result, function(index, value) { //bincard"stateList
+        $j.each(result, function (index, value) { //bincard"stateList
 
         });
 
@@ -292,10 +281,9 @@ function getDataDispense(data, pid, formid) {
 
         $j.getScript("" + jQuery.Page.context
             + "moduleResources/pharmacy/jspharmacy/generalFormScript.js",
-            function() {
+            function () {
 
             });
-
 
 
         jQuery.Pid = {
@@ -303,9 +291,9 @@ function getDataDispense(data, pid, formid) {
         };
 
 
-        $j.getJSON("dispense.form?Pid=" + pid, function(result) {
+        $j.getJSON("dispense.form?Pid=" + pid, function (result) {
 
-            $j.each(result, function(index, value) { //bincard"stateList
+            $j.each(result, function (index, value) { //bincard"stateList
 
                 oFormObject = document.forms['generalform'];
                 oFormObject.elements["patient|1#1"].value = value;
@@ -321,7 +309,6 @@ function getDataDispense(data, pid, formid) {
         oFormObject.elements["Patient_id|2#2"].value = pid;
 
 
-
     } else if (formid.substring(0, 7) == "Psychia") {
         // ...
 
@@ -331,14 +318,14 @@ function getDataDispense(data, pid, formid) {
 
         $j.getScript("" + jQuery.Page.context
             + "moduleResources/pharmacy/jspharmacy/psychiatryformData.js",
-            function() {
+            function () {
 
             });
 
 
-        $j.getJSON("dispense.form?Pid=" + pid, function(result) {
+        $j.getJSON("dispense.form?Pid=" + pid, function (result) {
 
-            $j.each(result, function(index, value) { //bincard"stateList
+            $j.each(result, function (index, value) { //bincard"stateList
 
                 oFormObject = document.forms['psychiatryform'];
                 oFormObject.elements["patient|1#1"].value = value;
@@ -353,12 +340,12 @@ function getDataDispense(data, pid, formid) {
         var oFormObject = document.forms['psychiatryform'];
         oFormObject.elements["Patient_id|2#2"].value = pid;
 
-        $j('#psychiatryform').delegate('input', 'focus', function() {
+        $j('#psychiatryform').delegate('input', 'focus',
+            function () {
 
 
-
-            $j(this).closest('.ui-dform-tr').css('background-color', '#dfdfdf');
-        }).delegate('input', 'blur', function() {
+                $j(this).closest('.ui-dform-tr').css('background-color', '#dfdfdf');
+            }).delegate('input', 'blur', function () {
                 $j(this).closest('.ui-dform-tr').css('background-color', 'white');
             });
 
@@ -371,14 +358,14 @@ function getDataDispense(data, pid, formid) {
 
         $j.getScript("" + jQuery.Page.context
             + "moduleResources/pharmacy/jspharmacy/barcodeFormScript.js",
-            function() {
+            function () {
 
             });
 
 
-        $j.getJSON("dispense.form?Pid=" + pid, function(result) {
+        $j.getJSON("dispense.form?Pid=" + pid, function (result) {
 
-            $j.each(result, function(index, value) { //bincard"stateList
+            $j.each(result, function (index, value) { //bincard"stateList
 
                 oFormObject = document.forms['psychiatryform'];
                 oFormObject.elements["patient|1#1"].value = value;
@@ -393,7 +380,6 @@ function getDataDispense(data, pid, formid) {
         var oFormObject = document.forms['psychiatryform'];
         oFormObject.elements["Patient_id|2#2"].value = pid;
     }
-
 
 
 }

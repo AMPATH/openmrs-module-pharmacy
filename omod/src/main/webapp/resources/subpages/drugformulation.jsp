@@ -16,9 +16,11 @@
                 <legend>Formulation Void reason</legend>
 
                 <label for="engine">Reason</label> <input type="text" name="reason"
-                                                          id="reason" class="required" /> <input type="hidden"
-                                                                                                 name="uuidvoid" id="uuidvoid" /> <input class="submit"
-                                                                                                                                         type="submit" value="Submit" />
+                                                          id="reason" class="required"/> <input type="hidden"
+                                                                                                name="uuidvoid"
+                                                                                                id="uuidvoid"/> <input
+                    class="submit"
+                    type="submit" value="Submit"/>
             </fieldset>
         </form>
         <form id="formulation" action="#">
@@ -27,10 +29,11 @@
                 <legend>Formulation</legend>
 
                 <label for="engine">Formulation name</label> <input type="text"
-                                                                    name="formulationname" id="formulationname" class="required" /> <input
-                    type="hidden" name="edit" id="edit" value="false" /> <input
-                    type="hidden" name="uuid" id="uuid" /> <input class="submit"
-                                                                  type="submit" value="Submit" />
+                                                                    name="formulationname" id="formulationname"
+                                                                    class="required"/> <input
+                    type="hidden" name="edit" id="edit" value="false"/> <input
+                    type="hidden" name="uuid" id="uuid"/> <input class="submit"
+                                                                 type="submit" value="Submit"/>
             </fieldset>
         </form>
     </DIV>

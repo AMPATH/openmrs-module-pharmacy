@@ -76,8 +76,7 @@ public class DrugUnitController {
             }
             response.flushBuffer();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             log.error("Error generated", e);
         }
@@ -132,9 +131,7 @@ public class DrugUnitController {
 
             }
 
-        }
-
-        else if (unitsuuidvoid != null) {
+        } else if (unitsuuidvoid != null) {
 
             DrugUnits drugUnits = new DrugUnits();
             drugUnits = service.getDrugUnitsByUuid(unitsuuidvoid);
@@ -154,7 +151,7 @@ public class DrugUnitController {
         Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
         for (Role rl : xvc) {
 
-            if((rl.getRole().equals("System Developer"))||(rl.getRole().equals("Provider"))||(rl.getRole().equals("	Authenticated "))){
+            if ((rl.getRole().equals("System Developer")) || (rl.getRole().equals("Provider")) || (rl.getRole().equals("	Authenticated "))) {
 
                 editPharmacy = true;
                 deletePharmacy = true;

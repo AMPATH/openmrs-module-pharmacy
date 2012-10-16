@@ -9,10 +9,7 @@
 <DIV id="dtab_1">
 
 
-
-
     <!-- 		<a href="#" id="bincardform">Add drugs </a> -->
-
 
 
     <DIV id="incss">
@@ -25,9 +22,11 @@
                 <legend> Void reason</legend>
 
                 <label>Reason</label> <input type="text" name="binreason"
-                                             id="binreason" class="required" /> <input type="hidden"
-                                                                                       name="binuuidvoid" id="binuuidvoid" /> <input class="submit"
-                                                                                                                                     type="submit" value="Submit" />
+                                             id="binreason" class="required"/> <input type="hidden"
+                                                                                      name="binuuidvoid"
+                                                                                      id="binuuidvoid"/> <input
+                    class="submit"
+                    type="submit" value="Submit"/>
             </fieldset>
             <hr color=#1aad9b width="100%">
 
@@ -41,8 +40,7 @@
 
                 <label>Drug</label>
                 <input type="text"
-                       name="filterdrughigh" id="filterdrughigh" />
-
+                       name="filterdrughigh" id="filterdrughigh"/>
 
 
             </fieldset>
@@ -72,7 +70,6 @@
             <th>Suppier</th>
 
 
-
             <th>Void</th>
         </tr>
         </thead>
@@ -98,13 +95,10 @@
             <th></th>
 
 
-
         </tr>
         </tbody>
 
     </table>
-
-
 
 
 </DIV>

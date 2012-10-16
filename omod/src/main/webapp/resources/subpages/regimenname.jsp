@@ -15,10 +15,10 @@
 
                 <legend>Name Void reason</legend>
 
-                <label >Reason</label>
-                <input type="text" name="regimennamereason" id="regimennamereason" class="required"  />
+                <label>Reason</label>
+                <input type="text" name="regimennamereason" id="regimennamereason" class="required"/>
 
-                <input type="hidden" name="regimennameuuidvoid" id="regimennameuuidvoid" />
+                <input type="hidden" name="regimennameuuidvoid" id="regimennameuuidvoid"/>
                 <input class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
@@ -28,9 +28,10 @@
                 <legend>Regimen Code</legend>
 
                 <label for="engine">Regimen Code</label> <input type="text"
-                                                                name="regimennamename" id="regimennamename" class="required"  />
-                <input type="hidden" name="regimennameedit" id="regimennameedit" value="false" />
-                <input type="hidden" name="regimennameuuid" id="regimennameuuid" />
+                                                                name="regimennamename" id="regimennamename"
+                                                                class="required"/>
+                <input type="hidden" name="regimennameedit" id="regimennameedit" value="false"/>
+                <input type="hidden" name="regimennameuuid" id="regimennameuuid"/>
                 <input class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>

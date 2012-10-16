@@ -11,10 +11,8 @@
 <div id="dataformD" title="InformationXXXXX">
 
 
-
 </div>
 <div id="detailsformout" title="Information">
-
 
 
 </div>
@@ -22,11 +20,9 @@
 <div id="detailsformVal" title="Are you sure ?">
 
 
-
 </div>
 
 <div id="encountformOut" title="Information">
-
 
 
 </div>
@@ -37,9 +33,8 @@
 
     <DIV id="errorDivOut" class="header-footer ui-state-default ui-corner-all"
          style="padding: 3px 5px 5px; text-align: center; margin-bottom: 1ex;">
-        <div id='red'>You cannot select more than what you have in store </div> </DIV>
-
-
+        <div id='red'>You cannot select more than what you have in store</div>
+    </DIV>
 
 
     <form id="outgoingVal" name="outgoingVal" action="#">
@@ -48,36 +43,36 @@
         <fieldset>
 
             <legend>outgoing name</legend>
-            <input type="hidden" name="outgoingedit" id="outgoingedit" value="false" />
-            <input type="hidden" name="outgoinguuid" id="outgoinguuid" />
+            <input type="hidden" name="outgoingedit" id="outgoingedit" value="false"/>
+            <input type="hidden" name="outgoinguuid" id="outgoinguuid"/>
             <label>Drug</label>
             <select id="outgoingdrug" name="outgoingdrug">
 
 
             </select>
             <label>Total in store:</label>
-            <input id="totalstore" type="totalstore" value="000" readonly="readonly" />
+            <input id="totalstore" type="totalstore" value="000" readonly="readonly"/>
             <label>Location</label>
             <select id="location" name="location">
 
 
             </select>
 
-            <br />
+            <br/>
 
 
             <label>Quantity out</label>
-            <input type="text" 	name="outgoingquantityin" id="outgoingquantityin" class="required" />
+            <input type="text" name="outgoingquantityin" id="outgoingquantityin" class="required"/>
 
-            <br />
+            <br/>
             <label for="outgoing">Batch NO</label>
-            <input type="text" name="outgoingbatch" id="outgoingbatch" />
+            <input type="text" name="outgoingbatch" id="outgoingbatch"/>
             <label for="outgoing">S11 NO</label>
-            <input type="text" name="outgoings11" id="outgoings11" />
+            <input type="text" name="outgoings11" id="outgoings11"/>
 
             <label for="outgoing">Expire date</label>
-            <input type="text" name="outgoingexpire" id="outgoingexpire" />
-            <br />
+            <input type="text" name="outgoingexpire" id="outgoingexpire"/>
+            <br/>
             <label>Destination</label>
             <select id="destination" name="destination">
 
@@ -96,7 +91,7 @@
             </select>
 
 
-            <input class="submit" type="submit" value="Submit" />
+            <input class="submit" type="submit" value="Submit"/>
         </fieldset>
 
     </form>
@@ -109,9 +104,11 @@
             <legend> Void reason</legend>
 
             <label>Reason</label> <input type="text" name="outgoingreason"
-                                         id="outgoingreason" class="required" /> <input type="hidden"
-                                                                                        name="outgoinguuidvoid" id="outgoinguuidvoid" /> <input class="submit"
-                                                                                                                                                type="submit" value="Submit" />
+                                         id="outgoingreason" class="required"/> <input type="hidden"
+                                                                                       name="outgoinguuidvoid"
+                                                                                       id="outgoinguuidvoid"/> <input
+                class="submit"
+                type="submit" value="Submit"/>
         </fieldset>
         <hr color=#1aad9b width="100%">
 
@@ -145,7 +142,6 @@
             <th></th>
 
 
-
         </tr>
         </tbody>
 
@@ -165,7 +161,7 @@
                 <!-- 					<label>Batch No</label>  -->
                 <!-- 				<input type="text" name="outgoingbatch" id="outgoingbatch"  class="required"/> 			<br /> 	 -->
                 <label>S 11 No</label>
-                <input type="text" name="outgoings11" id="outgoings11" class="required" /> 			<br />
+                <input type="text" name="outgoings11" id="outgoings11" class="required"/> <br/>
 
                 <!-- 					<label for="outgoingexpire">Expire date</label>  -->
                 <!-- 				<input type="text" name="outgoingexpire" id="outgoingexpire222" class="required" /> 		 -->
@@ -174,60 +170,56 @@
 
                 <div id="input1" style="margin-bottom:4px;" class="clonedInput">
                     <label>Quantity</label>
-                    <input  class="datavalues" type="text" name="outgoingnumber" id="outgoingnumber"  class="required"/>
+                    <input class="datavalues" type="text" name="outgoingnumber" id="outgoingnumber" class="required"/>
                 </div>
 
 
                 <!--  <input type="button" id="btnDel" value="Remove field" />	<br /> 	 -->
-                <input type="hidden" name="one" id="one2"  />
-                <input type="hidden" name="two" id="one3" />
-                <input type="hidden" name="three" id="one4" />
-                <input type="hidden" name="four" id="one5"  />
+                <input type="hidden" name="one" id="one2"/>
+                <input type="hidden" name="two" id="one3"/>
+                <input type="hidden" name="three" id="one4"/>
+                <input type="hidden" name="four" id="one5"/>
 
-                <input type="hidden" name="one1" id="one22"  />
-                <input type="hidden" name="two1" id="one23" />
-                <input type="hidden" name="three1" id="one24"  />
-                <input type="hidden" name="four1" id="one25"  />
+                <input type="hidden" name="one1" id="one22"/>
+                <input type="hidden" name="two1" id="one23"/>
+                <input type="hidden" name="three1" id="one24"/>
+                <input type="hidden" name="four1" id="one25"/>
 
-                <input type="hidden" name="outgoingdrug" id="outgoingdrug" />
-                <input type="hidden" name="outgoinguuidextra" id="outgoinguuidextra"  />
-                <input class="submit" type="submit" value="Submit" />
+                <input type="hidden" name="outgoingdrug" id="outgoingdrug"/>
+                <input type="hidden" name="outgoinguuidextra" id="outgoinguuidextra"/>
+                <input class="submit" type="submit" value="Submit"/>
             </fieldset>
 
         </form>
     </div>
-    <br /><br />
+    <br/><br/>
     <!-- 			<a href="#" id="hideoutgoingform">Hide forms </a> -->
 
 
     <fieldset>
-    <form id="filteroutgoing" action="#">
-        <hr color=#1aad9b width="100%">
-
+        <form id="filteroutgoing" action="#">
+            <hr color=#1aad9b width="100%">
 
 
             <legend> Filter</legend>
 
             <label>Drug</label>
-            <input type="text" name="filterdrugoutgoing" id="filterdrugoutgoing"  />
+            <input type="text" name="filterdrugoutgoing" id="filterdrugoutgoing"/>
 
 
+            <hr color=#1aad9b width="100%">
+
+        </form>
 
 
-
-        <hr color=#1aad9b width="100%">
-
-    </form>
-
-
-    <div id="submitAllDivo">
-        <input class="submit" type="submit" value="Approve checked" id="submitAllo" />
-    </div>
+        <div id="submitAllDivo">
+            <input class="submit" type="submit" value="Approve checked" id="submitAllo"/>
+        </div>
 
 
-    <div id="SaveDivo">
-        <input class="submit" type="submit" value="Save" id="Saveo" />
-    </div>
+        <div id="SaveDivo">
+            <input class="submit" type="submit" value="Save" id="Saveo"/>
+        </div>
 
     </fieldset>
 </DIV>
@@ -250,8 +242,6 @@
         <th>Details</th>
         <th>Details</th>
         <th>Details</th>
-
-
 
 
         <th>Details</th>
@@ -285,7 +275,6 @@
         <th></th>
 
 
-
         <th></th>
         <th></th>
         <th></th>
@@ -298,8 +287,6 @@
     </tbody>
 
 </table>
-
-
 
 
 </DIV>

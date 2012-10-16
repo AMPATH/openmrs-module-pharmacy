@@ -26,7 +26,7 @@
 
 
                 <input
-                        type="submit" value="Set" />
+                        type="submit" value="Set"/>
             </fieldset>
             <hr color=#1aad9b width="100%">
 

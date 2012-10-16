@@ -78,8 +78,7 @@ public class DrugFrequencyController {
             }
             response.flushBuffer();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             log.error("Error generated", e);
         }
@@ -133,9 +132,7 @@ public class DrugFrequencyController {
                 }
             }
 
-        }
-
-        else if (frequencyuuidvoid != null) {
+        } else if (frequencyuuidvoid != null) {
 
             DrugFrequency drugFrequency = new DrugFrequency();
             drugFrequency = service.getDrugFrequencyByUuid(frequencyuuidvoid);

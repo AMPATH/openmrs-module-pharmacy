@@ -3,7 +3,7 @@ $j("#strengthvoid").validate();
 $j("#strength").validate();
 $j("#strengthvoid").hide();//
 var oCache = {
-    iCacheLower: -1
+    iCacheLower:-1
 };
 
 function RefreshTable(tableId, urlData) {
@@ -31,26 +31,28 @@ function fnFormatDetails(nTr) {
 }
 
 soTable = $j('#tstrength').dataTable({
-    bJQueryUI : true,
-    bRetrieve : true,
-    bServerSide : true,
-    bProcessing : true,
-    sAjaxSource : 'drugStrength.form',
-    "fnServerData": fnDataTablesPipeline,
-    "aoColumnDefs" : [ {
-        "bVisible" : false,
-        "aTargets" : [ 1 ]
-    }]
+    bJQueryUI:true,
+    bRetrieve:true,
+    bServerSide:true,
+    bProcessing:true,
+    sAjaxSource:'drugStrength.form',
+    "fnServerData":fnDataTablesPipeline,
+    "aoColumnDefs":[
+        {
+            "bVisible":false,
+            "aTargets":[ 1 ]
+        }
+    ]
 });
 
-$j('#tstrength tbody td img').live('click', function() {
+$j('#tstrength tbody td img').live('click', function () {
     var nTr = this.parentNode.parentNode;
 
     fnFormatDetails(nTr);
 
 });
 
-$j('#tstrength tbody td a').live('click', function() {
+$j('#tstrength tbody td a').live('click', function () {
     var nTr = this.parentNode.parentNode;
 
     var aData = soTable.fnGetData(nTr);
@@ -62,16 +64,16 @@ $j('#tstrength tbody td a').live('click', function() {
     $j("#strengthvoid").show();//
 });
 
-$j("form#strength").submit(function() {
+$j("form#strength").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
     if ($j("form#strength").valid()) {
         dataString = $j("#strength").serialize();
 
         $j.ajax({
-            type : "POST",
-            url : "drugStrength.form",
-            data : dataString,
-            success : function() {
+            type:"POST",
+            url:"drugStrength.form",
+            data:dataString,
+            success:function () {
                 var oFormObject = document.forms['strength'];
 
                 oFormObject.elements["strengthedit"].value = 'false';
@@ -82,17 +84,17 @@ $j("form#strength").submit(function() {
         return false;
     }
 });
-$j("form#strengthvoid").submit(function() {
+$j("form#strengthvoid").submit(function () {
     // we want to store the values from the form input box, then send via ajax below
 
     if ($j("#strengthvoid").valid()) {
         dataString = $j("#strengthvoid").serialize();
 
         $j.ajax({
-            type : "POST",
-            url : "drugStrength.form",
-            data : dataString,
-            success : function() {
+            type:"POST",
+            url:"drugStrength.form",
+            data:dataString,
+            success:function () {
                 $j("#strengthvoid").hide();//
                 AutoReload();
             }

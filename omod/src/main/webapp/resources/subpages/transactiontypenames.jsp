@@ -17,9 +17,10 @@
                 <legend>Name Void reason</legend>
 
                 <label for="engine">Reason</label> <input type="text"
-                                                          name="transactionsreason" id="transactionsreason" class="required" /> <input
-                    type="hidden" name="transactionsuuidvoid" id="transactionsuuidvoid" /> <input
-                    class="submit" type="submit" value="Submit" />
+                                                          name="transactionsreason" id="transactionsreason"
+                                                          class="required"/> <input
+                    type="hidden" name="transactionsuuidvoid" id="transactionsuuidvoid"/> <input
+                    class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
         <form id="transactionsform" action="#">
@@ -28,14 +29,14 @@
                 <legend>Name</legend>
 
                 <label for="engine">transaction name</label>
-                <input type="text" 	name="transactionsname" id="transactionsname" class="required" /> <br />
+                <input type="text" name="transactionsname" id="transactionsname" class="required"/> <br/>
                 <label for="engine">description</label>
-                <input type="text" 	name="description" id="description"/>
-                <input type="hidden" name="transactionseedit" id="transactionsedit" value="false" />
+                <input type="text" name="description" id="description"/>
+                <input type="hidden" name="transactionseedit" id="transactionsedit" value="false"/>
 
                 <input
-                        type="hidden" name="transactionsuuid" id="transactionsuuid" /> <input
-                    class="submit" type="submit" value="Submit" />
+                        type="hidden" name="transactionsuuid" id="transactionsuuid"/> <input
+                    class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
     </DIV>
@@ -60,7 +61,6 @@
             <td></td>
             <td></td>
             <td></td>
-
 
 
         </tr>

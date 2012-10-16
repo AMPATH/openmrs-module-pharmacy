@@ -1,5 +1,5 @@
 var oCache = {
-    iCacheLower: -1
+    iCacheLower:-1
 };
 
 var uoTable;
@@ -20,9 +20,8 @@ function RefreshTable(tableId, urlData) {
 }
 
 
-
 function AutoReload() {
-    RefreshTable('#tregimenname','regimenName.form');
+    RefreshTable('#tregimenname', 'regimenName.form');
 
 }
 /* Formating function for row details */
@@ -36,61 +35,57 @@ function fnFormatDetails(nTr) {
     oFormObject.elements["regimennameuuid"].value = aData[2];
 
 
-
 }
 
 uoTable = $j('#tregimenname').dataTable(
-    {  bJQueryUI : true,
-        bRetrieve : true,
-        bServerSide: true,
-        bAutoWidth: false,
-        bProcessing : true,
-        "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+    {  bJQueryUI:true,
+        bRetrieve:true,
+        bServerSide:true,
+        bAutoWidth:false,
+        bProcessing:true,
+        "fnRowCallback":function (nRow, aData, iDisplayIndex) {
 
 
-            var htm= '<ul class="popRegimenN">	<li> <img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/items.png" alt="" /><ul class="popRegimenN" id='+"popRegimenN"+aData[2]+'>';
+            var htm = '<ul class="popRegimenN">	<li> <img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/items.png" alt="" /><ul class="popRegimenN" id=' + "popRegimenN" + aData[2] + '>';
 
 
-            if(aData[0]=="edit"){
-                htm +=	'<li> <a href="#"  id="edit"><img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/edit2.png" />Edit</a></li>';
+            if (aData[0] == "edit") {
+                htm += '<li> <a href="#"  id="edit"><img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/edit2.png" />Edit</a></li>';
 
             }
 
-            if(aData[4]=="void"){
-                htm +=	'<li> <a href="#" id="void" ><img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/delete.png" />Void</a></li>';
+            if (aData[4] == "void") {
+                htm += '<li> <a href="#" id="void" ><img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/delete.png" />Void</a></li>';
             }
 
 
-
-            htm +='<li> <a href="#" id="cancel"><img src="'+jQuery.Page.context+'moduleResources/pharmacy/images/cancel.png" />Cancel</a></li>';
-
-
+            htm += '<li> <a href="#" id="cancel"><img src="' + jQuery.Page.context + 'moduleResources/pharmacy/images/cancel.png" />Cancel</a></li>';
 
 
             htm += '</ul></li></ul>';
-
-
 
 
             $j('td:eq(0)', nRow).html(htm);
 
             return nRow;
         },
-        sAjaxSource : 'regimenName.form',
-        "fnServerData": fnDataTablesPipeline,
-        "aoColumnDefs": [{ "bVisible": false, "aTargets": [ 0 ] },{ "bVisible": false, "aTargets": [ 2 ] },{ "bVisible": false, "aTargets": [ 4 ] }
+        sAjaxSource:'regimenName.form',
+        "fnServerData":fnDataTablesPipeline,
+        "aoColumnDefs":[
+            { "bVisible":false, "aTargets":[ 0 ] },
+            { "bVisible":false, "aTargets":[ 2 ] },
+            { "bVisible":false, "aTargets":[ 4 ] }
         ]
-    } );
+    });
 
 
-
-$j('#edit').live('click', function() {
+$j('#edit').live('click', function () {
     $j("ul .popRegimenN").hide();
     fnFormatDetails(editTr);
 
 });
 
-$j('#void').live('click', function() {
+$j('#void').live('click', function () {
 
     $j("ul .popRegimenN").hide();
     var aData = uoTable.fnGetData(editTr);
@@ -104,19 +99,18 @@ $j('#void').live('click', function() {
 });
 
 
-$j('#cancel').live('click', function() {
+$j('#cancel').live('click', function () {
     $j("ul .popRegimenN").hide();
 
 });
 
 
-$j('#tregimenname tbody td ul').live('click', function() {
-
+$j('#tregimenname tbody td ul').live('click', function () {
 
 
     editTr = this.parentNode.parentNode;
     var aData = uoTable.fnGetData(editTr);
-    link="#popRegimenN"+aData[2];
+    link = "#popRegimenN" + aData[2];
 
 
     $j(link).show();
@@ -126,25 +120,23 @@ $j('#tregimenname tbody td ul').live('click', function() {
 });
 
 
-
-
 $j("form#drugregimenname")
     .submit(
-    function() {
+    function () {
         // we want to store the values from the form input box, then send via ajax below
-        if($j("#drugregimenname").valid()){
+        if ($j("#drugregimenname").valid()) {
             dataString = $j("#drugregimenname").serialize();
 
             $j.ajax({
-                type : "POST",
-                url : "regimenName.form",
+                type:"POST",
+                url:"regimenName.form",
                 data:dataString,
-                success : function() {
+                success:function () {
                     AutoReload();
                     var oFormObject = document.forms['drugregimenname'];
 
                     oFormObject.elements["regimennameedit"].value = 'false';
-                    oFormObject.elements["regimennamename"].value ="";
+                    oFormObject.elements["regimennamename"].value = "";
 
                 }
             });
@@ -154,17 +146,17 @@ $j("form#drugregimenname")
 
 $j("form#regimennamevoid")
     .submit(
-    function() {
+    function () {
         // we want to store the values from the form input box, then send via ajax below
-        if($j("#regimennamevoid").valid()){
+        if ($j("#regimennamevoid").valid()) {
 
             dataString = $j("#regimennamevoid").serialize();
 
             $j.ajax({
-                type : "POST",
-                url : "regimenName.form",
+                type:"POST",
+                url:"regimenName.form",
                 data:dataString,
-                success : function() {
+                success:function () {
                     $j("#regimennamevoid").hide();//
 
                     AutoReload();

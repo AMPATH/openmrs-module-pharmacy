@@ -11,16 +11,13 @@
     <div id="detailsApproved" title="Information">
 
 
-
     </div>
     <div id="detrailsAp" title="Information">
-
 
 
     </div>
 
     <div id="detailsformValap" title="Are you sure ?">
-
 
 
     </div>
@@ -30,12 +27,8 @@
         <a href="#" id="hideapprovedform">Hide Add Request </a>
 
         <div id="submitAllApp">
-            <input class="submit" type="submit" value="Add to store checked" id="submitAllAp" />
+            <input class="submit" type="submit" value="Add to store checked" id="submitAllAp"/>
         </div>
-
-
-
-
 
 
         <form id="approvedvoid" action="#">
@@ -46,9 +39,11 @@
                 <legend> Void reason</legend>
 
                 <label>Reason</label> <input type="text" name="approvedreason"
-                                             id="approvedreason" class="required" /> <input type="hidden"
-                                                                                            name="approveduuidvoid" id="approveduuidvoid" /> <input class="submit"
-                                                                                                                                                    type="submit" value="Submit" />
+                                             id="approvedreason" class="required"/> <input type="hidden"
+                                                                                           name="approveduuidvoid"
+                                                                                           id="approveduuidvoid"/>
+                <input class="submit"
+                       type="submit" value="Submit"/>
             </fieldset>
             <hr color=#1aad9b width="100%">
 
@@ -61,16 +56,16 @@
             <fieldset>
 
                 <legend>Extra information</legend>
-                <br />
+                <br/>
                 <label>Supplier</label>
                 <select id="supplierout" name="supplierout" class="required">
 
 
-                </select> 		<br />
-              <label>Delivery No</label>
-                <input type="text" name="delivery" id="delivery" class="required"  /> <br />
+                </select> <br/>
+                <label>Delivery No</label>
+                <input type="text" name="delivery" id="delivery" class="required"/> <br/>
 
-                <input class="submit" type="submit" value="Submit" />
+                <input class="submit" type="submit" value="Submit"/>
             </fieldset>
             <hr color=#1aad9b width="100%">
 
@@ -85,12 +80,7 @@
                 <legend> Filter</legend>
 
                 <label>Drug</label>
-                <input type="text" name="filterdrugapproved" id="filterdrugapproved"  />
-
-
-
-
-
+                <input type="text" name="filterdrugapproved" id="filterdrugapproved"/>
 
 
             </fieldset>
@@ -117,8 +107,6 @@
             <th>Details</th>
             <th>Details</th>
             <th>Details</th>
-
-
 
 
             <th>Details</th>
@@ -153,7 +141,6 @@
             <th></th>
 
 
-
             <th></th>
             <th></th>
             <th></th>
@@ -170,8 +157,6 @@
 
 
     </table>
-
-
 
 
 </DIV>

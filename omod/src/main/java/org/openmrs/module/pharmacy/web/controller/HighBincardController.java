@@ -110,7 +110,8 @@ public class HighBincardController {
 
     private int monthsDiff;
 
-    private UserContext userService;;
+    private UserContext userService;
+    ;
 
     private boolean editPharmacy = false;
 
@@ -119,27 +120,21 @@ public class HighBincardController {
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/highBincard")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
 
-        String locationVal=null;
+        String locationVal = null;
 
         service = Context.getService(PharmacyService.class);
-        List<PharmacyLocationUsers> listUsers= service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        int sizeUsers =listUsers.size();
+        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
+        int sizeUsers = listUsers.size();
 
 
+        if (sizeUsers > 1) {
+            locationVal = request.getSession().getAttribute("location").toString();
 
-
-
-        if(sizeUsers>1){
-            locationVal=request.getSession().getAttribute("location").toString();
-
-        }
-        else if(sizeUsers==1)
-        {
-            locationVal=listUsers.get(0).getLocation();
+        } else if (sizeUsers == 1) {
+            locationVal = listUsers.get(0).getLocation();
 
 
         }
-
 
 
         serviceLocation = Context.getLocationService();
@@ -205,9 +200,9 @@ public class HighBincardController {
                     if (service.getPharmacyLocationsByUuid(List.get(i).getLocation()).getName()
                             .equalsIgnoreCase(locationVal)) {
 
-                        JSONArray val =getArrayDialog(List,i,locationVal);
+                        JSONArray val = getArrayDialog(List, i, locationVal);
 
-                        if (val!= null)
+                        if (val != null)
                             json.accumulate("aaData", val);
                     }
                     if (exit)
@@ -218,9 +213,9 @@ public class HighBincardController {
                 for (int i = 0; i < size; i++) {
                     if (service.getPharmacyLocationsByUuid(List.get(i).getLocation()).getName()
                             .equalsIgnoreCase(locationVal)) {
-                        JSONArray val =getArray(List,i,locationVal);
+                        JSONArray val = getArray(List, i, locationVal);
 
-                        if (val!= null)
+                        if (val != null)
                             json.accumulate("aaData", val);
                     }
                     if (exit)
@@ -262,8 +257,7 @@ public class HighBincardController {
             response.getWriter().print(json);
 
             response.flushBuffer();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             log.error("Error generated", e);
         }
@@ -372,8 +366,7 @@ public class HighBincardController {
 
                 try {
                     dateVal = new SimpleDateFormat("dd-MM-yyyy").parse(date);
-                }
-                catch (ParseException e) {
+                } catch (ParseException e) {
                     // TODO Auto-generated catch blockreturn datad;
                     log.error("Error generated", e);
                 }
@@ -550,8 +543,7 @@ public class HighBincardController {
                         if (outgoingexpire != null) {
                             date2 = new SimpleDateFormat("MM/dd/yyyy").parse(outgoingexpire.substring(0, 10));
                         }
-                    }
-                    catch (ParseException e) {
+                    } catch (ParseException e) {
                         // TODO Auto-generated catch block
                         log.error("Error generated", e);
                     }
@@ -585,9 +577,7 @@ public class HighBincardController {
                     //
                 }
             }
-        }
-
-        else if (binuuidvoid != null) {
+        } else if (binuuidvoid != null) {
             PharmacyStore pharmacyStore = new PharmacyStore();
             pharmacyStore = service.getPharmacyInventoryByUuid(binuuidvoid);
 
@@ -600,7 +590,7 @@ public class HighBincardController {
 
     }
 
-    public synchronized JSONArray getArray(List<PharmacyStore> pharmacyStore, int size,String location) {
+    public synchronized JSONArray getArray(List<PharmacyStore> pharmacyStore, int size, String location) {
 
         if (filter.length() > 2) {
 
@@ -617,7 +607,7 @@ public class HighBincardController {
                         Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
                         for (Role rl : xvc) {
 
-                            if((rl.getRole().equals("System Developer"))||(rl.getRole().equals("Provider"))||(rl.getRole().equals("	Authenticated "))){
+                            if ((rl.getRole().equals("System Developer")) || (rl.getRole().equals("Provider")) || (rl.getRole().equals("	Authenticated "))) {
 
                                 editPharmacy = true;
                                 deletePharmacy = true;
@@ -697,7 +687,7 @@ public class HighBincardController {
                     Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
                     for (Role rl : xvc) {
 
-                        if((rl.getRole().equals("System Developer"))||(rl.getRole().equals("Provider"))||(rl.getRole().equals("	Authenticated "))){
+                        if ((rl.getRole().equals("System Developer")) || (rl.getRole().equals("Provider")) || (rl.getRole().equals("	Authenticated "))) {
 
                             editPharmacy = true;
                             deletePharmacy = true;
@@ -761,7 +751,7 @@ public class HighBincardController {
         return null;
     }
 
-    public synchronized JSONArray getArrayDialog(List<PharmacyStore> pharmacyStore, int size,String location) {
+    public synchronized JSONArray getArrayDialog(List<PharmacyStore> pharmacyStore, int size, String location) {
         if (service.getPharmacyLocationsByUuid(pharmacyStore.get(size).getLocation()).getName()
                 .equalsIgnoreCase(location)) {
             if (uuiddialog != null) {

@@ -7,8 +7,8 @@ import org.json.JSONObject;
 import org.openmrs.Role;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.context.UserContext;
-import org.openmrs.module.pharmacy.model.PharmacyCategory;
-import org.openmrs.module.pharmacy.service.PharmacyService;
+import org.openmrs.module.pharmacy.model.*;
+import org.openmrs.module.pharmacy.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -95,8 +95,7 @@ public class CategoryNamesController {
             }
             response.flushBuffer();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             log.error("Error generated", e);
         }
@@ -152,9 +151,7 @@ public class CategoryNamesController {
 
             }
 
-        }
-
-        else if (uuidvoid != null) {
+        } else if (uuidvoid != null) {
 
             PharmacyCategory categoryNamee = new PharmacyCategory();
 
@@ -176,7 +173,7 @@ public class CategoryNamesController {
         Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
         for (Role rl : xvc) {
 
-            if((rl.getRole().equals("System Developer"))||(rl.getRole().equals("Provider"))||(rl.getRole().equals("	Authenticated "))){
+            if ((rl.getRole().equals("System Developer")) || (rl.getRole().equals("Provider")) || (rl.getRole().equals("	Authenticated "))) {
 
                 editPharmacy = true;
                 deletePharmacy = true;
@@ -192,16 +189,7 @@ public class CategoryNamesController {
             }
 
         }
-//		for (Privilege p : xc) {
-//			if (p.getPrivilege().equalsIgnoreCase("Edit Pharmacy")) {
-//				editPharmacy = true;
-//			}
-//			
-//			if (p.getPrivilege().equalsIgnoreCase("Delete Pharmacy")) {
-//				deletePharmacy = true;
-//			}
-//			
-//		}
+
 
         if (editPharmacy) {
 

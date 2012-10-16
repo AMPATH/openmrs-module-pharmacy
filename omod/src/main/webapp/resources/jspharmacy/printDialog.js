@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     initHide();
 });
 
@@ -17,7 +17,7 @@ function showPrint() {
     pwin.document.write('<html><body onload="window.print()">' + content
         + '</body></html>');
     pwin.document.close();
-    setTimeout(function() {
+    setTimeout(function () {
         pwin.close();
     }, 1000);
 }
@@ -36,8 +36,7 @@ function getValues() {
         hrFont, res);
 }
 
-function loadImage(type, msg, height, moduleWidth, wideFactor, format, hrSize,
-                   hrFont, res) {
+function loadImage(type, msg, height, moduleWidth, wideFactor, format, hrSize, hrFont, res) {
     /***************************************************************************
      * Defaults ****************** type = 'code39'; height='1.0cm'; moduleWidth =
      * '0.2mm'; wideFactor = '2'; format = 'png'; hrSize = '6pt'; hrFont =
@@ -56,7 +55,7 @@ function loadImage(type, msg, height, moduleWidth, wideFactor, format, hrSize,
 function showImage(src) {
     $("#loader img").fadeOut("normal").remove();
     var image = new Image();
-    $(image).load(function() {
+    $(image).load(function () {
         $(this).hide();
         $("#loader").append(this).removeClass("loading");
         $(image).fadeIn("slow");

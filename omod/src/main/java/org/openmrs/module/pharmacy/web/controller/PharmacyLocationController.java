@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+
 @Controller
 public class PharmacyLocationController {
 
@@ -32,47 +33,40 @@ public class PharmacyLocationController {
         String drop = request.getParameter("drop");
 
 
-
-
-        List<PharmacyLocationUsers> listUsers= service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        int size =listUsers.size();
+        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
+        int size = listUsers.size();
         JSONArray jsons = new JSONArray();
 
 
         try {
 
-            if(drop!=null){
+            if (drop != null) {
 
                 jsons.put("" + request.getSession().getAttribute("location"));
 
-            }   else{
+            } else {
 
 
+                if (size > 1) {
 
-            if(size>1){
+                    if (request.getSession().getAttribute("location") != null)
+                        jsons.put("" + request.getSession().getAttribute("location"));
+                    else
+                        jsons.put("none");
 
-                if(request.getSession().getAttribute("location")!=null)
-                    jsons.put("" + request.getSession().getAttribute("location"));
-                else
+                } else if (size == 1) {
+
+                    jsons.put("" + listUsers.get(0).getLocation());
+
+                } else
                     jsons.put("none");
-
-            }
-            else if(size==1)
-            {
-
-                jsons.put(""+listUsers.get(0).getLocation() );
-
-            }
-            else
-                jsons.put("none" );
 
             }
             response.getWriter().print(jsons);
 
             response.flushBuffer();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             log.error("Error generated", e);
         }
@@ -90,11 +84,10 @@ public class PharmacyLocationController {
             String location = request.getParameter("locationsVal");
             if (location != null) {
 
-                if(request.getSession().getAttribute("location")==null){
+                if (request.getSession().getAttribute("location") == null) {
                     request.getSession(true).setAttribute("location", location);
                     response.getWriter().print(service.setPharmacyLocation(location));
-                }
-                else{
+                } else {
 
 
                     request.getSession(false).removeAttribute("location");
@@ -103,15 +96,13 @@ public class PharmacyLocationController {
                     response.getWriter().print(service.setPharmacyLocation(location));
 
 
-
                 }
 
             }
 
             response.flushBuffer();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             log.error("Error generated", e);
         }

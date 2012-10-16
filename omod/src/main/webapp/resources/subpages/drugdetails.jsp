@@ -12,15 +12,18 @@
 
     <DIV id="incss">
         <a href="#" id="adddrug">Add drugs </a>
+
         <form id="drugsvoid" action="#">
             <fieldset>
 
                 <legend>Drugs Void reason</legend>
 
                 <label>Reason</label> <input type="text" name="drugsreason"
-                                             id="drugsreason" class="required" /> <input type="hidden"
-                                                                                         name="drugsuuidvoid" id="drugsuuidvoid" /> <input class="submit"
-                                                                                                                                           type="submit" value="Submit" />
+                                             id="drugsreason" class="required"/> <input type="hidden"
+                                                                                        name="drugsuuidvoid"
+                                                                                        id="drugsuuidvoid"/> <input
+                    class="submit"
+                    type="submit" value="Submit"/>
             </fieldset>
         </form>
         <form id="drugs" action="#">
@@ -31,18 +34,18 @@
                 <label>Drug name</label> <select id="drugsname" name="drugsname">
 
 
-            </select><br /> 	 <input type="hidden" name="drugsedit" id="drugsedit" value="false" />
-                <input type="hidden" name="drugsuuid" id="drugsuuid" /> <label>Formulation</label>
+            </select><br/> <input type="hidden" name="drugsedit" id="drugsedit" value="false"/>
+                <input type="hidden" name="drugsuuid" id="drugsuuid"/> <label>Formulation</label>
                 <select id="drugsformulation" name="drugsformulation">
 
 
-                </select><br /> 	 <label>Strength</label> <select id="drugsstrength"
-                                                                     name="drugsstrength">
+                </select><br/> <label>Strength</label> <select id="drugsstrength"
+                                                               name="drugsstrength">
 
-            </select> <br /> 	<label>Units</label> <select id="drugsunits" name="drugsunits">
+            </select> <br/> <label>Units</label> <select id="drugsunits" name="drugsunits">
 
 
-            </select> <input class="submit" type="submit" value="Submit" />
+            </select> <input class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
     </DIV>
@@ -69,7 +72,6 @@
             <td></td>
             <td></td>
             <td></td>
-
 
 
         </tr>

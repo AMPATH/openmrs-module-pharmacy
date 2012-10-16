@@ -14,8 +14,6 @@
         <!-- 		<a href="#" id="bincardform">Add drugs </a> -->
 
 
-
-
         <form id="lowvoid" action="#">
             <hr color=#1aad9b width="100%">
 
@@ -24,9 +22,11 @@
                 <legend> Void reason</legend>
 
                 <label>Reason</label> <input type="text" name="binreason"
-                                             id="binreason" class="required" /> <input type="hidden"
-                                                                                       name="binuuidvoid" id="binuuidvoid" /> <input class="submit"
-                                                                                                                                     type="submit" value="Submit" />
+                                             id="binreason" class="required"/> <input type="hidden"
+                                                                                      name="binuuidvoid"
+                                                                                      id="binuuidvoid"/> <input
+                    class="submit"
+                    type="submit" value="Submit"/>
             </fieldset>
             <hr color=#1aad9b width="100%">
 
@@ -42,10 +42,7 @@
 
                 <label>Drug</label>
                 <input type="text"
-                       name="filterdruglow" id="filterdruglow" />
-
-
-
+                       name="filterdruglow" id="filterdruglow"/>
 
 
             </fieldset>
@@ -75,7 +72,6 @@
             <th>Suppier</th>
 
 
-
             <th>Void</th>
         </tr>
         </thead>
@@ -101,13 +97,10 @@
             <th></th>
 
 
-
         </tr>
         </tbody>
 
     </table>
-
-
 
 
 </DIV>

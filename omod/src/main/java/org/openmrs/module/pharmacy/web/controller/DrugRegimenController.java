@@ -88,8 +88,6 @@ public class DrugRegimenController {
         service = Context.getService(PharmacyService.class);
 
 
-
-
         serviceDrugs = Context.getConceptService();
         List<Regimen> list = service.getRegimen();
         regimenCombination = new RegimenCombination();
@@ -148,8 +146,7 @@ public class DrugRegimenController {
             }
             response.flushBuffer();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // drugs
             log.error("Error generated", e);
         }
@@ -174,7 +171,6 @@ public class DrugRegimenController {
         String regimendrug2 = request.getParameter("regimendrug2");
         String regimendrug3 = request.getParameter("regimendrug3");
         String regimendrug4 = request.getParameter("regimendrug4");
-
 
 
         String option1 = request.getParameter("option1");
@@ -216,7 +212,7 @@ public class DrugRegimenController {
             if (regimenedit.equalsIgnoreCase("false")) {
 
                 if (!optionss.isEmpty()) {
-                    if ((!foundOptionYes)&& optionss.equalsIgnoreCase("Yes")) {
+                    if ((!foundOptionYes) && optionss.equalsIgnoreCase("Yes")) {
 
                         Regimen regimen = new Regimen();
 
@@ -274,10 +270,7 @@ public class DrugRegimenController {
                             combination2.setDrugName(null);
 
 
-
-
-
-                        if(option1!=null && option2!=null){
+                        if (option1 != null && option2 != null) {
 
                             option1Combi = new RegimenCombination();
                             option2Combi = new RegimenCombination();
@@ -306,12 +299,9 @@ public class DrugRegimenController {
                         service.saveRegimenCombination(option2Combi);//
 
 
-
                         //	    		    			}
 
-                    }
-
-                    else if ((!found)&&optionss.equalsIgnoreCase("No")) {
+                    } else if ((!found) && optionss.equalsIgnoreCase("No")) {
 
                         Regimen regimen = new Regimen();
 
@@ -334,7 +324,7 @@ public class DrugRegimenController {
 
                 if (!optionss.isEmpty()) {
 
-                    if ((foundOptionYes)&&optionss.equalsIgnoreCase("Yes")) {
+                    if ((foundOptionYes) && optionss.equalsIgnoreCase("Yes")) {
 
                         List<RegimenCombination> combinat = service.getRegimenCombination();
                         int sizee = combinat.size();
@@ -354,12 +344,10 @@ public class DrugRegimenController {
                             String get = getRegimenUuid(combinat, r, regimenuuid);
 
 
-
-
                             if (get != null) {
 
 
-                                if(combinat.get(r).getOptions()){
+                                if (combinat.get(r).getOptions()) {
                                     if (datafour) {
                                         option1Combi = new RegimenCombination();
 
@@ -376,7 +364,7 @@ public class DrugRegimenController {
                                     }
 
 
-                                } else{
+                                } else {
 
                                     if (dataone) {
                                         newcombination1 = new RegimenCombination();
@@ -400,8 +388,6 @@ public class DrugRegimenController {
                                         continue;
                                     }
                                 }
-
-
 
 
                             } else {
@@ -450,9 +436,6 @@ public class DrugRegimenController {
                         // if (userService.getAuthenticatedUser().getUserId() == regimen.getCreator().getUserId()) {
 
 
-
-
-
                         //regimen.setRegimenNames(service.getRegimenNamesByName(regimennamecomplete));
                         if (!complete.equals("-1"))
                             regimen.setDrugName(serviceDrugs.getDrugByNameOrId(complete));
@@ -497,11 +480,7 @@ public class DrugRegimenController {
                             newcombination3.setDrugName(null);
 
 
-
-
-
-
-                        if(option1!=null && option2!=null){
+                        if (option1 != null && option2 != null) {
 
                             option1Combi = new RegimenCombination();
                             option2Combi = new RegimenCombination();
@@ -531,9 +510,7 @@ public class DrugRegimenController {
 
                         service.saveRegimen(regimen);
                         //}
-                    }
-
-                    else if ((found)&&optionss.equalsIgnoreCase("No")) {
+                    } else if ((found) && optionss.equalsIgnoreCase("No")) {
 
                         Regimen regimen = new Regimen();
 
@@ -544,13 +521,6 @@ public class DrugRegimenController {
                             regimen.setDrugName(serviceDrugs.getDrugByNameOrId(complete));
                         else
                             regimen.setDrugName(null);
-
-
-
-
-
-
-
 
 
                         if (regimen.getCombination()) {
@@ -588,9 +558,7 @@ public class DrugRegimenController {
 
             }
 
-        }
-
-        else if (regimenuuidvoid != null) {
+        } else if (regimenuuidvoid != null) {
 
             Regimen regimen = new Regimen();
 
@@ -637,7 +605,7 @@ public class DrugRegimenController {
         Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
         for (Role rl : xvc) {
 
-            if((rl.getRole().equals("System Developer"))||(rl.getRole().equals("Provider"))||(rl.getRole().equals("	Authenticated "))){
+            if ((rl.getRole().equals("System Developer")) || (rl.getRole().equals("Provider")) || (rl.getRole().equals("	Authenticated "))) {
 
                 editPharmacy = true;
                 deletePharmacy = true;
@@ -669,7 +637,6 @@ public class DrugRegimenController {
             data.put("None");
 
 
-
         if (regimen.get(size).getCombination()) {
             String uuid = regimen.get(size).getRegimenNames().getRegimenName();
 
@@ -682,7 +649,7 @@ public class DrugRegimenController {
                 if (found != null) {
 
 
-                    if(combi.get(i).getOptions()){
+                    if (combi.get(i).getOptions()) {
 
                         if (combi.get(i).getDrugName() != null) {
                             data.put(combi.get(i).getDrugName().getName());
@@ -690,8 +657,7 @@ public class DrugRegimenController {
                         } else
                             data.put("None");
 
-                    }
-                    else{
+                    } else {
 
                         if (combi.get(i).getDrugName() != null) {
                             data.put(combi.get(i).getDrugName().getName());
@@ -699,7 +665,6 @@ public class DrugRegimenController {
                         } else
                             data.put("None");
                     }
-
 
 
                 }

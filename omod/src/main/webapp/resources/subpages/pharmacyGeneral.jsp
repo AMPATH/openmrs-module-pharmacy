@@ -17,9 +17,10 @@
                 <legend>Name Void reason</legend>
 
                 <label for="engine">Reason</label> <input type="text"
-                                                          name="generalreason" id="generalreason" class="required" /> <input
-                    type="hidden" name="generaluuidvoid" id="generaluuidvoid" /> <input
-                    class="submit" type="submit" value="Submit" />
+                                                          name="generalreason" id="generalreason" class="required"/>
+                <input
+                        type="hidden" name="generaluuidvoid" id="generaluuidvoid"/> <input
+                    class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
         <form id="generalForm" action="#">
@@ -29,14 +30,14 @@
 
                 <label for="engine"> Name</label>
 
-                <input type="text" name="generalname" id="generalname" class="required" /><br />
+                <input type="text" name="generalname" id="generalname" class="required"/><br/>
 
 
                 <label for="engine">Description</label>
-                <input type="text"	name="description" id="description"  />
-                <input	type="hidden" name="generaledit" id="generaledit" value="false" /> <input
-                    type="hidden" name="generaluuid" id="generaluuid" /> <input
-                    class="submit" type="submit" value="Submit" />
+                <input type="text" name="description" id="description"/>
+                <input type="hidden" name="generaledit" id="generaledit" value="false"/> <input
+                    type="hidden" name="generaluuid" id="generaluuid"/> <input
+                    class="submit" type="submit" value="Submit"/>
             </fieldset>
         </form>
     </DIV>
@@ -60,7 +61,6 @@
             <td></td>
             <td></td>
             <td></td>
-
 
 
         </tr>

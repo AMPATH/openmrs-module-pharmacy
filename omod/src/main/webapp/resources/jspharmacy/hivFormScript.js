@@ -1,6 +1,3 @@
-
-
-
 var pRegimen;
 
 var cRegimen;
@@ -8,24 +5,24 @@ var cRegimen;
 
 var formDose;
 $j("#dispensedby").autocomplete({
-    search : function() {
+    search:function () {
         $j(this).addClass('working');
     },
 
-    source : function(request, response) {
+    source:function (request, response) {
         //   http://localhost:8080/openmrs/module/htmlwidgets/conceptSearch.form
 
         dataString = "q=" + request.term;
 
-        $j.getJSON("dispense.form?" + dataString, function(result) {
+        $j.getJSON("dispense.form?" + dataString, function (result) {
 
             $j("#dispensedby").removeClass('working');
 
-            response($j.each(result, function(index, item) {
+            response($j.each(result, function (index, item) {
 
                 return {
-                    label : item,
-                    value : item
+                    label:item,
+                    value:item
 
                 }
             }));
@@ -33,72 +30,62 @@ $j("#dispensedby").autocomplete({
         });
 
     },
-    minLength : 2,
-    select : function(event, ui) {
+    minLength:2,
+    select:function (event, ui) {
 
         //											log( ui.item ?
         //												"Selected: " + ui.item.label :
         //												"Nothing selected, input was " + this.value);
     },
-    open : function() {
+    open:function () {
         $j(this).removeClass("ui-corner-all").addClass("ui-corner-top");
     },
-    close : function() {
+    close:function () {
         $j(this).removeClass("ui-corner-top").addClass("ui-corner-all");
     }
 });
 
-$j.getJSON("dispense.form?encounter=enc&Pen=" + jQuery.Pid.Pi, function(result) {
+$j.getJSON("dispense.form?encounter=enc&Pen=" + jQuery.Pid.Pi, function (result) {
 
 
-    if(jQuery.isEmptyObject(result)){
+    if (jQuery.isEmptyObject(result)) {
 
         $j("div.pregimen").text("Not given");
         //document.getElementById('pregimen').style.color = 'blue';
-        $j(".pregimen").css("color","blue");
+        $j(".pregimen").css("color", "blue");
     }
-    else{
-        $j.each(result, function(key, val) {
+    else {
+        $j.each(result, function (key, val) {
 
 
-            $j.each(val, function(index, item) {
+            $j.each(val, function (index, item) {
 
 
-                var text=item;
+                var text = item;
 
-                var strv= text.toString();
+                var strv = text.toString();
 
                 var numbersArray = strv.split(",");
 
 
-                var value=numbersArray[0]+"/"+numbersArray[1]+"/"+numbersArray[2]+"/"+numbersArray[3]+"/"+numbersArray[4]+"/"+numbersArray[5]+"/"+numbersArray[6]+"|"+numbersArray[7];
-                pRegimen=value;
+                var value = numbersArray[0] + "/" + numbersArray[1] + "/" + numbersArray[2] + "/" + numbersArray[3] + "/" + numbersArray[4] + "/" + numbersArray[5] + "/" + numbersArray[6] + "|" + numbersArray[7];
+                pRegimen = value;
                 $j("div.pregimen").text(value);
                 //document.getElementById('pregimen').style.color = 'blue';
-                $j(".pregimen").css("color","blue");
+                $j(".pregimen").css("color", "blue");
 
             });
-
-
-
-
 
 
         });
     }
 
 
-
-
-
-
 });
-function check(val){
+function check(val) {
 
 
-
-
-    cRegimen=val;
+    cRegimen = val;
     // if(cRegimen!=pRegimen)
     //  {
     //$j("#info").text("Regimen Not ok");
@@ -112,7 +99,7 @@ function check(val){
 }
 
 
-if(jQuery.Age.age>=16){
+if (jQuery.Age.age >= 16) {
     $j('#drugdiv')
         .after(
         "'"
@@ -128,7 +115,7 @@ if(jQuery.Age.age>=16){
             + '<td class="ui-dform-td">'
             + '<input type="text" name="DRUGS|90902#7" id="month1" class="ui-dform-checkbox" value=""/>'
             + '</td>'
-            +'</td>'
+            + '</td>'
             + '<td class="ui-dform-td">'
             + '<input type="text" name="DRUGS|90906#7"  id="pill"  class="ui-dform-checkbox" value=""/>'
             +
@@ -142,7 +129,7 @@ if(jQuery.Age.age>=16){
             "'");
 
 }
-else{
+else {
     $j('#drugdiv')
         .after(
         "'"
@@ -162,7 +149,7 @@ else{
             + '<td class="ui-dform-td">'
             + '<input type="text" name="DRUGS|90902#7" id="month1" class="ui-dform-checkbox" value=""/>'
             + '</td>'
-            +'</td>'
+            + '</td>'
             + '<td class="ui-dform-td">'
             + '<input type="text" name="DRUGS|90906#7"  id="pill"  class="ui-dform-checkbox" value=""/>'
             +
@@ -175,43 +162,39 @@ else{
 
             "'");
 }
-$j("#generalform").delegate("#btnDel", "click", function() {
+$j("#generalform").delegate("#btnDel", "click", function () {
     var id = "#" + $j(this).attr("name");
 
     $j("" + id + "").remove();
 });
 
 
-
 document.getElementById('medication').style.width = '200px';
 
 
-
-$j('#medication').focus(function() {
-
+$j('#medication').focus(function () {
 
 
-    var val=document.getElementById("reg").value;
+    var val = document.getElementById("reg").value;
 
 
-    if(val==""){
+    if (val == "") {
 
         $j("#info").text("Current regimen must be selected before proceeding");
         //document.getElementById('pregimen').style.color = 'blue';
-        $j("#info").css("color","red");
+        $j("#info").css("color", "red");
 
 
-        setTimeout(function(){
-            $j("#info").css("color","white");
-        },5000);
+        setTimeout(function () {
+            $j("#info").css("color", "white");
+        }, 5000);
 
 
         $("#reg").focus();
 
     }
 
-    else if(cRegimen!=pRegimen)
-    {
+    else if (cRegimen != pRegimen) {
 
         if ($j("#regimenchange").is(":checked")) {
 
@@ -220,15 +203,15 @@ $j('#medication').focus(function() {
 
             regimen();
         }
-        else{
+        else {
 
             $j("#info").text("Regimen Not ok or give reason for change");
 
             //document.getElementById('pregimen').style.color = 'blue';
-            $j("#info").css("color","red");
-            setTimeout(function(){
-                $j("#info").css("color","white");
-            },5000);
+            $j("#info").css("color", "red");
+            setTimeout(function () {
+                $j("#info").css("color", "white");
+            }, 5000);
 
         }
 
@@ -236,60 +219,52 @@ $j('#medication').focus(function() {
     }
 
 
-    else if((val!="")&&(cRegimen==pRegimen)){
+    else if ((val != "") && (cRegimen == pRegimen)) {
         if (!$j("#regimenchange").is(":checked")) {
             regimen();
 
-        }else
-        {
+        } else {
 
             $j("#info").text("You should not select change regimen");
 
             //document.getElementById('pregimen').style.color = 'blue';
-            $j("#info").css("color","red");
-            setTimeout(function(){
-                $j("#info").css("color","white");
-            },8000);
+            $j("#info").css("color", "red");
+            setTimeout(function () {
+                $j("#info").css("color", "white");
+            }, 8000);
 
         }
-
 
 
     }
 
 
-
-
 });
 
-function regimen(){
-
-
-
-
+function regimen() {
 
 
     $j("#medication").autocomplete({
-        search : function() {
+        search:function () {
             $j(this).addClass('working');
         },
 
-        source : function(request, response) {
+        source:function (request, response) {
             //   http://localhost:8080/openmrs/module/htmlwidgets/conceptSearch.form
             alert(cRegimen);
 
-            dataString = "drugs=" + request.term+"&values="+cRegimen;
+            dataString = "drugs=" + request.term + "&values=" + cRegimen;
 
 
-            $j.getJSON("dispense.form?" + dataString, function(result) {
+            $j.getJSON("dispense.form?" + dataString, function (result) {
 
                 $j("#medication").removeClass('working');
 
-                response($j.each(result, function(index, item) {
+                response($j.each(result, function (index, item) {
 
                     return {
-                        label : item,
-                        value : item
+                        label:item,
+                        value:item
 
                     }
                 }));
@@ -297,17 +272,17 @@ function regimen(){
             });
 
         },
-        minLength : 2,
-        select : function(event, ui) {
+        minLength:2,
+        select:function (event, ui) {
 
             //											log( ui.item ?
             //												"Selected: " + ui.item.label :
             //												"Nothing selected, input was " + this.value);
         },
-        open : function() {
+        open:function () {
             $j(this).removeClass("ui-corner-all").addClass("ui-corner-top");
         },
-        close : function() {
+        close:function () {
             $j(this).removeClass("ui-corner-top").addClass("ui-corner-all");
         }
     });
@@ -316,7 +291,7 @@ function regimen(){
 }
 $j(document)
     .keydown(
-    function(e) {
+    function (e) {
         if (e.keyCode == 13) {
 
             var drugId;
@@ -335,9 +310,9 @@ $j(document)
                 }
 
                 $j.getJSON("drugDetails.form?drop=drug&id="
-                    + drugId, function(result) {
+                    + drugId, function (result) {
 
-                    $j.each(result, function(index, value) { //bincard"stateList
+                    $j.each(result, function (index, value) { //bincard"stateList
                         if (index == 0) {
 
                             name = value;
@@ -372,24 +347,24 @@ $j(document)
 
 
 $j("#Current").autocomplete({
-    search : function() {
+    search:function () {
         $j(this).addClass('working');
     },
 
-    source : function(request, response) {
+    source:function (request, response) {
         //   http://localhost:8080/openmrs/module/htmlwidgets/conceptSearch.form
 
         dataString = "q=" + request.term;
 
-        $j.getJSON("dispense.form?" + dataString, function(result) {
+        $j.getJSON("dispense.form?" + dataString, function (result) {
 
             $j("#prescriber").removeClass('working');
 
-            response($j.each(result, function(index, item) {
+            response($j.each(result, function (index, item) {
 
                 return {
-                    label : item,
-                    value : item
+                    label:item,
+                    value:item
 
                 }
             }));
@@ -397,40 +372,40 @@ $j("#Current").autocomplete({
         });
 
     },
-    minLength : 2,
-    select : function(event, ui) {
+    minLength:2,
+    select:function (event, ui) {
 
         //											log( ui.item ?
         //												"Selected: " + ui.item.label :
         //												"Nothing selected, input was " + this.value);
     },
-    open : function() {
+    open:function () {
         $j(this).removeClass("ui-corner-all").addClass("ui-corner-top");
     },
-    close : function() {
+    close:function () {
         $j(this).removeClass("ui-corner-top").addClass("ui-corner-all");
     }
 });
 
 $j("#prescriber").autocomplete({
-    search : function() {
+    search:function () {
         $j(this).addClass('working');
     },
 
-    source : function(request, response) {
+    source:function (request, response) {
         //   http://localhost:8080/openmrs/module/htmlwidgets/conceptSearch.form
 
         dataString = "q=" + request.term;
 
-        $j.getJSON("dispense.form?" + dataString, function(result) {
+        $j.getJSON("dispense.form?" + dataString, function (result) {
 
             $j("#prescriber").removeClass('working');
 
-            response($j.each(result, function(index, item) {
+            response($j.each(result, function (index, item) {
 
                 return {
-                    label : item,
-                    value : item
+                    label:item,
+                    value:item
 
                 }
             }));
@@ -438,53 +413,49 @@ $j("#prescriber").autocomplete({
         });
 
     },
-    minLength : 2,
-    select : function(event, ui) {
+    minLength:2,
+    select:function (event, ui) {
 
         //											log( ui.item ?
         //												"Selected: " + ui.item.label :
         //												"Nothing selected, input was " + this.value);
     },
-    open : function() {
+    open:function () {
         $j(this).removeClass("ui-corner-all").addClass("ui-corner-top");
     },
-    close : function() {
+    close:function () {
         $j(this).removeClass("ui-corner-top").addClass("ui-corner-all");
     }
 });
 
 
-
-
-
-
 $j('#weigh').change(
-    function() {
-        var wgth=$j("#weigh").val();
+    function () {
+        var wgth = $j("#weigh").val();
 
-        if(wgth>=3 && wgth <=5.9 ){
+        if (wgth >= 3 && wgth <= 5.9) {
 
             $j("#weight").val("3 - 5.9");
         }
-        else   if(wgth>=6 && wgth <=9.9 ){
+        else if (wgth >= 6 && wgth <= 9.9) {
 
             $j("#weight").val("6 - 9.9");
         }
 
-        else   if(wgth>=10 && wgth <=13.9 ){
+        else if (wgth >= 10 && wgth <= 13.9) {
 
             $j("#weight").val("10 - 13.9");
         }
 
-        else   if(wgth>=14 && wgth <=19.9 ){
+        else if (wgth >= 14 && wgth <= 19.9) {
 
             $j("#weight").val("14 - 19.9");
         }
 
-        else   if(wgth>=20 && wgth <=24.9 ){
+        else if (wgth >= 20 && wgth <= 24.9) {
 
             $j("#weight").val("20 - 24.9");
-        }else   if(wgth>=25){
+        } else if (wgth >= 25) {
 
             $j("#weight").val("25");
         }
@@ -499,36 +470,30 @@ var formForm = [
 ];
 
 $j("#formi").autocomplete({
-    minLength : 0,
+    minLength:0,
 
-    source : formForm,
+    source:formForm,
 
-    select : function(event, ui) {
+    select:function (event, ui) {
         $j(this).autocomplete('close');
     },
-    open : function() {
+    open:function () {
         $j(this).removeClass("ui-corner-all").addClass("ui-corner-top");
     },
-    close : function() {
+    close:function () {
         $j(this).removeClass("ui-corner-top").addClass("ui-corner-all");
     }
 });
 
 
-
-
-
-var  formDoseMore = [
+var formDoseMore = [
     // Africa
-    "1 tablet BD | 1888",   "1 tablet OD | 1891", "1 tablet NOCTE | 2176",  "2 tablet BD | 1888",  "3 tablet BD | 1888"
+    "1 tablet BD | 1888", "1 tablet OD | 1891", "1 tablet NOCTE | 2176", "2 tablet BD | 1888", "3 tablet BD | 1888"
 
 ];
 
 
-
-
-
-var   formDose = [
+var formDose = [
     // Africa
     "3 ml BD | 1888", "4 ml BD | 1888", "6 ml BD | 1888", "7 ml BD | 1888",
     "1/2 tab BD | 1888",
@@ -538,45 +503,37 @@ var   formDose = [
 ];
 
 
-
-
-
-
-
-
-
 $j("#dosemore").autocomplete({
-    minLength : 0,
+    minLength:0,
 
-    source : formDoseMore,
+    source:formDoseMore,
 
-    select : function(event, ui) {
+    select:function (event, ui) {
         $j(this).autocomplete('close');
     },
-    open : function() {
+    open:function () {
         $j(this).removeClass("ui-corner-all").addClass("ui-corner-top");
     },
-    close : function() {
+    close:function () {
         $j(this).removeClass("ui-corner-top").addClass("ui-corner-all");
     }
 });
 
 $j("#dose").autocomplete({
-    minLength : 0,
+    minLength:0,
 
-    source : formDose,
+    source:formDose,
 
-    select : function(event, ui) {
+    select:function (event, ui) {
         $j(this).autocomplete('close');
     },
-    open : function() {
+    open:function () {
         $j(this).removeClass("ui-corner-all").addClass("ui-corner-top");
     },
-    close : function() {
+    close:function () {
         $j(this).removeClass("ui-corner-top").addClass("ui-corner-all");
     }
 });
-
 
 
 var formDisp = [
@@ -586,16 +543,16 @@ var formDisp = [
 ];
 
 $j("#dispensed").autocomplete({
-    minLength : 0,
+    minLength:0,
 
-    source : formDisp,
-    select : function(event, ui) {
+    source:formDisp,
+    select:function (event, ui) {
         $j(this).autocomplete('close');
     },
-    open : function() {
+    open:function () {
         $j(this).removeClass("ui-corner-all").addClass("ui-corner-top");
     },
-    close : function() {
+    close:function () {
         $j(this).removeClass("ui-corner-top").addClass("ui-corner-all");
     }
 });

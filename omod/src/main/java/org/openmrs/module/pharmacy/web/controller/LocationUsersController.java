@@ -103,51 +103,43 @@ public class LocationUsersController {
                 }
 
 
-            }
-
-            else if (user != null) {
+            } else if (user != null) {
 
 
+                List<User> p = Context.getUserService().getUsers(user, Context.getUserService().getRoles(), true);
 
 
-                List<User> p= Context.getUserService().getUsers(user, Context.getUserService().getRoles(), true);
-
-
-                psize=p.size();
+                psize = p.size();
 
                 JSONArray temp = new JSONArray();
                 for (int i = 0; i < psize; i++) {
 
 
-                    temp.put(p.get(i).getUsername() );
+                    temp.put(p.get(i).getUsername());
 
 
                 }
 
                 response.getWriter().print(temp);
-            }
-            else if (locations != null) {
+            } else if (locations != null) {
 
 
+                List<PharmacyLocations> p = service.getPharmacyLocations();
 
 
-                List<PharmacyLocations> p= service.getPharmacyLocations();
-
-
-                psize=p.size();
+                psize = p.size();
 
                 JSONArray temp = new JSONArray();
                 for (int i = 0; i < psize; i++) {
 
 
-                    temp.put(p.get(i).getName() );
+                    temp.put(p.get(i).getName());
 
 
                 }
 
                 response.getWriter().print(temp);
-            }
-            else {
+            } else {
 
 
                 if (size != 0) {
@@ -181,8 +173,7 @@ public class LocationUsersController {
             }
             response.flushBuffer();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             log.error("Error generated", e);
         }
@@ -221,13 +212,12 @@ public class LocationUsersController {
                 service.savePharmacyLocationUsers(pharmacyLocations);
 
 
-
             } else if (edit.equalsIgnoreCase("true")) {
                 PharmacyLocationUsers pharmacyLocations = new PharmacyLocationUsers();
 
                 pharmacyLocations = service.getPharmacyLocationUsersByUuid(uuid);
 
-                if (userService.getAuthenticatedUser().getUserId().equals( pharmacyLocations.getCreator().getUserId())) {
+                if (userService.getAuthenticatedUser().getUserId().equals(pharmacyLocations.getCreator().getUserId())) {
 
                     // saving/updating a record
                     pharmacyLocations.setUserName(locationName);
@@ -237,9 +227,7 @@ public class LocationUsersController {
                 }
             }
 
-        }
-
-        else if (uuidvoid != null) {
+        } else if (uuidvoid != null) {
 
             PharmacyLocationUsers pharmacyLocations = new PharmacyLocationUsers();
 
@@ -260,7 +248,7 @@ public class LocationUsersController {
         Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
         for (Role rl : xvc) {
 
-            if((rl.equals("System Developer"))||(rl.equals("Provider"))){
+            if ((rl.equals("System Developer")) || (rl.equals("Provider"))) {
 
                 editPharmacy = true;
                 deletePharmacy = true;
