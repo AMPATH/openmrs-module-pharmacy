@@ -183,9 +183,7 @@ $j("#filterdruglow").autocomplete({
     minLength:3,
     select:function (event, ui) {
         binTable.fnFilter(ui.item.label);
-        // log( ui.item ?
-        // "Selected: " + ui.item.label :
-        // "Nothing selected, input was " + this.value);
+
     },
     open:function () {
         $j(this).removeClass("ui-corner-all").addClass("ui-corner-top");

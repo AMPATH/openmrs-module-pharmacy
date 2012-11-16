@@ -661,21 +661,6 @@ $j('#tinventoryoutgoing').delegate('tbody tr  input', 'click', function () {
 
         removeInput();
     }
-//	
-//}
-//else if(num==0){
-//	
-//	alert("out");
-////	removeInput();
-//}
-////	
-//  	alert("3333333");
-//	
-//}else
-//	{
-//	alert("cvcvcvcv");
-//	
-//	}
 
 
     return true;

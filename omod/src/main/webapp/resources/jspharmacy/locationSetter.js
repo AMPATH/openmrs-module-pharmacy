@@ -9,20 +9,7 @@ $j.getJSON(
 
 
         if (result == "null") {
-//            $j("#ui").hide();
-//$j("#ui8").hide();
-//
-//$j("#ui1").hide();
-//$j("#ui18").hide();
-//
-//$j("#ui2").hide();
-//$j("#ui28").hide();
-//
-//$j("#ui3").hide();
-//$j("#ui38").hide();
-//
-//$j("#ui4").hide();
-//$j("#ui48").hide();
+
         }
         else {
             $j("#ui").show();
@@ -46,7 +33,7 @@ $j.getJSON(
 
 
 $j("#locationForm").validate();
-//$jj("#locationForm").hide();
+
 
 getDataLocation();
 $j("#hidelocation").hide();

@@ -48,9 +48,6 @@ $j("#username").autocomplete({
     minLength:2,
     select:function (event, ui) {
 
-        // log( ui.item ?
-        // "Selected: " + ui.item.label :
-        // "Nothing selected, input was " + this.value);
     },
     change:function (event, ui) {
         if (!ui.item) {

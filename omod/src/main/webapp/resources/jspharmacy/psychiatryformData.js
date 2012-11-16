@@ -492,10 +492,6 @@ $j("#prescriber").autocomplete({
     },
     minLength:2,
     select:function (event, ui) {
-
-        //											log( ui.item ?
-        //												"Selected: " + ui.item.label :
-        //												"Nothing selected, input was " + this.value);
     },
     open:function () {
         $j(this).removeClass("ui-corner-all").addClass("ui-corner-top");

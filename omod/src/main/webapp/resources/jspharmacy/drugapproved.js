@@ -214,9 +214,6 @@ $j("#approve").live('click', function () {
 
     var aData = binTable.fnGetData(editTr);
     var oFormObject = document.forms['incomingextraap'];
-    //  oFormObject.elements["incominguuidextra"].value = aData[2];
-    // oFormObject.elements["incomingdrug"].value = aData[3];
-//    oFormObject.elements["incomingnumberap"].value = aData[4];
 
 
     getDataSupplier();
@@ -240,13 +237,6 @@ $j('#tapproved tbody td ul').live('click', function () {
 });
 $j('#tapproved tbody td  dfn').live('click', function () {
 
-
-
-//	 var data="<div id='red'>Its already approved</div>";
-//	 $j('#inincominglocation').empty();
-//	 $j(data).appendTo(' #inincominglocation');
-
-    //$j('#approvedInfo #inapprovedInfo').replaceWith("<div id='red'>Its already approved</div>");
     $j("#approvedInfo").show();//
     $j("#approvedInfo").delay(5000).hide();
 
@@ -255,12 +245,10 @@ $j('#tapproved tbody td  dfn').live('click', function () {
 $j('#tapproved tbody td  em').live('click', function () {
 
     var nTr = this.parentNode.parentNode;
-    //getDataSupplier();
-
 
 });
 $j("form#filterapproved").submit(function () {
-    // we want to store the values from the form input box, then send via ajax below
+
     if ($j("#filterapproved").valid()) {
         AutoReload();
 
@@ -627,21 +615,7 @@ $j('#tinventoryout tbody td  input').live('click', function () {
 
         removeInput();
     }
-//	
-//}
-//else if(num==0){
-//	
-//	alert("out");
-////	removeInput();
-//}
-////	
-//  	alert("3333333");
-//	
-//}else
-//	{
-//	alert("cvcvcvcv");
-//	
-//	}
+
 
 });
 function voidData(nTr) {
@@ -772,17 +746,6 @@ $j("#details").live('click', function () {
     $j('<dl><dt></dt><dd > -' + "Supplier:" + aData[8] + '</dd></dl> ').appendTo('#detrailsAp');
 
     $j("#detrailsAp").dialog("open");
-
-
-//
-//
-//
-//	
-//	//overlay();
-//	
-//	el = document.getElementById("overlay");
-//	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
-//	  
 
 });
 
@@ -1078,37 +1041,12 @@ $j('#submitAllApp').live('click', function () {
     getDataSupplier();
     getUsers();
 
-//    $j("#incomingextraap").show();
-//    $j("#approvedperm").show();//
 
-//
-//
-//
-//    dataString = $j("#incomingextraap").serialize();
-//    dataPerm= $j("#Permissionapproved").serialize();
-
-//    var all =serverData;
-//
-//
-//
-//
-//    $j.ajax({
-//        type : "POST",
-//        url : "drugApproved.form",
-//        data : all,
-//        success : function() {
-//
-//
-//            AutoReload();
-//        }
-//    });
 });
 
 
 function fnGetSelected() {
 
-//     mySave=new Array();
-//    var count=0;
     $j("#detailsApproved").empty();
 
     var myResultData = "";

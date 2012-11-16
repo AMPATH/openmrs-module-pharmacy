@@ -334,27 +334,11 @@ function fnGetSelected(oTAble) {
 
 
         if ($j(this).hasClass('sorting_1')) {
-//             alert("xcxtdc");
+
         }
     });
 
-//     var aReturn = new Array();
-//
-//     var aTrs= oTAble.fnGetNodes();
-//
-//     for(var i=0;i <aTrs.length;i++){
-//         alert($j(aTrs[i]));
-//         if($j(aTrs[i]).hasClass('sorting_1')){
-//
-//             var aData = binTable.fnGetData(aTrs[i]);
-//             link=aData[10]+aData[11]+aData[12];
-//
-//
-//             alert(link);
-//
-//         }
-//
-//     }
+
 }
 
 
@@ -580,12 +564,7 @@ function demoTwoPageDocument(dataStringValin) {
         }
 
     }
-//    doc.text(20, 20, "Hello world!");
-//    doc.text(20, 30, 'This is client-side Javascript, pumping out a PDF.');
-//    doc.addPage();
-//    doc.text(20, 20, 'Do you like that?');
 
-    // Output as Data URI
     doc.output('datauri');
 }
 function close() {
@@ -641,8 +620,6 @@ $j("form#incoming").submit(function () {
 });
 $j("form#s11").submit(function () {
     dataStringValin = $j("#s11").serialize();
-
-//alert(dataStringValin);
 
 
     var myResult = dataStringValin.split("&");

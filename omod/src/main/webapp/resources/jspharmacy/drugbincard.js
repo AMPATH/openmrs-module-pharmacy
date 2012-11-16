@@ -104,13 +104,7 @@ function det(aData) {
         type:"GET",
         url:"drugBincard.form?druguuidshow=" + aData,
         success:function () {
-//            alert("zz"+data);
-//			alert("zz"+result);
-//			for(u=0;u<result.length;u++){
-//				 
-//				   
-//				   alert(result[u][u]);
-//				}
+
 
         }
     });
@@ -240,13 +234,6 @@ function tableSetUp(category) {
     $j("#parent_field").show();
 
 }
-////          group by code
-//
-//.rowGrouping({    bHideGroupingColumn: false,
-//    iGroupingColumnIndex: 7,
-//    bExpandableGrouping: true, 
-//	bExpandSingleGroup: true,
-//	iExpandGroupOffset: -1 })
 
 
 $j('select#filtercategory').change(function () {

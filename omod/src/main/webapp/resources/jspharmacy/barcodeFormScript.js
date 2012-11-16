@@ -62,7 +62,6 @@ $j(document)
             return false;
         }
     });
-// ///////////////////////////////////////////////////////////////////////////////////////
 
 function set() {
 
@@ -82,7 +81,6 @@ function set() {
 $j("#psychiatryform").delegate("input[type='checkbox']", "click", function () {
 
 
-    // if you want to add on checked
     if ($j(this).val() == id) {
         if ($j(this).is(":checked")) {
 
@@ -331,9 +329,6 @@ $j("#psychiatryform").delegate("#WA2", "change", function () {
 
 $j("#psychiatryform").delegate("#nextvisit", "change", function () {
 
-
-    // alert('Handler for .change()
-    // called.'+document.getElementById("nextvisit").value);
     var givenDate = document.getElementById("nextvisit").value;
 
     var currentTime = new Date();
@@ -438,7 +433,6 @@ $j("#psychiatryform").delegate("#nextvisit", "change", function () {
         }
     }
 
-    // 3 weeks
 
 });
 
@@ -542,16 +536,12 @@ function addDays(myDate, days) {
     return new Date(myDate.getTime() + days * 24 * 60 * 60 * 1000);
 }
 
-// //////////////////////////////////////////////////////////////////////////////////
-
 $j("#prescriber").autocomplete({
     search:function () {
         $j(this).addClass('working');
     },
 
     source:function (request, response) {
-        // http://localhost:8080/openmrs/module/htmlwidgets/conceptSearch.form
-
         dataString = "q=" + request.term;
 
         $j.getJSON("dispense.form?" + dataString, function (result) {
@@ -573,9 +563,6 @@ $j("#prescriber").autocomplete({
     minLength:2,
     select:function (event, ui) {
 
-        // log( ui.item ?
-        // "Selected: " + ui.item.label :
-        // "Nothing selected, input was " + this.value);
     },
     open:function () {
         $j(this).removeClass("ui-corner-all").addClass("ui-corner-top");

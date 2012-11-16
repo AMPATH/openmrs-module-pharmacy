@@ -237,10 +237,6 @@ $j("#maxmindrug").autocomplete({
         }
     }
 });
-function getMaxMinFilter() {
-
-
-}
 
 
 $j("#maxminreason").autocomplete({

@@ -233,8 +233,6 @@ public class DrugDispenseStore {
 
         uuidedit = request.getParameter("dispenseuuid"); //from the drop down
 
-        //void
-
         voidreason = request.getParameter("dispensereason");
         voiduuid = request.getParameter("dispenseuuidvoid");
 

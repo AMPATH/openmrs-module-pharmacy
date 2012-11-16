@@ -91,9 +91,6 @@ function SetDispenseTable(id) {
         oCache.iCacheLower = -1;
         $j('#tdispense').dataTable().fnReloadAjax(url);
 
-
-        // binTable.fnDraw();
-
     }
     else {
 
@@ -149,7 +146,7 @@ function SetDispenseTable(id) {
     $j("#lower").show();
 
 }
-//ooTable.fnSetColumnVis( 1, false );
+
 $j('#tdispense tbody td ul').live('click', function () {
 
 
@@ -159,8 +156,6 @@ $j('#tdispense tbody td ul').live('click', function () {
 
 
     $j(batchLink).show();
-
-//	
 
 });
 
@@ -186,19 +181,10 @@ $j('#deleteBatch').live('click', function () {
 $j('#editBatch').live('click', function () {
 
 
-    /*             $j("ul .popSet").hide();
-
-     var oFormObjectB = document.forms['dispensevoid'];
-     oFormObjectB.elements["dispenseuuidvoid"].value=batchaData[2];
-
-
-     $j("#dispensevoid").show();*/
-
-
 });
 
 $j("form#filteroutgoing").submit(function () {
-    // we want to store the values from the form input box, then send via ajax below
+
     if ($j("#filteroutgoing").valid()) {
         AutoReload();
 
@@ -263,11 +249,7 @@ function setTable(uuid) {
     $j("#parent_div_1").show();
 
 
-    //RefreshInventory('#tinventoryset');
-
-
 }
-//$j('#outgoingnumber').attr('disabled','disabled');
 
 
 function voidData(nTr) {
@@ -451,11 +433,6 @@ $j("form#dispenseextra").submit(function () {
 function loadImage(url, type, msg, height, moduleWidth, wideFactor, format, qz, hrp) {
 
     $j("#spinner").show();
-    /***************************************************************************
-     * Defaults ****************** type = 'code39'; height='1.0cm'; moduleWidth =
-     * '0.2mm'; wideFactor = '2'; format = 'png'; hrSize = '6pt'; hrFont =
-     * 'Helvetica'; res = '300';
-     **************************************************************************/
 
     var imageSource = url + "moduleServlet/pharmacy/Barcode?type=" + type + "&msg=" + msg + "&height=" + height + "&mw=" + moduleWidth + "&wf=" + wideFactor + "&fmt=" + format + "&qz=" + qz + "&hrp=" + hrp;
     showImage(imageSource);
@@ -669,13 +646,10 @@ $j("#dispensedrug").autocomplete({
         var strUser = ui.item.label
         var drugId = strUser.substr(0, strUser.indexOf('|'));
 
-        //getDataTotal(strUser);
         setTable(drugId);
 
         SetDispenseTable(drugId);
-        // log( ui.item ?
-        // "Selected: " + ui.item.label :
-        // "Nothing selected, input was " + this.value);
+
     },
     open:function () {
         $j(this).removeClass("ui-corner-all").addClass("ui-corner-top");

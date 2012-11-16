@@ -17,13 +17,8 @@ function showPrint() {
 
 
 getDrugFilter();
-$j("#generate").live('click', function () {
-
-
-});
 
 $j("form#barcodeform").submit(function () {
-    // we want to store the values from the form input box, then send via ajax below
     if ($j("#barcodeform").valid()) {
 
         var oFormObject = document.forms['barcodeform'];
@@ -58,12 +53,6 @@ $j("form#barcodeform").submit(function () {
 function loadImage(url, type, msg, height, moduleWidth, wideFactor, format, qz, hrp) {
 
     $j("#spinner").show();
-    /***************************************************************************
-     * Defaults ****************** type = 'code39'; height='1.0cm'; moduleWidth =
-     * '0.2mm'; wideFactor = '2'; format = 'png'; hrSize = '6pt'; hrFont =
-     * 'Helvetica'; res = '300';
-     **************************************************************************/
-
     var imageSource = url + "moduleServlet/pharmacy/Barcode?type=" + type + "&msg=" + msg + "&height=" + height + "&mw=" + moduleWidth + "&wf=" + wideFactor + "&fmt=" + format + "&qz=" + qz + "&hrp=" + hrp;
     showImage(imageSource);
     return false;

@@ -32,10 +32,6 @@ $j("#dispensedby").autocomplete({
     },
     minLength:2,
     select:function (event, ui) {
-
-        //											log( ui.item ?
-        //												"Selected: " + ui.item.label :
-        //												"Nothing selected, input was " + this.value);
     },
     open:function () {
         $j(this).removeClass("ui-corner-all").addClass("ui-corner-top");
@@ -86,16 +82,7 @@ function check(val) {
 
 
     cRegimen = val;
-    // if(cRegimen!=pRegimen)
-    //  {
-    //$j("#info").text("Regimen Not ok");
 
-    //document.getElementById('pregimen').style.color = 'blue';
-    //$j("#info").css("color","red");
-    //setTimeout(function(){
-    //  $j("#info").css("color","white");
-    //},5000);
-    //}
 }
 
 
@@ -374,10 +361,6 @@ $j("#Current").autocomplete({
     },
     minLength:2,
     select:function (event, ui) {
-
-        //											log( ui.item ?
-        //												"Selected: " + ui.item.label :
-        //												"Nothing selected, input was " + this.value);
     },
     open:function () {
         $j(this).removeClass("ui-corner-all").addClass("ui-corner-top");
