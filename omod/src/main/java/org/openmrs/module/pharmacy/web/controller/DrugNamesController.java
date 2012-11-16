@@ -40,6 +40,11 @@ public class DrugNamesController {
     private boolean editPharmacy = false;
 
     private boolean deletePharmacy = false;
+    private List<DrugName> drugNameList;
+    private int size;
+    private JSONObject jsonObject;
+    private JSONArray jsonArray;
+
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/drugName")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
@@ -49,13 +54,13 @@ public class DrugNamesController {
         String drop = request.getParameter("drop");
         service = Context.getService(PharmacyService.class);
 
-        List<DrugName> list = service.getDrugName();
-        int size = list.size();
+        drugNameList = service.getDrugName();
+        size = drugNameList.size();
 
 
-        JSONObject json = new JSONObject();
+        jsonObject = new JSONObject();
 
-        JSONArray jsons = new JSONArray();
+        jsonArray = new JSONArray();
 
         try {
 
@@ -67,25 +72,25 @@ public class DrugNamesController {
                     int size2 = list2.size();
 
                     for (int i = 0; i < size2; i++) {
-                        jsons.put("" + getDropDown(list2, i));
+                        jsonArray.put("" + getDropDown(list2, i));
                     }
 
-                    response.getWriter().print(jsons);
+                    response.getWriter().print(jsonArray);
                 }
 
             } else {
 
                 for (int i = 0; i < size; i++) {
 
-                    json.accumulate("aaData", getArray(list, i));
+                    jsonObject.accumulate("aaData", getArray(drugNameList, i));
 
                 }
-                json.accumulate("iTotalRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iTotalDisplayRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iDisplayStart", 0);
-                json.accumulate("iDisplayLength", 10);
+                jsonObject.accumulate("iTotalRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iTotalDisplayRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iDisplayStart", 0);
+                jsonObject.accumulate("iDisplayLength", 10);
 
-                response.getWriter().print(json);
+                response.getWriter().print(jsonObject);
             }
             response.flushBuffer();
 
@@ -137,7 +142,7 @@ public class DrugNamesController {
                 if (userService.getAuthenticatedUser().getUserId().equals(drugNamee.getCreator().getUserId())) {
 
                     // saving/updating a record
-                    drugNamee.setDrugName(drugName);//(drugName);
+                    drugNamee.setDrugName(drugName);
 
                     service.saveDrugName(drugNamee);
                 }

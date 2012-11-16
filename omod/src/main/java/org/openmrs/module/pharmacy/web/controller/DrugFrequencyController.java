@@ -34,6 +34,11 @@ public class DrugFrequencyController {
     private boolean editPharmacy = false;
 
     private boolean deletePharmacy = false;
+    private List<DrugFrequency> drugFrequencyList;
+    private int size;
+    private JSONObject jsonObject;
+    private JSONArray jsonArray;
+    private List<DrugFrequency> serviceDrugFrequency;
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/drugFrequency")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
@@ -42,11 +47,10 @@ public class DrugFrequencyController {
         String uuid = request.getParameter("uuid");
         String drop = request.getParameter("drop");
         service = Context.getService(PharmacyService.class);
-        List<DrugFrequency> list = service.getDrugFrequency();
-        int size = list.size();
-        JSONObject json = new JSONObject();
-
-        JSONArray jsons = new JSONArray();
+        drugFrequencyList = service.getDrugFrequency();
+        size = drugFrequencyList.size();
+        jsonObject = new JSONObject();
+        jsonArray = new JSONArray();
 
         try {
 
@@ -55,26 +59,26 @@ public class DrugFrequencyController {
 
                     for (int i = 0; i < size; i++) {
 
-                        jsons.put("" + getDropDown(list, i));
+                        jsonArray.put("" + getDropDown(drugFrequencyList, i));
                     }
 
-                    response.getWriter().print(jsons);
+                    response.getWriter().print(jsonArray);
                 }
 
             } else {
 
                 for (int i = 0; i < size; i++) {
 
-                    json.accumulate("aaData", getArray(list, i));
+                    jsonObject.accumulate("aaData", getArray(drugFrequencyList, i));
 
                 }
 
-                json.accumulate("iTotalRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iTotalDisplayRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iDisplayStart", 0);
-                json.accumulate("iDisplayLength", 10);
+                jsonObject.accumulate("iTotalRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iTotalDisplayRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iDisplayStart", 0);
+                jsonObject.accumulate("iDisplayLength", 10);
 
-                response.getWriter().print(json);
+                response.getWriter().print(jsonObject);
             }
             response.flushBuffer();
 
@@ -88,22 +92,23 @@ public class DrugFrequencyController {
     @RequestMapping(method = RequestMethod.POST, value = "module/pharmacy/drugFrequency")
     public synchronized void pageLoadd(HttpServletRequest request, HttpServletResponse response) {
 
-        String frequencyreason = request.getParameter("frequencyreason");
-        String frequencyuuidvoid = request.getParameter("frequencyuuidvoid");
+        String frequencyReason = request.getParameter("frequencyReason");
+        String frequencyUuidVoid = request.getParameter("frequencyUuidVoid");
 
-        String frequencyname = request.getParameter("frequencyname");
-        String frequencyedit = request.getParameter("frequencyedit");
-        String frequencyuuid = request.getParameter("frequencyuuid");
+        String frequencyName = request.getParameter("frequencyName");
+        String frequencyEdit = request.getParameter("frequencyEdit");
+        String frequencyUuid = request.getParameter("frequencyUuid");
+
         userService = Context.getUserContext();
-        if (frequencyedit != null) {
-            if (frequencyedit.equalsIgnoreCase("false")) {
+        if (frequencyEdit != null) {
+            // code to edit an entry
+            if (frequencyEdit.equalsIgnoreCase("false")) {
 
-                //check for same entry before saving
-                List<DrugFrequency> list = service.getDrugFrequency();
-                int size = list.size();
+                serviceDrugFrequency = service.getDrugFrequency();
+                size = serviceDrugFrequency.size();
                 for (int i = 0; i < size; i++) {
 
-                    found = getCheck(list, i, frequencyname);
+                    found = getCheck(serviceDrugFrequency, i, frequencyName);
                     if (found)
                         break;
                 }
@@ -111,7 +116,7 @@ public class DrugFrequencyController {
                 if (!found) {
 
                     DrugFrequency drugFrequency = new DrugFrequency();
-                    drugFrequency.setFrequencyName(frequencyname);
+                    drugFrequency.setFrequencyName(frequencyName);
                     service.saveDrugFrequency(drugFrequency);
 
                 } else //do code to display to the user
@@ -119,26 +124,26 @@ public class DrugFrequencyController {
 
                 }
 
-            } else if (frequencyedit.equalsIgnoreCase("true")) {
+            } else if (frequencyEdit.equalsIgnoreCase("true")) {
 
                 DrugFrequency drugFrequency = new DrugFrequency();
-                drugFrequency = service.getDrugFrequencyByUuid(frequencyuuid);
+                drugFrequency = service.getDrugFrequencyByUuid(frequencyUuid);
                 if (userService.getAuthenticatedUser().getUserId().equals(drugFrequency.getCreator().getUserId())) {
 
                     // saving/updating a record
-                    drugFrequency.setFrequencyName(frequencyname);
+                    drugFrequency.setFrequencyName(frequencyName);
 
                     service.saveDrugFrequency(drugFrequency);
                 }
             }
 
-        } else if (frequencyuuidvoid != null) {
+        } else if (frequencyUuidVoid != null) {
 
             DrugFrequency drugFrequency = new DrugFrequency();
-            drugFrequency = service.getDrugFrequencyByUuid(frequencyuuidvoid);
+            drugFrequency = service.getDrugFrequencyByUuid(frequencyUuidVoid);
 
             drugFrequency.setVoided(true);
-            drugFrequency.setVoidReason(frequencyreason);
+            drugFrequency.setVoidReason(frequencyReason);
 
             service.saveDrugFrequency(drugFrequency);
 

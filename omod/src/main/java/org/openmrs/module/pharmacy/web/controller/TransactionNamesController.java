@@ -48,6 +48,15 @@ public class TransactionNamesController {
     private boolean deletePharmacy = false;
 
     private JSONArray datad2;
+    private int sizeUsers;
+    private List<PharmacyLocationUsers> pharmacyLocationUsersByUserName;
+    private List<PharmacyTransactionTypes> pharmacyTransactionTypes;
+    private int size;
+    private JSONObject jsonObject;
+    private JSONArray jsonArray;
+    private List<PharmacyStore> pharmacyStoreList;
+    private List<PharmacyStore> pharmacyInventory;
+    private PharmacyTransactionTypes pharmacyTransactionTypes1;
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/transactionsName")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
@@ -59,23 +68,23 @@ public class TransactionNamesController {
 
         String locationVal = null;
 
-        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        int sizeUsers = listUsers.size();
+        pharmacyLocationUsersByUserName = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
+        sizeUsers = pharmacyLocationUsersByUserName.size();
 
 
         if (sizeUsers > 1) {
             locationVal = request.getSession().getAttribute("location").toString();
 
         } else if (sizeUsers == 1) {
-            locationVal = listUsers.get(0).getLocation();
+            locationVal = pharmacyLocationUsersByUserName.get(0).getLocation();
 
 
         }
-        List<PharmacyTransactionTypes> list = service.getPharmacyTransactionTypes();
-        int size = list.size();
-        JSONObject json = new JSONObject();
+        pharmacyTransactionTypes = service.getPharmacyTransactionTypes();
+        size = pharmacyTransactionTypes.size();
+        jsonObject = new JSONObject();
 
-        JSONArray jsons = new JSONArray();
+        jsonArray = new JSONArray();
 
         try {
 
@@ -83,58 +92,58 @@ public class TransactionNamesController {
                 if (drop.equalsIgnoreCase("drop")) {
                     if (size != 0) {
                         for (int i = 0; i < size; i++) {
-                            jsons.put("" + getDropDown(list, i));
+                            jsonArray.put("" + getDropDown(pharmacyTransactionTypes, i));
                         }
 
                     } else
-                        jsons.put("" + null);
+                        jsonArray.put("" + null);
 
-                    response.getWriter().print(jsons);
+                    response.getWriter().print(jsonArray);
                 } else if (drop.equalsIgnoreCase("total")) {
 
 
-                    List<PharmacyStore> listSize = service.getPharmacyInventory();
-                    int sizeList = listSize.size();
+                    pharmacyStoreList = service.getPharmacyInventory();
+                    size = pharmacyStoreList.size();
 
                     if (size != 0) {
-                        for (int i = 0; i < sizeList; i++) {
+                        for (int i = 0; i < size; i++) {
 
 
-                            int val = getCheckSize(listSize, i, drug);
+                            int val = getCheckSize(pharmacyStoreList, i, drug);
 
                             if (val == 0) {
 
                             } else {
-                                jsons.put("" + val);
+                                jsonArray.put("" + val);
                             }
                             if (val != 0)
                                 break;
                         }
                     } else
-                        jsons.put("" + null);
+                        jsonArray.put("" + null);
 
-                    response.getWriter().print(jsons);
+                    response.getWriter().print(jsonArray);
                 } else if (drop.equalsIgnoreCase("totalTwo")) {
-                    List<PharmacyStore> listSize = service.getPharmacyInventory();
-                    int sizeList = listSize.size();
+                    pharmacyInventory = service.getPharmacyInventory();
+                    size = pharmacyInventory.size();
 
                     int total = 0;
-                    for (int i = 0; i < sizeList; i++) {
+                    for (int i = 0; i < size; i++) {
 
 
-                        if ((service.getPharmacyLocationsByUuid(listSize.get(i).getLocation()).getName()
+                        if ((service.getPharmacyLocationsByUuid(pharmacyInventory.get(i).getLocation()).getName()
                                 .equalsIgnoreCase(locationVal))) {
 
-                            if (drug.equals(listSize.get(i).getDrugs())) {
+                            if (drug.equals(pharmacyInventory.get(i).getDrugs())) {
 
-                                total += listSize.get(i).getQuantity();
+                                total += pharmacyInventory.get(i).getQuantity();
 
                             }
 
                         }
                     }
-                    jsons.put("" + total);
-                    response.getWriter().print(jsons);
+                    jsonArray.put("" + total);
+                    response.getWriter().print(jsonArray);
                 }
 
             } else {
@@ -142,12 +151,12 @@ public class TransactionNamesController {
                 if (size != 0) {
                     for (int i = 0; i < size; i++) {
 
-                        json.accumulate("aaData", getArray(list, i));
+                        jsonObject.accumulate("aaData", getArray(pharmacyTransactionTypes, i));
 
                     }
 
                 }
-                if (!json.has("aaData")) {
+                if (!jsonObject.has("aaData")) {
 
                     datad2 = new JSONArray();
                     datad2.put("None");
@@ -158,15 +167,15 @@ public class TransactionNamesController {
                     datad2.put("None");
                     datad2.put("None");
 
-                    json.accumulate("aaData", datad2);
+                    jsonObject.accumulate("aaData", datad2);
 
                 }
-                json.accumulate("iTotalRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iTotalDisplayRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iDisplayStart", 0);
-                json.accumulate("iDisplayLength", 10);
+                jsonObject.accumulate("iTotalRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iTotalDisplayRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iDisplayStart", 0);
+                jsonObject.accumulate("iDisplayLength", 10);
 
-                response.getWriter().print(json);
+                response.getWriter().print(jsonObject);
             }
             response.flushBuffer();
 
@@ -189,22 +198,22 @@ public class TransactionNamesController {
         if (edit != null) {
             if (edit.equalsIgnoreCase("false")) {
                 //check for same entry before saving
-                List<PharmacyTransactionTypes> list = service.getPharmacyTransactionTypes();
-                int size = list.size();
+                pharmacyTransactionTypes = service.getPharmacyTransactionTypes();
+                int size = pharmacyTransactionTypes.size();
                 for (int i = 0; i < size; i++) {
 
-                    found = getCheck(list, i, transactionsName);
+                    found = getCheck(pharmacyTransactionTypes, i, transactionsName);
                     if (found)
                         break;
                 }
 
                 if (!found) {
 
-                    PharmacyTransactionTypes transactionNamee = new PharmacyTransactionTypes();
-                    transactionNamee.setName(transactionsName);
-                    transactionNamee.setDescription(description);
+                    pharmacyTransactionTypes1 = new PharmacyTransactionTypes();
+                    pharmacyTransactionTypes1.setName(transactionsName);
+                    pharmacyTransactionTypes1.setDescription(description);
 
-                    service.savePharmacyTransactionTypes(transactionNamee);
+                    service.savePharmacyTransactionTypes(pharmacyTransactionTypes1);
 
                 } else //do code to display to the user
                 {
@@ -212,30 +221,30 @@ public class TransactionNamesController {
                 }
 
             } else if (edit.equalsIgnoreCase("true")) {
-                PharmacyTransactionTypes transactionName = new PharmacyTransactionTypes();
+                pharmacyTransactionTypes1 = new PharmacyTransactionTypes();
 
-                transactionName = service.getPharmacyTransactionTypesByUuid(uuid);
+                pharmacyTransactionTypes1 = service.getPharmacyTransactionTypesByUuid(uuid);
 
-                if (userService.getAuthenticatedUser().getUserId().equals(transactionName.getCreator().getUserId())) {
+                if (userService.getAuthenticatedUser().getUserId().equals(pharmacyTransactionTypes1.getCreator().getUserId())) {
 
                     // saving/updating a record
-                    transactionName.setName(transactionsName);
-                    transactionName.setDescription(description);
+                    pharmacyTransactionTypes1.setName(transactionsName);
+                    pharmacyTransactionTypes1.setDescription(description);
 
-                    service.savePharmacyTransactionTypes(transactionName);
+                    service.savePharmacyTransactionTypes(pharmacyTransactionTypes1);
                 }
             }
 
         } else if (uuidvoid != null) {
 
-            PharmacyTransactionTypes transactionNamev = new PharmacyTransactionTypes();
+            pharmacyTransactionTypes1 = new PharmacyTransactionTypes();
 
-            transactionNamev = service.getPharmacyTransactionTypesByUuid(uuidvoid);
+            pharmacyTransactionTypes1 = service.getPharmacyTransactionTypesByUuid(uuidvoid);
 
-            transactionNamev.setVoided(true);
-            transactionNamev.setVoidReason(reason);
+            pharmacyTransactionTypes1.setVoided(true);
+            pharmacyTransactionTypes1.setVoidReason(reason);
 
-            service.savePharmacyTransactionTypes(transactionNamev);
+            service.savePharmacyTransactionTypes(pharmacyTransactionTypes1);
 
         }
 

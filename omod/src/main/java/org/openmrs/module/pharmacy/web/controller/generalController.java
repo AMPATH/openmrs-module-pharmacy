@@ -38,6 +38,11 @@ public class generalController {
     private boolean deletePharmacy = false;
 
     private JSONArray datad2;
+    private List<PharmacyGeneralVariables> pharmacyGeneralVariables;
+    private int size;
+    private JSONObject jsonObject;
+    private JSONArray jsonArray;
+    private PharmacyGeneralVariables generalVariables;
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/generalName")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
@@ -46,11 +51,11 @@ public class generalController {
         String drop = request.getParameter("drop");
         service = Context.getService(PharmacyService.class);
 
-        List<PharmacyGeneralVariables> list = service.getPharmacyGeneralVariables();
-        int size = list.size();
-        JSONObject json = new JSONObject();
+        pharmacyGeneralVariables = service.getPharmacyGeneralVariables();
+        size = pharmacyGeneralVariables.size();
+        jsonObject = new JSONObject();
 
-        JSONArray jsons = new JSONArray();
+        jsonArray = new JSONArray();
 
 
         try {
@@ -59,21 +64,21 @@ public class generalController {
                 if (drop.equalsIgnoreCase("drop")) {
 
                     for (int i = 0; i < size; i++) {
-                        jsons.put("" + getDropDown(list, i));
+                        jsonArray.put("" + getDropDown(pharmacyGeneralVariables, i));
                     }
 
-                    response.getWriter().print(jsons);
+                    response.getWriter().print(jsonArray);
                 }
 
             } else {
 
                 for (int i = 0; i < size; i++) {
 
-                    json.accumulate("aaData", getArray(list, i));
+                    jsonObject.accumulate("aaData", getArray(pharmacyGeneralVariables, i));
 
                 }
 
-                if (!json.has("aaData")) {
+                if (!jsonObject.has("aaData")) {
 
                     datad2 = new JSONArray();
                     datad2.put("None");
@@ -84,15 +89,15 @@ public class generalController {
                     datad2.put("None");
                     datad2.put("None");
 
-                    json.accumulate("aaData", datad2);
+                    jsonObject.accumulate("aaData", datad2);
 
                 }
-                json.accumulate("iTotalRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iTotalDisplayRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iDisplayStart", 0);
-                json.accumulate("iDisplayLength", 10);
+                jsonObject.accumulate("iTotalRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iTotalDisplayRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iDisplayStart", 0);
+                jsonObject.accumulate("iDisplayLength", 10);
 
-                response.getWriter().print(json);
+                response.getWriter().print(jsonObject);
             }
             response.flushBuffer();
 
@@ -117,23 +122,23 @@ public class generalController {
             if (edit.equalsIgnoreCase("false")) {
 
                 //check for same entry before saving
-                List<PharmacyGeneralVariables> list = service.getPharmacyGeneralVariables();
-                int size = list.size();
+                pharmacyGeneralVariables = service.getPharmacyGeneralVariables();
+                size = pharmacyGeneralVariables.size();
                 for (int i = 0; i < size; i++) {
 
-                    found = getCheck(list, i, generalName);
+                    found = getCheck(pharmacyGeneralVariables, i, generalName);
                     if (found)
                         break;
                 }
 
                 if (!found) {
 
-                    PharmacyGeneralVariables pharmacyGeneralVariables = new PharmacyGeneralVariables();
+                    generalVariables = new PharmacyGeneralVariables();
 
-                    pharmacyGeneralVariables.setName(generalName);
-                    pharmacyGeneralVariables.setDescription(description);
+                    generalVariables.setName(generalName);
+                    generalVariables.setDescription(description);
 
-                    service.savePharmacyGeneralVariables(pharmacyGeneralVariables);
+                    service.savePharmacyGeneralVariables(generalVariables);
 
                 } else //do code to display to the user
                 {
@@ -141,27 +146,27 @@ public class generalController {
                 }
 
             } else if (edit.equalsIgnoreCase("true")) {
-                PharmacyGeneralVariables pharmacyGeneralVariables = new PharmacyGeneralVariables();
+                generalVariables = new PharmacyGeneralVariables();
 
-                pharmacyGeneralVariables = service.getPharmacyGeneralVariablesByUuid(uuid);
+                generalVariables = service.getPharmacyGeneralVariablesByUuid(uuid);
 
                 // saving/updating a record
-                pharmacyGeneralVariables.setName(generalName);//(drugName);
-                pharmacyGeneralVariables.setDescription(description);
-                service.savePharmacyGeneralVariables(pharmacyGeneralVariables);
+                generalVariables.setName(generalName);//(drugName);
+                generalVariables.setDescription(description);
+                service.savePharmacyGeneralVariables(generalVariables);
 
             }
 
         } else if (uuidvoid != null) {
 
-            PharmacyGeneralVariables pharmacyGeneralVariables = new PharmacyGeneralVariables();
+            generalVariables = new PharmacyGeneralVariables();
 
-            pharmacyGeneralVariables = service.getPharmacyGeneralVariablesByUuid(uuidvoid);
+            generalVariables = service.getPharmacyGeneralVariablesByUuid(uuidvoid);
 
-            pharmacyGeneralVariables.setVoided(true);
-            pharmacyGeneralVariables.setVoidReason(reason);
+            generalVariables.setVoided(true);
+            generalVariables.setVoidReason(reason);
 
-            service.savePharmacyGeneralVariables(pharmacyGeneralVariables);
+            service.savePharmacyGeneralVariables(generalVariables);
 
         }
 

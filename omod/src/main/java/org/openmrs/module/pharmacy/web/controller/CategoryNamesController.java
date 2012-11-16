@@ -23,7 +23,6 @@ public class CategoryNamesController {
 
     private static final Log log = LogFactory.getLog(CategoryNamesController.class);
 
-    private JSONArray drugStrengthA;
 
     public PharmacyService service;
 
@@ -31,25 +30,42 @@ public class CategoryNamesController {
 
     private JSONArray supplierNames;
 
+
     private UserContext userService;
 
     private boolean editPharmacy = false;
 
     private boolean deletePharmacy = false;
 
-    private JSONArray datad2;
+    private JSONArray jsonArray;
+
+    private JSONObject jsonObject;
+
+    private int size;
+
+
+    private List<PharmacyCategory> pharmacyCategoryList;
+
+    private PharmacyCategory pharmacyCategoryObject;
+
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/categoryName")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
-        userService = Context.getUserContext();
+
+
+        //get parameters
         String uuid = request.getParameter("nameuuid");
         String drop = request.getParameter("drop");
-        service = Context.getService(PharmacyService.class);
-        List<PharmacyCategory> list = service.getPharmacyCategory();
-        int size = list.size();
-        JSONObject json = new JSONObject();
 
-        JSONArray jsons = new JSONArray();
+
+        service = Context.getService(PharmacyService.class);
+        pharmacyCategoryList = service.getPharmacyCategory();
+        userService = Context.getUserContext();
+
+        int size = pharmacyCategoryList.size();
+
+        jsonObject = new JSONObject();
+
 
         try {
 
@@ -57,70 +73,80 @@ public class CategoryNamesController {
                 if (drop.equalsIgnoreCase("drop")) {
 
                     for (int i = 0; i < size; i++) {
-                        jsons.put("" + getDropDown(list, i));
+                        jsonArray.put("" + getDropDown(pharmacyCategoryList, i));
                     }
 
-                    response.getWriter().print(jsons);
+                    response.getWriter().print(jsonArray);
                 }
 
             } else {
 
                 for (int i = 0; i < size; i++) {
 
-                    json.accumulate("aaData", getArray(list, i));
+                    jsonObject.accumulate("aaData", getArray(pharmacyCategoryList, i));
 
                 }
 
-                if (!json.has("aaData")) {
+                if (!jsonObject.has("aaData")) {
 
-                    datad2 = new JSONArray();
-                    datad2.put("None");
-                    datad2.put("None");
-                    datad2.put("None");
-                    datad2.put("None");
+                    jsonArray = new JSONArray();
+                    jsonArray.put("None");
+                    jsonArray.put("None");
+                    jsonArray.put("None");
+                    jsonArray.put("None");
 
-                    datad2.put("None");
-                    datad2.put("None");
+                    jsonArray.put("None");
+                    jsonArray.put("None");
 
-                    json.accumulate("aaData", datad2);
+                    jsonObject.accumulate("aaData", jsonArray);
 
                 }
-                json.accumulate("iTotalRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iTotalDisplayRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iDisplayStart", 0);
-                json.accumulate("iDisplayLength", 10);
+                jsonObject.accumulate("iTotalRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iTotalDisplayRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iDisplayStart", 0);
+                jsonObject.accumulate("iDisplayLength", 10);
 
 
-                response.getWriter().print(json);
+                response.getWriter().print(jsonObject);
             }
             response.flushBuffer();
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
+
             log.error("Error generated", e);
         }
 
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "module/pharmacy/categoryName")
-    public synchronized void pageLoadd(HttpServletRequest request, HttpServletResponse response) {
-        service = Context.getService(PharmacyService.class);
+    public synchronized void pageLoadPost(HttpServletRequest request, HttpServletResponse response) {
+
+
+        // get parameters
         String categoryName = request.getParameter("categoryname");
         String description = request.getParameter("description");
-        String edit = request.getParameter("categoryedit");
-        String uuid = request.getParameter("categoryuuid");
-        String uuidvoid = request.getParameter("categoryuuidvoid");
-        String reason = request.getParameter("categoryreason");
-        userService = Context.getUserContext();
-        if (edit != null) {
-            if (edit.equalsIgnoreCase("false")) {
+        String categoryEdit = request.getParameter("categoryedit");
+        String categoryUuid = request.getParameter("categoryuuid");
+        String categoryUuidVoid = request.getParameter("categoryuuidvoid");
+        String categoryReason = request.getParameter("categoryreason");
 
-                //check for same entry before saving
-                List<PharmacyCategory> list = service.getPharmacyCategory();
-                int size = list.size();
+
+        //openmrs constants
+        userService = Context.getUserContext();
+        service = Context.getService(PharmacyService.class);
+
+        if (categoryEdit != null) {
+            //making a new entry
+            if (categoryEdit.equalsIgnoreCase("false")) {
+
+
+                pharmacyCategoryList = service.getPharmacyCategory();
+                size = pharmacyCategoryList.size();
+
+                //check if there is an entry before saving
                 for (int i = 0; i < size; i++) {
 
-                    found = getCheck(list, i, categoryName);
+                    found = getCheck(pharmacyCategoryList, i, categoryName);
                     if (found)
                         break;
                 }
@@ -134,41 +160,44 @@ public class CategoryNamesController {
 
                     service.savePharmacyCategory(pharmacyCategory);
 
-                } else //do code to display to the user
+                } else //do code to display to the user that there is a duplicate entry
                 {
 
                 }
 
-            } else if (edit.equalsIgnoreCase("true")) {
-                PharmacyCategory categoryNamee = new PharmacyCategory();
+            }   // Editing an existing entry
+            else if (categoryEdit.equalsIgnoreCase("true"))
 
-                categoryNamee = service.getPharmacyCategoryByUuid(uuid);
+            {
+
+                pharmacyCategoryObject = service.getPharmacyCategoryByUuid(categoryUuid);
 
                 // saving/updating a record
-                categoryNamee.setName(categoryName);//(drugName);
-                categoryNamee.setDescription(description);
-                service.savePharmacyCategory(categoryNamee);
+                pharmacyCategoryObject.setName(categoryName);
+                pharmacyCategoryObject.setDescription(description);
+                service.savePharmacyCategory(pharmacyCategoryObject);
 
             }
 
-        } else if (uuidvoid != null) {
+        } else if (categoryUuidVoid != null) {     // user voiding an entry
 
-            PharmacyCategory categoryNamee = new PharmacyCategory();
 
-            categoryNamee = service.getPharmacyCategoryByUuid(uuidvoid);
+            pharmacyCategoryObject = service.getPharmacyCategoryByUuid(categoryUuidVoid);
 
-            categoryNamee.setVoided(true);
-            categoryNamee.setVoidReason(reason);
+            pharmacyCategoryObject.setVoided(true);
+            pharmacyCategoryObject.setVoidReason(categoryReason);
 
-            service.savePharmacyCategory(categoryNamee);
+            service.savePharmacyCategory(pharmacyCategoryObject);
 
         }
 
     }
 
-    public synchronized JSONArray getArray(List<PharmacyCategory> categoryNamee, int size) {
+    public synchronized JSONArray getArray(List<PharmacyCategory> pharmacyCategoryList1, int size) {
 
         supplierNames = new JSONArray();
+
+        // check the user permission
 
         Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
         for (Role rl : xvc) {
@@ -195,12 +224,16 @@ public class CategoryNamesController {
 
             supplierNames.put("edit");
             editPharmacy = false;
+
+
         } else
             supplierNames.put("");
+
+
         supplierNames.put("");
-        supplierNames.put(categoryNamee.get(size).getUuid());
-        supplierNames.put(categoryNamee.get(size).getName());
-        supplierNames.put(categoryNamee.get(size).getDescription());
+        supplierNames.put(pharmacyCategoryList1.get(size).getUuid());
+        supplierNames.put(pharmacyCategoryList1.get(size).getName());
+        supplierNames.put(pharmacyCategoryList1.get(size).getDescription());
         if (deletePharmacy) {
             supplierNames.put("void");
             deletePharmacy = false;
@@ -210,13 +243,13 @@ public class CategoryNamesController {
         return supplierNames;
     }
 
-    public synchronized String getDropDown(List<PharmacyCategory> categoryNamee, int size) {
+    public synchronized String getDropDown(List<PharmacyCategory> pharmacyCategories, int size) {
 
-        return categoryNamee.get(size).getName();
+        return pharmacyCategories.get(size).getName();
     }
 
-    public synchronized boolean getCheck(List<PharmacyCategory> categoryNamee, int size, String names) {
-        if (categoryNamee.get(size).getName().equalsIgnoreCase(names)) {
+    public synchronized boolean getCheck(List<PharmacyCategory> pharmacyCategories, int size, String names) {
+        if (pharmacyCategories.get(size).getName().equalsIgnoreCase(names)) {
 
             return true;
 

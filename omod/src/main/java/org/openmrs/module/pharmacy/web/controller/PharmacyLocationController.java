@@ -25,6 +25,8 @@ public class PharmacyLocationController {
     public PharmacyService service;
 
     private UserContext userService;
+    private List<PharmacyLocationUsers> pharmacyLocationUsersByUserName;
+    private int size;
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/locationSetter")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
@@ -33,8 +35,8 @@ public class PharmacyLocationController {
         String drop = request.getParameter("drop");
 
 
-        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        int size = listUsers.size();
+        pharmacyLocationUsersByUserName = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
+        size = pharmacyLocationUsersByUserName.size();
         JSONArray jsons = new JSONArray();
 
 
@@ -56,7 +58,7 @@ public class PharmacyLocationController {
 
                 } else if (size == 1) {
 
-                    jsons.put("" + listUsers.get(0).getLocation());
+                    jsons.put("" + pharmacyLocationUsersByUserName.get(0).getLocation());
 
                 } else
                     jsons.put("none");

@@ -40,29 +40,34 @@ public class DrugDosesController {
     private boolean editPharmacy = false;
 
     private boolean deletePharmacy = false;
+    private int size, size2;
+    private List<Dose> doseList = service.getDoses();
+    private JSONObject jsonObject;
+    private List<Drug> allDrugs;
+
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/drugDoses")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
         service = Context.getService(PharmacyService.class);
         serviceDrugs = Context.getConceptService();
-        List<Dose> List = service.getDoses();
-        int size = List.size();
-        JSONObject json = new JSONObject();
+        doseList = service.getDoses();
+        size = doseList.size();
+        jsonObject = new JSONObject();
 
         try {
 
             for (int i = 0; i < size; i++) {
 
-                json.accumulate("aaData", getArray(List, i));
+                jsonObject.accumulate("aaData", getArray(doseList, i));
             }
-            json.accumulate("iTotalRecords", json.getJSONArray("aaData").length());
-            json.accumulate("iTotalDisplayRecords", json.getJSONArray("aaData").length());
-            json.accumulate("iDisplayStart", 0);
-            json.accumulate("iDisplayLength", 10);
+            jsonObject.accumulate("iTotalRecords", jsonObject.getJSONArray("aaData").length());
+            jsonObject.accumulate("iTotalDisplayRecords", jsonObject.getJSONArray("aaData").length());
+            jsonObject.accumulate("iDisplayStart", 0);
+            jsonObject.accumulate("iDisplayLength", 10);
 
-            response.setContentType("application/json");
+            response.setContentType("application/jsonObject");
 
-            response.getWriter().print(json);
+            response.getWriter().print(jsonObject);
             response.flushBuffer();
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -77,76 +82,39 @@ public class DrugDosesController {
         serviceDrugs = Context.getConceptService();
         userService = Context.getUserContext();
 
-        String dosesfrequency = request.getParameter("dosesfrequency");
-        String dosesdrug = request.getParameter("dosesdrug");
-        String dosequantity = request.getParameter("dosequantity");
-        String dosesreason = request.getParameter("dosesreason");
-        String dosesuuidvoid = request.getParameter("dosesuuidvoid");
+        String dosesFrequency = request.getParameter("dosesFrequency");
+        String dosesDrug = request.getParameter("dosesDrug");
+        String doseQuantity = request.getParameter("doseQuantity");
+        String dosesReason = request.getParameter("dosesReason");
+        String dosesUuidVoid = request.getParameter("dosesUuidVoid");
 
-        String dosesname = request.getParameter("dosesname");
-        String dosesedit = request.getParameter("dosesedit");
-        String dosesuuid = request.getParameter("dosesuuid");
-        if (dosesuuidvoid == null) {
-            dosesdrug = dosesdrug.substring(0, dosesdrug.indexOf("("));
+        String dosesName = request.getParameter("dosesName");
+        String dosesEdit = request.getParameter("dosesEdit");
+        String dosesUuid = request.getParameter("dosesUuid");
+        if (dosesUuidVoid == null) {
+            dosesDrug = dosesDrug.substring(0, dosesDrug.indexOf("("));
 
-            String uuidvalue = service.getDrugNameByName(dosesdrug).getUuid();
+            String uuidValue = service.getDrugNameByName(dosesDrug).getUuid();
 
-            List<Drug> dname = serviceDrugs.getAllDrugs();
-            int dnames = dname.size();
-            for (int i = 0; i < dnames; i++) {
-                uuid = getString(dname, i, uuidvalue);
-                if (uuid != null)
-                    break;
+            allDrugs = serviceDrugs.getAllDrugs();
+            size2 = allDrugs.size();
 
-            }
         }
-        if (dosesedit != null) {
-            if (dosesedit.equalsIgnoreCase("false")) {
+        if (dosesEdit != null) {
+            if (dosesEdit.equalsIgnoreCase("false")) {
 
-                //check for same entry before saving
-                List<Dose> list = service.getDoses();
-                int size = list.size();
-                for (int i = 0; i < size; i++) {
 
-                    found = getCheck(list, i, service.getDrugsByUuid(uuid).getUuid(),
-                            service.getDrugFrequencyByName(dosesfrequency).getUuid(), Integer.parseInt(dosequantity));
-                    if (found)
-                        break;
-                }
-
-                if (!found) {
-
-                    Dose dose = new Dose();
-                    //dose.setPharmacyDrug(service.getDrugsByUuid(uuid));
-                    dose.setFrequency(service.getDrugFrequencyByName(dosesfrequency));
-                    dose.setQuantity(Integer.parseInt(dosequantity));
-
-                    service.saveDoses(dose);
-
-                } else { ///inform the user that the entry exi
-
-                }
-
-            } else if (dosesedit.equalsIgnoreCase("true")) {
-                Dose dose = new Dose();
-                dose = service.getDosesByUuid(dosesuuid);
-                if (userService.getAuthenticatedUser().getUserId().equals(dose.getCreator().getUserId())) {
-
-                    //dose.setPharmacyDrug(service.getDrugsByUuid(uuid));
-                    dose.setFrequency(service.getDrugFrequencyByName(dosesfrequency));
-                    dose.setQuantity(Integer.parseInt(dosequantity));
-                }
-                service.saveDoses(dose);
+            } else if (dosesEdit.equalsIgnoreCase("true")) {
 
             }
 
-        } else if (dosesuuidvoid != null) {
+        } else if (dosesUuidVoid != null) {
 
             Dose dose = new Dose();
-            dose = service.getDosesByUuid(dosesuuidvoid);
+            dose = service.getDosesByUuid(dosesUuidVoid);
 
             dose.setVoided(true);
-            dose.setVoidReason(dosesreason);
+            dose.setVoidReason(dosesReason);
 
             service.saveDoses(dose);
 
@@ -186,7 +154,6 @@ public class DrugDosesController {
             drugStrengthA.put("");
         drugStrengthA.put("<img src='/openmrs/moduleResources/pharmacy/images/edit.png'/>");
         drugStrengthA.put(doses.get(size).getUuid());
-        //drugStrengthA.put(service.getDrugsByUuid(doses.get(size).getPharmacyDrug().getUuid()).getDrugName().getDrugName());
         drugStrengthA.put(service.getDrugFrequencyByUuid(doses.get(size).getFrequency().getUuid()).getFrequencyName());
         drugStrengthA.put(doses.get(size).getQuantity());
 
@@ -199,26 +166,5 @@ public class DrugDosesController {
         return drugStrengthA;
     }
 
-    public synchronized boolean getCheck(List<Dose> doses, int size, String uuid, String freq, int quantity) {
-
-        //		if ((doses.get(size).getPharmacyDrug().getUuid().equals(uuid)
-        //		        && doses.get(size).getFrequency().getUuid().equalsIgnoreCase(freq) && doses.get(size).getQuantity()
-        //		        .equals(quantity))) {
-        //
-        //			return true;
-        //
-        //		} else
-        return false;
-
-    }
-
-    public synchronized String getString(List<Drug> dname, int size, String text) {
-
-        //		if (dname.get(size).getDrugName().getUuid().equalsIgnoreCase(text)) {
-        //
-        //			return dname.get(size).getUuid();
-        //		}
-        return null;
-    }
 
 }

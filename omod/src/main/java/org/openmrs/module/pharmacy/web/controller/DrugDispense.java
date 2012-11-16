@@ -64,9 +64,9 @@ public class DrugDispense {
 
     private Date dateC;
 
-    private GregorianCalendar one;
+    private GregorianCalendar gregorianCalendar;
 
-    private GregorianCalendar two;
+    private GregorianCalendar calendar;
 
     private String batchNo;
 
@@ -112,33 +112,36 @@ public class DrugDispense {
 
     private String back;
     private boolean found;
+    private List<PharmacyLocationUsers> pharmacyLocationUserses;
+    private int sizeUsers;
+    private List<DrugDispenseSettings> drugDispenseSettings;
+    private DrugDispenseSettings drugDispense;
+    ;
+
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/drugDispense")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
         String locationVal = null;
         service = Context.getService(PharmacyService.class);
-        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        int sizeUsers = listUsers.size();
+        pharmacyLocationUserses = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
+        sizeUsers = pharmacyLocationUserses.size();
 
 
         if (sizeUsers > 1) {
             locationVal = request.getSession().getAttribute("location").toString();
 
         } else if (sizeUsers == 1) {
-            locationVal = listUsers.get(0).getLocation();
+            locationVal = pharmacyLocationUserses.get(0).getLocation();
 
 
         }
         userService = Context.getUserContext();
-        dialogShow = request.getParameter("drugID");
-        dialog = request.getParameter("uuid");
-        dose = request.getParameter("dose");
 
         service = Context.getService(PharmacyService.class);
         serviceLocation = Context.getLocationService();
         datadFrm = new JSONArray();
 
-        List<DrugDispenseSettings> drugDispenseSettings = service.getDrugDispenseSettings();
+        drugDispenseSettings = service.getDrugDispenseSettings();
 
         size = drugDispenseSettings.size();
         currentDate = Calendar.getInstance();
@@ -148,10 +151,10 @@ public class DrugDispense {
 
         currentDate.setTime(dateC);
 
-        one = new GregorianCalendar();
-        two = new GregorianCalendar();
+        gregorianCalendar = new GregorianCalendar();
+        calendar = new GregorianCalendar();
 
-        one.set(currentDate.get(currentDate.YEAR), currentDate.get(currentDate.MONTH),
+        gregorianCalendar.set(currentDate.get(currentDate.YEAR), currentDate.get(currentDate.MONTH),
                 currentDate.get(currentDate.DAY_OF_MONTH));
 
         try {
@@ -165,6 +168,7 @@ public class DrugDispense {
 
 
                         if (service.getPharmacyLocationsByUuid(drugDispenseSettings.get(i).getLocation().getUuid())
+
                                 .getName().equalsIgnoreCase(locationVal)) {
                             datadFrm = new JSONArray();
 
@@ -250,7 +254,7 @@ public class DrugDispense {
             } else if (dose != null) {
 
                 DrugDispenseSettings drugDispense = new DrugDispenseSettings();
-                //change two
+                //change calendar
                 datad2 = new JSONArray();
                 if (Context.getConceptService().getDrugByNameOrId(dose) != null && service.getDrugDispenseSettingsByDrugId(Context.getConceptService().getDrugByNameOrId(
                         dose)) != null) {
@@ -285,36 +289,7 @@ public class DrugDispense {
 
     @RequestMapping(method = RequestMethod.POST, value = "module/pharmacy/drugDispense")
     public synchronized void pageLoadd(HttpServletRequest request, HttpServletResponse response) {
-        String locationVal = null;
-        service = Context.getService(PharmacyService.class);
-        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        int sizeUsers = listUsers.size();
 
-
-        if (sizeUsers > 1) {
-            locationVal = request.getSession().getAttribute("location").toString();
-
-        } else if (sizeUsers == 1) {
-            locationVal = listUsers.get(0).getLocation();
-
-
-        }
-
-
-        currentDate = Calendar.getInstance();
-        readDate = Calendar.getInstance();
-
-        dateC = new Date();
-
-        currentDate.setTime(dateC);
-
-        one = new GregorianCalendar();
-        two = new GregorianCalendar();
-
-        one.set(currentDate.get(currentDate.YEAR), currentDate.get(currentDate.MONTH),
-                currentDate.get(currentDate.DAY_OF_MONTH));
-
-        service = Context.getService(PharmacyService.class);
 
         inventoryNo = request.getParameter("inventoryNo"); //inventory
 
@@ -346,15 +321,46 @@ public class DrugDispense {
 
         voidreason = request.getParameter("dispensereason");
         voiduuid = request.getParameter("dispenseuuidvoid");
+        String locationVal = null;
+        service = Context.getService(PharmacyService.class);
+        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
+        int sizeUsers = listUsers.size();
 
-        List<DrugDispenseSettings> drugDispenseSettings = service.getDrugDispenseSettings();
+
+        if (sizeUsers > 1) {
+            locationVal = request.getSession().getAttribute("location").toString();
+
+        } else if (sizeUsers == 1) {
+            locationVal = listUsers.get(0).getLocation();
+
+
+        }
+
+
+        currentDate = Calendar.getInstance();
+        readDate = Calendar.getInstance();
+
+        dateC = new Date();
+
+        currentDate.setTime(dateC);
+
+        gregorianCalendar = new GregorianCalendar();
+        calendar = new GregorianCalendar();
+
+        gregorianCalendar.set(currentDate.get(currentDate.YEAR), currentDate.get(currentDate.MONTH),
+                currentDate.get(currentDate.DAY_OF_MONTH));
+
+        service = Context.getService(PharmacyService.class);
+
+
+        drugDispenseSettings = service.getDrugDispenseSettings();
 
         sizeDrug = drugDispenseSettings.size();
 
         if (sizeDrug == 0) {
             //save a new copy
 
-            DrugDispenseSettings drugDispense = new DrugDispenseSettings();
+            drugDispense = new DrugDispenseSettings();
 
             drugDispense.setBatchId(service.getPharmacyInventoryByUuid(inventoryNo).getBatchNo());
             drugDispense.setInventoryId(service.getPharmacyInventoryByUuid(inventoryNo));
@@ -390,7 +396,7 @@ public class DrugDispense {
             if (voiduuid != null) {
 
 
-                DrugDispenseSettings drugDispense = new DrugDispenseSettings();
+                drugDispense = new DrugDispenseSettings();
 
                 drugDispense = service.getDrugDispenseSettingsByUuid(voiduuid);
                 drugDispense.setVoided(true);
@@ -400,7 +406,7 @@ public class DrugDispense {
             } else {
 
 
-                DrugDispenseSettings drugDispense = new DrugDispenseSettings();
+                drugDispense = new DrugDispenseSettings();
 
 
                 drugDispense.setBatchId(service.getPharmacyInventoryByUuid(inventoryNo).getBatchNo());
@@ -421,10 +427,7 @@ public class DrugDispense {
 
 
         } else {
-            System.out.println("YYYYYYYYYYYYYYYYYYYYYYY" + inventoryNo);
 
-
-            DrugDispenseSettings drugDispense;// = new DrugDispenseSettings();
 
             drugDispense = service.getDrugDispenseSettingsByDrugId(service.getPharmacyInventoryByUuid(inventoryNo).getDrugs());
 
@@ -533,9 +536,9 @@ public class DrugDispense {
 
                     readDate.setTime(pharmacyStore.get(size).getExpireDate());
 
-                    two.set(readDate.get(readDate.YEAR), readDate.get(readDate.MONTH), readDate.get(readDate.DAY_OF_MONTH));
+                    calendar.set(readDate.get(readDate.YEAR), readDate.get(readDate.MONTH), readDate.get(readDate.DAY_OF_MONTH));
 
-                    int num = daysBetween(two.getTime(), one.getTime());
+                    int num = daysBetween(calendar.getTime(), gregorianCalendar.getTime());
 
                     datad2 = new JSONArray();
 

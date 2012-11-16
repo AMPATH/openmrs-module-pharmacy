@@ -45,6 +45,10 @@ public class HomeController {
     private String noOfMonths;
     private ArrayList<String> drugDispensed;
     private ArrayList<ArrayList<String>> drugAll;
+    private List<PharmacyLocationUsers> pharmacyLocationUsersByUserName;
+    private int size;
+    private JSONParser parser;
+    private PharmacyEncounter pEncounter;
 
     @Authorized("Manage Pharmacy")
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/home")
@@ -59,28 +63,28 @@ public class HomeController {
         String locationVal = null;
 
         service = Context.getService(PharmacyService.class);
-        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        int sizeUsers = listUsers.size();
+        pharmacyLocationUsersByUserName = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
+        size = pharmacyLocationUsersByUserName.size();
 
 
-        if (sizeUsers > 1) {
+        if (size > 1) {
             locationVal = request.getSession().getAttribute("location").toString();
 
-        } else if (sizeUsers == 1) {
-            locationVal = listUsers.get(0).getLocation();
+        } else if (size == 1) {
+            locationVal = pharmacyLocationUsersByUserName.get(0).getLocation();
 
 
         }
 
         String jsonText = request.getParameter("values");
 
-        JSONParser parser = new JSONParser();
+        parser = new JSONParser();
         String[][] obsObs = ArrayObs(parser, jsonText);
         String[][] obsEnc = ArrayEnc(parser, jsonText);
         String[][] obsExtra = ArrayExtra(parser, jsonText);
 
 
-        PharmacyEncounter pEncounter = new PharmacyEncounter();
+        pEncounter = new PharmacyEncounter();
 
 
         for (int i = 1; i < obsEnc.length; i++) {

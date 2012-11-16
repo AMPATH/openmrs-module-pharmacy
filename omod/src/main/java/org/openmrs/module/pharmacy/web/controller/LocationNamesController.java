@@ -48,13 +48,18 @@ public class LocationNamesController {
     private boolean deletePharmacy = false;
 
     private JSONArray datad2;
+    private List<PharmacyLocations> list;
+    private List<PharmacyStore> pharmacyInventory;
+    private int sizeList;
+    private List<User> userList;
+    private PharmacyLocations pharmacyLocations1;
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/locationName")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
 
 
         service = Context.getService(PharmacyService.class);
-        List<PharmacyLocations> list = service.getPharmacyLocations();
+        list = service.getPharmacyLocations();
 
 
         userService = Context.getUserContext();
@@ -84,12 +89,12 @@ public class LocationNamesController {
                     response.getWriter().print(jsons);
                 } else if (drop.equalsIgnoreCase("total")) {
 
-                    List<PharmacyStore> listSize = service.getPharmacyInventory();
-                    int sizeList = listSize.size();
+                    pharmacyInventory = service.getPharmacyInventory();
+                    sizeList = pharmacyInventory.size();
 
                     if (size != 0) {
                         for (int i = 0; i < sizeList; i++) {
-                            int val = getCheckSize(listSize, i, drug);
+                            int val = getCheckSize(pharmacyInventory, i, drug);
                             if (val == 0) {
 
                             } else {
@@ -108,16 +113,16 @@ public class LocationNamesController {
             } else if (user != null) {
 
 
-                List<User> p = Context.getUserService().getUsers(user, Context.getUserService().getRoles(), true);
+                userList = Context.getUserService().getUsers(user, Context.getUserService().getRoles(), true);
 
-                psize = p.size();
+                psize = userList.size();
 
 
                 JSONArray temp = new JSONArray();
                 for (int i = 0; i < psize; i++) {
 
 
-                    temp.put(p.get(i).getUsername());
+                    temp.put(userList.get(i).getUsername());
 
 
                 }
@@ -178,7 +183,7 @@ public class LocationNamesController {
         if (edit != null) {
             if (edit.equalsIgnoreCase("false")) {
                 //check for same entry before saving
-                List<PharmacyLocations> list = service.getPharmacyLocations();
+                list = service.getPharmacyLocations();
                 int size = list.size();
                 for (int i = 0; i < size; i++) {
 
@@ -189,11 +194,11 @@ public class LocationNamesController {
 
                 if (!found) {
 
-                    PharmacyLocations pharmacyLocations = new PharmacyLocations();
-                    pharmacyLocations.setName(locationName);
-                    pharmacyLocations.setDescription(description);
+                    pharmacyLocations1 = new PharmacyLocations();
+                    pharmacyLocations1.setName(locationName);
+                    pharmacyLocations1.setDescription(description);
 
-                    service.savePharmacyLocations(pharmacyLocations);
+                    service.savePharmacyLocations(pharmacyLocations1);
 
                 } else //do code to display to the user
                 {
@@ -201,30 +206,30 @@ public class LocationNamesController {
                 }
 
             } else if (edit.equalsIgnoreCase("true")) {
-                PharmacyLocations pharmacyLocations = new PharmacyLocations();
+                pharmacyLocations1 = new PharmacyLocations();
 
-                pharmacyLocations = service.getPharmacyLocationsByUuid(uuid);
+                pharmacyLocations1 = service.getPharmacyLocationsByUuid(uuid);
 
-                if (userService.getAuthenticatedUser().getUserId().equals(pharmacyLocations.getCreator().getUserId())) {
+                if (userService.getAuthenticatedUser().getUserId().equals(pharmacyLocations1.getCreator().getUserId())) {
 
                     // saving/updating a record
-                    pharmacyLocations.setName(locationName);
-                    pharmacyLocations.setDescription(description);
+                    pharmacyLocations1.setName(locationName);
+                    pharmacyLocations1.setDescription(description);
 
-                    service.savePharmacyLocations(pharmacyLocations);
+                    service.savePharmacyLocations(pharmacyLocations1);
                 }
             }
 
         } else if (uuidvoid != null) {
 
-            PharmacyLocations pharmacyLocations = new PharmacyLocations();
+            pharmacyLocations1 = new PharmacyLocations();
 
-            pharmacyLocations = service.getPharmacyLocationsByUuid(uuidvoid);
+            pharmacyLocations1 = service.getPharmacyLocationsByUuid(uuidvoid);
 
-            pharmacyLocations.setVoided(true);
-            pharmacyLocations.setVoidReason(reason);
+            pharmacyLocations1.setVoided(true);
+            pharmacyLocations1.setVoidReason(reason);
 
-            service.savePharmacyLocations(pharmacyLocations);
+            service.savePharmacyLocations(pharmacyLocations1);
 
         }
 

@@ -34,6 +34,12 @@ public class DrugFormulationController {
     private boolean editPharmacy = false;
 
     private boolean deletePharmacy = false;
+    private List<DrugFormulation> drugFormulationList;
+    private List<DrugFormulation> drugFormulationList1;
+    private int size;
+    private JSONObject jsonObject;
+    private JSONArray jsonArray;
+
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/drugFormulation")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
@@ -42,11 +48,11 @@ public class DrugFormulationController {
         String drop = request.getParameter("drop");
 
         service = Context.getService(PharmacyService.class);
-        List<DrugFormulation> list = service.getDrugFormulation();
-        int size = list.size();
-        JSONObject json = new JSONObject();
+        drugFormulationList = service.getDrugFormulation();
+        size = drugFormulationList.size();
+        jsonObject = new JSONObject();
 
-        JSONArray jsons = new JSONArray();
+        jsonArray = new JSONArray();
 
 
         try {
@@ -56,25 +62,25 @@ public class DrugFormulationController {
 
                     for (int i = 0; i < size; i++) {
 
-                        jsons.put("" + getDropDown(list, i));
+                        jsonArray.put("" + getDropDown(drugFormulationList, i));
                     }
 
-                    response.getWriter().print(jsons);
+                    response.getWriter().print(jsonArray);
                 }
 
             } else {
 
                 for (int i = 0; i < size; i++) {
 
-                    json.accumulate("aaData", getArray(list, i));
+                    jsonObject.accumulate("aaData", getArray(drugFormulationList, i));
 
                 }
-                json.accumulate("iTotalRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iTotalDisplayRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iDisplayStart", 0);
-                json.accumulate("iDisplayLength", 10);
+                jsonObject.accumulate("iTotalRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iTotalDisplayRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iDisplayStart", 0);
+                jsonObject.accumulate("iDisplayLength", 10);
 
-                response.getWriter().print(json);
+                response.getWriter().print(jsonObject);
             }
             response.flushBuffer();
         } catch (Exception e) {
@@ -82,7 +88,7 @@ public class DrugFormulationController {
 
         }
 
-        //log.info(json);
+        //log.info(jsonObject);
 
     }
 
@@ -100,11 +106,11 @@ public class DrugFormulationController {
             if (edit.equalsIgnoreCase("false")) {
 
                 //check for same entry before saving
-                List<DrugFormulation> list = service.getDrugFormulation();
-                int size = list.size();
+                drugFormulationList = service.getDrugFormulation();
+                size = drugFormulationList.size();
                 for (int i = 0; i < size; i++) {
 
-                    found = getCheck(list, i, formulationName);
+                    found = getCheck(drugFormulationList, i, formulationName);
                     if (found)
                         break;
                 }

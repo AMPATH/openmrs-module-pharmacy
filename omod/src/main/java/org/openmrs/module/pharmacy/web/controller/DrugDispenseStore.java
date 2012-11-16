@@ -92,21 +92,28 @@ public class DrugDispenseStore {
     private boolean editPharmacy = false;
 
     private boolean deletePharmacy = false;
+    private List<PharmacyLocationUsers> pharmacyLocationUsersByUserName;
+    private int size1, size2, size3;
+    private List<PharmacyLocationUsers> locationUsersByUserName;
+    private List<DrugDispenseSettings> drugDispenseSettings;
+
+    private List<PharmacyStore> pharmacyStoreList;
+    private DrugDispenseSettings drugDispense;
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/drugDispenseStore")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
         String locationVal = null;
 
         service = Context.getService(PharmacyService.class);
-        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        int sizeUsers = listUsers.size();
+        pharmacyLocationUsersByUserName = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
+        size1 = pharmacyLocationUsersByUserName.size();
 
 
-        if (sizeUsers > 1) {
+        if (size1 > 1) {
             locationVal = request.getSession().getAttribute("location").toString();
 
-        } else if (sizeUsers == 1) {
-            locationVal = listUsers.get(0).getLocation();
+        } else if (size1 == 1) {
+            locationVal = pharmacyLocationUsersByUserName.get(0).getLocation();
 
 
         }
@@ -117,7 +124,7 @@ public class DrugDispenseStore {
         serviceLocation = Context.getLocationService();
         datadFrm = new JSONArray();
 
-        List<DrugDispenseSettings> drugDispenseSettings = service.getDrugDispenseSettings();
+        drugDispenseSettings = service.getDrugDispenseSettings();
 
         size = drugDispenseSettings.size();
         currentDate = Calendar.getInstance();
@@ -137,16 +144,16 @@ public class DrugDispenseStore {
 
             if (dialog != null) {
                 json = new JSONObject();
-                List<PharmacyStore> listStore = service.getPharmacyInventory();
-                int sizeStore = listStore.size();
+                pharmacyStoreList = service.getPharmacyInventory();
+                size2 = pharmacyStoreList.size();
 
-                for (int i = 0; i < sizeStore; i++) {
-                    if (service.getPharmacyLocationsByUuid(listStore.get(i).getLocation()).getName()
+                for (int i = 0; i < size2; i++) {
+                    if (service.getPharmacyLocationsByUuid(pharmacyStoreList.get(i).getLocation()).getName()
                             .equalsIgnoreCase(locationVal)) {
 
                         datadFrm = new JSONArray();
 
-                        datadFrm = getArray(listStore, i, dialog, locationVal);
+                        datadFrm = getArray(pharmacyStoreList, i, dialog, locationVal);
                         if (datadFrm != null)
                             json.accumulate("aaData", datadFrm);
                     }
@@ -190,15 +197,15 @@ public class DrugDispenseStore {
         String locationVal = null;
 
         service = Context.getService(PharmacyService.class);
-        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        int sizeUsers = listUsers.size();
+        locationUsersByUserName = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
+        size3 = locationUsersByUserName.size();
 
 
-        if (sizeUsers > 1) {
+        if (size3 > 1) {
             locationVal = request.getSession().getAttribute("location").toString();
 
-        } else if (sizeUsers == 1) {
-            locationVal = listUsers.get(0).getLocation();
+        } else if (size3 == 1) {
+            locationVal = locationUsersByUserName.get(0).getLocation();
 
 
         }
@@ -231,13 +238,13 @@ public class DrugDispenseStore {
         voidreason = request.getParameter("dispensereason");
         voiduuid = request.getParameter("dispenseuuidvoid");
 
-        List<DrugDispenseSettings> drugDispenseSettings = service.getDrugDispenseSettings();
+        drugDispenseSettings = service.getDrugDispenseSettings();
 
         sizeDrug = drugDispenseSettings.size();
 
         if (sizeDrug == 0) {
             //save a new copy
-            DrugDispenseSettings drugDispense = new DrugDispenseSettings();
+            drugDispense = new DrugDispenseSettings();
 
             drugDispense.setBatchId(service.getPharmacyInventoryByUuid(inventoryNo).getBatchNo());
             drugDispense.setInventoryId(service.getPharmacyInventoryByUuid(inventoryNo));
@@ -258,7 +265,7 @@ public class DrugDispenseStore {
 
                     if (voiduuid != null) {
 
-                        DrugDispenseSettings drugDispense = new DrugDispenseSettings();
+                        drugDispense = new DrugDispenseSettings();
 
                         drugDispense = service.getDrugDispenseSettingsByUuid(voiduuid);
                         drugDispense.setVoided(true);
@@ -266,7 +273,7 @@ public class DrugDispenseStore {
 
                         service.saveDrugDispenseSettings(drugDispense);
                     } else if (dispenseedit != null) {
-                        DrugDispenseSettings drugDispense = new DrugDispenseSettings();
+                        drugDispense = new DrugDispenseSettings();
 
                         drugDispense = service.getDrugDispenseSettingsByUuid(uuidedit);
                         if (userService.getAuthenticatedUser().getUserId() == drugDispense.getCreator().getUserId()) {
@@ -282,7 +289,7 @@ public class DrugDispenseStore {
                 } else {
 
                     //save a new copy
-                    DrugDispenseSettings drugDispense = new DrugDispenseSettings();
+                    drugDispense = new DrugDispenseSettings();
 
                     drugDispense.setBatchId(service.getPharmacyInventoryByUuid(inventoryNo).getBatchNo());
                     drugDispense.setInventoryId(service.getPharmacyInventoryByUuid(inventoryNo));

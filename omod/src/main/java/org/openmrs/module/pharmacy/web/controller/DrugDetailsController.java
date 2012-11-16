@@ -53,10 +53,18 @@ public class DrugDetailsController {
     private String drug = null;
 
     private String id;
+    private List<Drug> allDrugs;
+    private List<PharmacyLocations> pharmacyLocations;
+    private List<PharmacyLocationUsers> pharmacyLocationUsers;
+    private int size, size1, size2;
+    private JSONObject jsonObject;
+    private JSONArray jsonArray;
+    private List<Drug> listDrugs;
+    private Drug drugByNameOrId;
+
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/drugDetails")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
-        userService = Context.getUserContext();
         String uuid = request.getParameter("uuid");
         String drop = request.getParameter("drop");
         bar = request.getParameter("bar");
@@ -66,36 +74,39 @@ public class DrugDetailsController {
 
         service = Context.getService(PharmacyService.class);
         serviceDrugs = Context.getConceptService();
-        List<Drug> list = serviceDrugs.getAllDrugs();
+        userService = Context.getUserContext();
         serviceLocation = Context.getLocationService();
-        List<PharmacyLocations> list2 = service.getPharmacyLocations();
-        List<PharmacyLocationUsers> locationUsers = service.getPharmacyLocationUsers();
 
-        int size = list.size();
-        int size2 = list2.size();
-        int sizeUsers = locationUsers.size();
-        JSONObject json = new JSONObject();
+        allDrugs = serviceDrugs.getAllDrugs();
+        pharmacyLocations = service.getPharmacyLocations();
+        pharmacyLocationUsers = service.getPharmacyLocationUsers();
 
-        JSONArray jsons = new JSONArray();
+        size = allDrugs.size();
+        size2 = pharmacyLocations.size();
+        size1 = pharmacyLocationUsers.size();
+        jsonObject = new JSONObject();
+
+        jsonArray = new JSONArray();
         try {
 
             if (drop != null) {
 
                 if (drop.equalsIgnoreCase("drug")) {
 
-                    Drug drug = Context.getConceptService().getDrugByNameOrId(id);
-                    jsons.put("" + drug.getName());
-                    jsons.put("" + drug.getConcept().getId());
-                    jsons.put("" + drug.getConcept().getDisplayString());
+                    drugByNameOrId = Context.getConceptService().getDrugByNameOrId(id);
+                    jsonArray.put("" + drugByNameOrId.getName());
+                    jsonArray.put("" + drugByNameOrId.getConcept().getId());
+                    jsonArray.put("" + drugByNameOrId.getConcept().getDisplayString());
 
-                    response.getWriter().print(jsons);
-                } else if (drop.equalsIgnoreCase("drop")) {
+                    response.getWriter().print(jsonArray);
 
-                    List<Drug> listDrugs = serviceDrugs.getDrugs(searchDrug);
+                } else if (drop.equalsIgnoreCase("drop")) { // get details of a drug with its ID
+
+                    listDrugs = serviceDrugs.getDrugs(searchDrug);
                     int sizeD = listDrugs.size();
                     if (bar != null) {
                         for (int i = 0; i < sizeD; i++) {
-                            jsons.put("" + listDrugs.get(i).getName() + "|" + listDrugs.get(i).getId());
+                            jsonArray.put("" + listDrugs.get(i).getName() + "|" + listDrugs.get(i).getId());
                         }
 
 
@@ -103,10 +114,10 @@ public class DrugDetailsController {
 
 
                         for (int i = 0; i < sizeD; i++) {
-                            jsons.put("" + listDrugs.get(i).getName());
+                            jsonArray.put("" + listDrugs.get(i).getName());
                         }
                     }
-                    response.getWriter().print(jsons);
+                    response.getWriter().print(jsonArray);
                 } else if (drop.equalsIgnoreCase("location")) {
 
 
@@ -127,26 +138,26 @@ public class DrugDetailsController {
                     }
                     if (setLocation) {
 
-                        for (int ii = 0; ii < sizeUsers; ii++) {
-                            String val = getDropDownLocation(locationUsers, ii, name);
+                        for (int ii = 0; ii < size1; ii++) {
+                            String val = getDropDownLocation(pharmacyLocationUsers, ii, name);
 
                             if (!val.contentEquals("null"))
-                                jsons.put("" + val);
+                                jsonArray.put("" + val);
                         }
                     } else {
 
-                        jsons.put("No permission");
+                        jsonArray.put("No permission");
                     }
 
-                    json.accumulate("", jsons);
-                    response.getWriter().print(jsons);
+                    jsonObject.accumulate("", jsonArray);
+                    response.getWriter().print(jsonArray);
                 } else if (drop.equalsIgnoreCase("locationAll")) {
                     for (int ii = 0; ii < size2; ii++) {
-                        System.out.println(list2.get(ii).getName());
-                        jsons.put("" + list2.get(ii).getName());
+                        System.out.println(pharmacyLocations.get(ii).getName());
+                        jsonArray.put("" + pharmacyLocations.get(ii).getName());
                     }
-                    json.accumulate("", jsons);
-                    response.getWriter().print(jsons);
+                    jsonObject.accumulate("", jsonArray);
+                    response.getWriter().print(jsonArray);
 
 
                 }
@@ -155,15 +166,15 @@ public class DrugDetailsController {
 
                 for (int i = 0; i < size; i++) {
 
-                    json.accumulate("aaData", getArray(list, i));
+                    jsonObject.accumulate("aaData", getArray(allDrugs, i));
 
                 }
-                json.accumulate("iTotalRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iTotalDisplayRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iDisplayStart", 0);
-                json.accumulate("iDisplayLength", 10);
+                jsonObject.accumulate("iTotalRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iTotalDisplayRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iDisplayStart", 0);
+                jsonObject.accumulate("iDisplayLength", 10);
 
-                response.getWriter().print(json);
+                response.getWriter().print(jsonObject);
             }
             response.flushBuffer();
 
@@ -177,74 +188,6 @@ public class DrugDetailsController {
     @RequestMapping(method = RequestMethod.POST, value = "module/pharmacy/drugDetails")
     public synchronized void pageLoadd(HttpServletRequest request, HttpServletResponse response) {
 
-        String drugsformulation = request.getParameter("drugsformulation");
-        String drugsstrength = request.getParameter("drugsstrength");
-        String drugsunits = request.getParameter("drugsunits");
-
-        String drugsreason = request.getParameter("drugsreason");
-        String drugsuuidvoid = request.getParameter("drugsuuidvoid");
-
-        String drugsname = request.getParameter("drugsname");
-        String drugsedit = request.getParameter("drugsedit");
-        String drugsuuid = request.getParameter("drugsuuid");
-
-        if (drugsedit != null) {
-            if (drugsedit.equalsIgnoreCase("false")) {
-
-                //check for same entry before saving
-                List<Drug> list = serviceDrugs.getAllDrugs();
-                int size = list.size();
-                for (int i = 0; i < size; i++) {
-
-                    found = getCheck(list, i, drugsname, drugsformulation, drugsstrength, drugsunits);
-                    if (found)
-                        break;
-                }
-
-                if (!found) {
-                    //					Drug drug = new Drug();
-                    //
-                    //					drug.setConcept(null);
-                    ////					drug.setDrugFormulation(service.getDrugFormulationByName(drugsformulation));
-                    ////
-                    ////					drug.setDrugStrength(service.getDrugStrengthByName(drugsstrength));
-                    ////					drug.setDrugUnit(service.getDrugUnitsByName(drugsunits));
-                    ////					drug.setDrugName(service.getDrugNameByName(drugsname));
-                    //
-                    //					service.saveDrugs(drug);
-
-                } else //do code to display to the user
-                {
-
-                }
-
-            } else if (drugsedit.equalsIgnoreCase("true")) {
-
-                //				Drug drug = new Drug();
-                //				drug = service.getDrugsByUuid(drugsuuid);
-                //
-                //				drug.setConcept(null);
-                //				drug.setDrugFormulation(service.getDrugFormulationByName(drugsformulation));
-                //
-                //				drug.setDrugStrength(service.getDrugStrengthByName(drugsstrength));
-                //				drug.setDrugUnit(service.getDrugUnitsByName(drugsunits));
-                //				drug.setDrugName(service.getDrugNameByName(drugsname));
-                //
-                //				service.saveDrugs(drug);
-
-            }
-
-        } else if (drugsuuidvoid != null) {
-            //
-            //			Drug drug = new Drug();
-            //			drug = service.getDrugsByUuid(drugsuuidvoid);
-            //
-            //			drug.setRetired(true);
-            //			drug.setRetireReason(drugsreason);
-            //
-            //			service.saveDrugs(drug);
-            //
-        }
 
     }
 
@@ -286,18 +229,6 @@ public class DrugDetailsController {
 
     }
 
-    public synchronized String getDropDown(List<Drug> drug, int size) {
-
-        return drug.get(size).getName();
-
-    }
-
-    public synchronized String getDropDownBarcode(List<Drug> drug, int size) {
-
-        return drug.get(size).getName() + "|" + drug.get(size).getId();
-
-    }
-
     public String getDropDownLocation(List<PharmacyLocationUsers> list2, int size, String name) {
 
 
@@ -311,15 +242,4 @@ public class DrugDetailsController {
 
     }
 
-    public synchronized boolean getCheck(List<Drug> drug, int size, String drugName, String drugsformulation,
-                                         String drugsstrength, String drugsunits) {
-
-        if ((drug.get(size).getName().equals(drugName))) {
-
-            return true;
-
-        } else
-            return false;
-
-    }
 }

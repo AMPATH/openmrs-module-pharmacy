@@ -34,6 +34,11 @@ public class DrugUnitController {
     private boolean editPharmacy = false;
 
     private boolean deletePharmacy = false;
+    private List<DrugUnits> drugUnits;
+    private int size;
+    private JSONArray jsonArray;
+    private JSONObject jsonObject;
+    private DrugUnits drugunits;
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/drugUnit")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
@@ -41,11 +46,11 @@ public class DrugUnitController {
         userService = Context.getUserContext();
 
         String drop = request.getParameter("drop");
-        List<DrugUnits> list = service.getDrugUnits();
-        int size = list.size();
-        JSONObject json = new JSONObject();
+        drugUnits = service.getDrugUnits();
+        size = drugUnits.size();
+        jsonObject = new JSONObject();
 
-        JSONArray jsons = new JSONArray();
+        jsonArray = new JSONArray();
 
         try {
 
@@ -54,25 +59,25 @@ public class DrugUnitController {
 
                     for (int i = 0; i < size; i++) {
 
-                        jsons.put(getDropDown(list, i));
+                        jsonArray.put(getDropDown(drugUnits, i));
                     }
 
-                    response.getWriter().print(jsons);
+                    response.getWriter().print(jsonArray);
                 }
 
             } else {
 
                 for (int i = 0; i < size; i++) {
 
-                    json.accumulate("aaData", getArray(list, i));
+                    jsonObject.accumulate("aaData", getArray(drugUnits, i));
 
                 }
-                json.accumulate("iTotalRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iTotalDisplayRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iDisplayStart", 0);
-                json.accumulate("iDisplayLength", 10);
+                jsonObject.accumulate("iTotalRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iTotalDisplayRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iDisplayStart", 0);
+                jsonObject.accumulate("iDisplayLength", 10);
 
-                response.getWriter().print(json);
+                response.getWriter().print(jsonObject);
             }
             response.flushBuffer();
 
@@ -97,20 +102,20 @@ public class DrugUnitController {
             if (unitsedit.equalsIgnoreCase("false")) {
 
                 //check for same entry before saving
-                List<DrugUnits> list = service.getDrugUnits();
-                int size = list.size();
+                drugUnits = service.getDrugUnits();
+                size = drugUnits.size();
                 for (int i = 0; i < size; i++) {
 
-                    found = getCheck(list, i, unitsname);
+                    found = getCheck(drugUnits, i, unitsname);
                     if (found)
                         break;
                 }
 
                 if (!found) {
 
-                    DrugUnits drugUnits = new DrugUnits();
-                    drugUnits.setDrugUnitName(unitsname);
-                    service.saveDrugUnits(drugUnits);
+                    drugunits = new DrugUnits();
+                    drugunits.setDrugUnitName(unitsname);
+                    service.saveDrugUnits(drugunits);
 
                 } else //do code to display to the user
                 {
@@ -118,14 +123,14 @@ public class DrugUnitController {
                 }
 
             } else if (unitsedit.equalsIgnoreCase("true")) {
-                DrugUnits drugUnits = new DrugUnits();
-                drugUnits = service.getDrugUnitsByUuid(unitsuuid);
-                if (userService.getAuthenticatedUser().getUserId().equals(drugUnits.getCreator().getUserId())) {
+                drugunits = new DrugUnits();
+                drugunits = service.getDrugUnitsByUuid(unitsuuid);
+                if (userService.getAuthenticatedUser().getUserId().equals(drugunits.getCreator().getUserId())) {
 
                     // saving/updating a record
-                    drugUnits.setDrugUnitName(unitsname);
+                    drugunits.setDrugUnitName(unitsname);
 
-                    service.saveDrugUnits(drugUnits);
+                    service.saveDrugUnits(drugunits);
 
                 }
 
@@ -133,13 +138,13 @@ public class DrugUnitController {
 
         } else if (unitsuuidvoid != null) {
 
-            DrugUnits drugUnits = new DrugUnits();
-            drugUnits = service.getDrugUnitsByUuid(unitsuuidvoid);
+            drugunits = new DrugUnits();
+            drugunits = service.getDrugUnitsByUuid(unitsuuidvoid);
 
-            drugUnits.setVoided(true);
-            drugUnits.setVoidReason(unitsreason);
+            drugunits.setVoided(true);
+            drugunits.setVoidReason(unitsreason);
 
-            service.saveDrugUnits(drugUnits);
+            service.saveDrugUnits(drugunits);
 
         }
 

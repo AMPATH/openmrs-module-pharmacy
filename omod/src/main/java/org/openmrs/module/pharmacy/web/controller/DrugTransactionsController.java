@@ -59,6 +59,13 @@ public class DrugTransactionsController {
     private UserContext userService;
 
     private boolean deletePharmacy = false;
+    private List<PharmacyLocationUsers> locationUsersByUserName;
+    private int sizeUsers;
+    private List<DrugTransactions> drugTransactions;
+    private JSONObject jsonObject;
+    private JSONArray jsonArray;
+    private List<Drug> allDrugs;
+    private int size1;
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/drugTransactions")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
@@ -68,15 +75,15 @@ public class DrugTransactionsController {
 
 
         service = Context.getService(PharmacyService.class);
-        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        int sizeUsers = listUsers.size();
+        locationUsersByUserName = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
+        sizeUsers = locationUsersByUserName.size();
 
 
         if (sizeUsers > 1) {
             locationVal = request.getSession().getAttribute("location").toString();
 
         } else if (sizeUsers == 1) {
-            locationVal = listUsers.get(0).getLocation();
+            locationVal = locationUsersByUserName.get(0).getLocation();
 
 
         }
@@ -86,20 +93,20 @@ public class DrugTransactionsController {
         drop = request.getParameter("drop");
         filter = request.getParameter("sSearch");
 
-        List<DrugTransactions> List = service.getDrugTransactions();
-        int size = List.size();
-        JSONObject json = new JSONObject();
-        JSONArray jsons = new JSONArray();
-        response.setContentType("application/json");
+        drugTransactions = service.getDrugTransactions();
+        int size = drugTransactions.size();
+        jsonObject = new JSONObject();
+        jsonArray = new JSONArray();
+        response.setContentType("application/jsonObject");
 
 
         if (filter.length() > 2) {
             originalbindrug = filter;
 
-            List<Drug> dname = serviceDrugs.getAllDrugs();
-            int dnames = dname.size();
-            for (int i = 0; i < dnames; i++) {
-                uuidfilter = getString(dname, i, originalbindrug);
+            allDrugs = serviceDrugs.getAllDrugs();
+            size1 = allDrugs.size();
+            for (int i = 0; i < size1; i++) {
+                uuidfilter = getString(allDrugs, i, originalbindrug);
                 if (uuidfilter != null)
                     break;
 
@@ -109,12 +116,12 @@ public class DrugTransactionsController {
 
             for (int i = 0; i < size; i++) {
 
-                if (List.get(i).getLocation() != null) {
-                    if (service.getPharmacyLocationsByUuid(List.get(i).getLocation()).getName()
+                if (drugTransactions.get(i).getLocation() != null) {
+                    if (service.getPharmacyLocationsByUuid(drugTransactions.get(i).getLocation()).getName()
                             .equalsIgnoreCase(locationVal)) {
-                        JSONArray val = getArray(List, i, locationVal);
-                        if (val != null)
-                            json.accumulate("aaData", val);
+                        jsonArray = getArray(drugTransactions, i, locationVal);
+                        if (jsonArray != null)
+                            jsonObject.accumulate("aaData", jsonArray);
                     }
                 }
                 if (exit)
@@ -123,7 +130,7 @@ public class DrugTransactionsController {
                 data = new JSONArray();
             }
 
-            if (!json.has("aaData")) {
+            if (!jsonObject.has("aaData")) {
 
                 data = new JSONArray();
                 data.put("No entry");
@@ -137,16 +144,16 @@ public class DrugTransactionsController {
 
                 data.put("No entry");
 
-                json.accumulate("aaData", data);
+                jsonObject.accumulate("aaData", data);
             }
 
             exit = false;
-            json.accumulate("iTotalRecords", json.getJSONArray("aaData").length());
-            json.accumulate("iTotalDisplayRecords", json.getJSONArray("aaData").length());
-            json.accumulate("iDisplayStart", 0);
-            json.accumulate("iDisplayLength", 10);
+            jsonObject.accumulate("iTotalRecords", jsonObject.getJSONArray("aaData").length());
+            jsonObject.accumulate("iTotalDisplayRecords", jsonObject.getJSONArray("aaData").length());
+            jsonObject.accumulate("iDisplayStart", 0);
+            jsonObject.accumulate("iDisplayLength", 10);
 
-            response.getWriter().print(json);
+            response.getWriter().print(jsonObject);
 
             response.flushBuffer();
 

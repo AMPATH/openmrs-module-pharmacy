@@ -150,21 +150,32 @@ public class DrugBincardController {
     private String row_id;
 
     private String value, s11number;
+    private List<PharmacyLocationUsers> pharmacyLocationUsersByUserName;
+    private List<PharmacyStore> pharmacyStores;
+    private List<PharmacyStore> pharmacyStoreList;
+    private List<Drug> allDrugs;
+    private JSONArray jsonArray;
+    private PharmacyStore pharmacyStore;
+    private DrugTransactions drugTransactions;
+
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/drugBincard")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
-        serviceLocation = Context.getLocationService();
+
+
         String locationVal = null;
+        serviceLocation = Context.getLocationService();
+
         service = Context.getService(PharmacyService.class);
-        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        int sizeUsers = listUsers.size();
+        pharmacyLocationUsersByUserName = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
+        int sizeUsers = pharmacyLocationUsersByUserName.size();
 
 
         if (sizeUsers > 1) {
             locationVal = request.getSession().getAttribute("location").toString();
 
         } else if (sizeUsers == 1) {
-            locationVal = listUsers.get(0).getLocation();
+            locationVal = pharmacyLocationUsersByUserName.get(0).getLocation();
 
 
         }
@@ -199,15 +210,15 @@ public class DrugBincardController {
 
         service = Context.getService(PharmacyService.class);
         serviceDrugs = Context.getConceptService();
-        List<PharmacyStore> List = service.getPharmacyInventory();
+        pharmacyStores = service.getPharmacyInventory();
 
-        List<PharmacyStore> ListTotal = service.getPharmacyInventoryByCategory(service.getPharmacyCategoryByName(category));
+        pharmacyStoreList = service.getPharmacyInventoryByCategory(service.getPharmacyCategoryByName(category));
 
-        List<Drug> drugList = Context.getConceptService().getAllDrugs();
-        int size = List.size();
-        int drugSize = drugList.size();
+        allDrugs = Context.getConceptService().getAllDrugs();
+        int size = pharmacyStores.size();
+        int drugSize = allDrugs.size();
         json = new JSONObject();
-        JSONArray jsons = new JSONArray();
+        jsonArray = new JSONArray();
         response.setContentType("application/json");
 
         if (filter.startsWith("s11"))
@@ -220,23 +231,10 @@ public class DrugBincardController {
                 originalbindrug = filter;
 
                 serviceLocation = Context.getLocationService();
-                //
-                //				bindrug = filter.substring(0, filter.indexOf("("));
-                //
-                //				drugstrength = originalbindrug.substring(originalbindrug.indexOf("(") + 1, originalbindrug.indexOf(","));
-                //				drugunit = originalbindrug.substring(originalbindrug.indexOf(",") + 1, originalbindrug.indexOf("/"));
-                //				formulation = originalbindrug.substring(originalbindrug.indexOf("/") + 1, originalbindrug.indexOf(")"));
-                //
-                //
-                //			String uuidvalue = service.getDrugNameByName(bindrug).getUuid();
-                //			String drugstrengthuuid = service.getDrugStrengthByName(drugstrength).getUuid();
-                //			String drugsunituuid = service.getDrugUnitsByName(drugunit).getUuid();
-                //			String drugsformulationuuid = service.getDrugFormulationByName(formulation).getUuid();
-
-                List<Drug> dname = serviceDrugs.getAllDrugs();
-                int dnames = dname.size();
+                allDrugs = serviceDrugs.getAllDrugs();
+                int dnames = allDrugs.size();
                 for (int i = 0; i < dnames; i++) {
-                    uuidfilter = getString(dname, i, originalbindrug);
+                    uuidfilter = getString(allDrugs, i, originalbindrug);
                     if (uuidfilter != null)
                         break;
 
@@ -249,11 +247,11 @@ public class DrugBincardController {
             if (dialog != null) {
 
                 for (int i = 0; i < size; i++) {
-                    if (service.getPharmacyLocationsByUuid(List.get(i).getLocation()).getName()
+                    if (service.getPharmacyLocationsByUuid(pharmacyStores.get(i).getLocation()).getName()
                             .equalsIgnoreCase(locationVal)) {
 
                         datad2 = new JSONArray();
-                        datad2 = getArrayDialog(List, i, locationVal);
+                        datad2 = getArrayDialog(pharmacyStores, i, locationVal);
                         if (datad2 != null)
                             json.accumulate("aaData", datad2);
                     }
@@ -284,31 +282,31 @@ public class DrugBincardController {
                 for (int i = 0; i < size; i++) {
 
 
-                    if ((service.getPharmacyLocationsByUuid(List.get(i).getLocation()).getName()
-                            .equalsIgnoreCase(locationVal) && (List.get(i).getCategory().getName().equalsIgnoreCase(category)))) {
+                    if ((service.getPharmacyLocationsByUuid(pharmacyStores.get(i).getLocation()).getName()
+                            .equalsIgnoreCase(locationVal) && (pharmacyStores.get(i).getCategory().getName().equalsIgnoreCase(category)))) {
 
-                        if (druguuidshow.equals(List.get(i).getDrugs().getUuid())) {
+                        if (druguuidshow.equals(pharmacyStores.get(i).getDrugs().getUuid())) {
 
-                            jsons = new JSONArray();
+                            jsonArray = new JSONArray();
 
-                            jsons.put(List.get(i).getDrugs().getName());
-                            jsons.put(List.get(i).getQuantity());
-                            jsons.put(10);
-                            jsons.put(List.get(i).getMaxLevel());
-                            jsons.put(List.get(i).getMinLevel());
+                            jsonArray.put(pharmacyStores.get(i).getDrugs().getName());
+                            jsonArray.put(pharmacyStores.get(i).getQuantity());
+                            jsonArray.put(10);
+                            jsonArray.put(pharmacyStores.get(i).getMaxLevel());
+                            jsonArray.put(pharmacyStores.get(i).getMinLevel());
 
-                            jsons.put(List.get(i).getExpireDate().toString().substring(0, 10));
+                            jsonArray.put(pharmacyStores.get(i).getExpireDate().toString().substring(0, 10));
 
-                            jsons.put(List.get(i).getBatchNo());
-                            jsons.put(List.get(i).getS11());
-                            jsons.put(List.get(i).getDeliveryNo());
+                            jsonArray.put(pharmacyStores.get(i).getBatchNo());
+                            jsonArray.put(pharmacyStores.get(i).getS11());
+                            jsonArray.put(pharmacyStores.get(i).getDeliveryNo());
 
-                            if (List.get(i).getSupplier() == null)
-                                jsons.put(List.get(i).getSupplier());
+                            if (pharmacyStores.get(i).getSupplier() == null)
+                                jsonArray.put(pharmacyStores.get(i).getSupplier());
                             else
-                                jsons.put(List.get(i).getSupplier().getName());
+                                jsonArray.put(pharmacyStores.get(i).getSupplier().getName());
 
-                            jsonsAll.put(jsons);
+                            jsonsAll.put(jsonArray);
 
                         }
 
@@ -318,11 +316,6 @@ public class DrugBincardController {
 
                 response.getWriter().print(jsonsAll);
             } else if (bintotal != null) {
-                //load totals for each drug
-
-
-//                for (int t = 0; t < drugSize; t++) {
-
                 total = 0;
                 druguuid = null;
                 drugname = null;
@@ -330,26 +323,20 @@ public class DrugBincardController {
                 HashMap add = new HashMap();
 
 
-                size = ListTotal.size();
+                size = pharmacyStoreList.size();
                 for (int i = 0; i < size; i++) {
-                    //System.out.println("--------------------------------------------------------------");
-
-
                     druguuid = null;
                     drugname = null;
 
-                    if ((service.getPharmacyLocationsByUuid(ListTotal.get(i).getLocation()).getName()
+                    if ((service.getPharmacyLocationsByUuid(pharmacyStoreList.get(i).getLocation()).getName()
                             .equalsIgnoreCase(locationVal))) {
 
-                        //name
-                        //name                 drugname
+                        total += pharmacyStoreList.get(i).getQuantity();
 
-                        total += ListTotal.get(i).getQuantity();
-
-                        druguuid = ListTotal.get(i).getDrugs().getUuid();
-                        drugname = ListTotal.get(i).getDrugs().getName();
+                        druguuid = pharmacyStoreList.get(i).getDrugs().getUuid();
+                        drugname = pharmacyStoreList.get(i).getDrugs().getName();
                         newDate = new Date();
-                        givenDate = ListTotal.get(i).getExpireDate();
+                        givenDate = pharmacyStoreList.get(i).getExpireDate();
 
                         monthsDiff = ((givenDate.getYear() - newDate.getYear()) * 12)
                                 + (givenDate.getMonth() - newDate.getMonth());
@@ -357,13 +344,13 @@ public class DrugBincardController {
                             monthsAlert = true;
 
                         }
-                        if (ListTotal.get(i).getQuantity() <= ListTotal.get(i).getMinLevel()) {
+                        if (pharmacyStoreList.get(i).getQuantity() <= pharmacyStoreList.get(i).getMinLevel()) {
                             minAlert = true;
 
                         }
 
                         for (int t = 0; t < size; t++) {
-                            if (ListTotal.get(i).getDrugs().getName().equalsIgnoreCase(ListTotal.get(t).getDrugs().getName())) {
+                            if (pharmacyStoreList.get(i).getDrugs().getName().equalsIgnoreCase(pharmacyStoreList.get(t).getDrugs().getName())) {
 
 
                                 test.put(druguuid, total);
@@ -378,33 +365,31 @@ public class DrugBincardController {
 //
 
                 }
-//                }         for (int t = 0; t < size; t++) {
-
-
+//
                 if (druguuid != null && drugname != null) {
 
                 }
                 for (int ch = 0; ch < size; ch++) {
 
 
-                    if (!add.containsKey(ListTotal.get(ch).getDrugs().getUuid())) {
+                    if (!add.containsKey(pharmacyStoreList.get(ch).getDrugs().getUuid())) {
 
 
-                        if (test.containsKey(ListTotal.get(ch).getDrugs().getUuid())) {
+                        if (test.containsKey(pharmacyStoreList.get(ch).getDrugs().getUuid())) {
 
-                            add.put(ListTotal.get(ch).getDrugs().getUuid(), ListTotal.get(ch).getDrugs().getUuid());
+                            add.put(pharmacyStoreList.get(ch).getDrugs().getUuid(), pharmacyStoreList.get(ch).getDrugs().getUuid());
 
 
                             data = new JSONArray();
                             data.put("<img src='/openmrs/moduleResources/pharmacy/images/details_open.png'/>");
-                            data.put(ListTotal.get(ch).getDrugs().getUuid());
-                            data.put(ListTotal.get(ch).getDrugs().getName());
+                            data.put(pharmacyStoreList.get(ch).getDrugs().getUuid());
+                            data.put(pharmacyStoreList.get(ch).getDrugs().getName());
 
-                            data.put(test.get(ListTotal.get(ch).getDrugs().getUuid()));
+                            data.put(test.get(pharmacyStoreList.get(ch).getDrugs().getUuid()));
 
 
                             newDate = new Date();
-                            givenDate = ListTotal.get(ch).getExpireDate();
+                            givenDate = pharmacyStoreList.get(ch).getExpireDate();
 
                             monthsDiff = ((givenDate.getYear() - newDate.getYear()) * 12)
                                     + (givenDate.getMonth() - newDate.getMonth());
@@ -425,13 +410,13 @@ public class DrugBincardController {
 
                             data = new JSONArray();
                             data.put("<img src='/openmrs/moduleResources/pharmacy/images/details_open.png'/>");
-                            data.put(ListTotal.get(ch).getDrugs().getUuid());
-                            data.put(ListTotal.get(ch).getDrugs().getName());
+                            data.put(pharmacyStoreList.get(ch).getDrugs().getUuid());
+                            data.put(pharmacyStoreList.get(ch).getDrugs().getName());
 
-                            data.put(test.get(ListTotal.get(ch).getDrugs().getUuid()));
+                            data.put(test.get(pharmacyStoreList.get(ch).getDrugs().getUuid()));
 
                             newDate = new Date();
-                            givenDate = ListTotal.get(ch).getExpireDate();
+                            givenDate = pharmacyStoreList.get(ch).getExpireDate();
 
                             monthsDiff = ((givenDate.getYear() - newDate.getYear()) * 12)
                                     + (givenDate.getMonth() - newDate.getMonth());
@@ -443,7 +428,7 @@ public class DrugBincardController {
 
 
                             }
-                            if (ListTotal.get(ch).getQuantity() <= ListTotal.get(ch).getMinLevel()) {
+                            if (pharmacyStoreList.get(ch).getQuantity() <= pharmacyStoreList.get(ch).getMinLevel()) {
                                 data.put("8");
 
                             }
@@ -490,14 +475,14 @@ public class DrugBincardController {
 
                 for (int i = 0; i < size; i++) {
 
-                    if (List.get(i).getCategory() != null) {
+                    if (pharmacyStores.get(i).getCategory() != null) {
                         if (category.equals("-111")) {
 
-                        } else if ((service.getPharmacyLocationsByUuid(List.get(i).getLocation()).getName()
+                        } else if ((service.getPharmacyLocationsByUuid(pharmacyStores.get(i).getLocation()).getName()
                                 .equalsIgnoreCase(locationVal))
-                                && (List.get(i).getCategory().getName().equalsIgnoreCase(category))) {
+                                && (pharmacyStores.get(i).getCategory().getName().equalsIgnoreCase(category))) {
 
-                            JSONArray val = getArray(List, i, locationVal);
+                            JSONArray val = getArray(pharmacyStores, i, locationVal);
                             if (val != null)
                                 json.accumulate("aaData", val);
 
@@ -543,7 +528,7 @@ public class DrugBincardController {
 
             response.flushBuffer();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
+
             log.error("Error generated", e);
         }
 
@@ -635,7 +620,7 @@ public class DrugBincardController {
                 try {
                     dateVal = new SimpleDateFormat("dd-MM-yyyy").parse(date);
                 } catch (ParseException e) {
-                    // TODO Auto-generated catch blockreturn datad;
+
                     log.error("Error generated", e);
                 }
             }
@@ -658,13 +643,13 @@ public class DrugBincardController {
 
                 if (!found) {
 
-                    PharmacyStore pharmacyStore = new PharmacyStore();
+                    pharmacyStore = new PharmacyStore();
 
                     //get drug details 		drugstrength drugunit formulation
 
                     pharmacyStore.setDrugs(serviceDrugs.getDrugByUuid(uuid));
 
-                    DrugTransactions drugTransactions = new DrugTransactions();
+                    drugTransactions = new DrugTransactions();
 
                     //transactions
 
@@ -755,12 +740,8 @@ public class DrugBincardController {
                                 pharmacyStore.setOutgoing(pharmacyStoreOutgoing);
                             }
 
-                            //pharmacyStore.setQuantityOut(null);
                             pharmacyStore.setChangeReason(bincom);
-                            //pharmacyStore.setLocation(null);
-                            //pharmacyStore.setexpireDate(null);
-                            //pharmacyStore.setIncoming(null);
-                            //pharmacyStore.setOutgoing(null);
+
                             if (!binmax.isEmpty()) {
 
                                 pharmacyStore.setMaxLevel(Integer.parseInt(binmax));
@@ -798,9 +779,9 @@ public class DrugBincardController {
                 }
 
             } else if (binedit.equalsIgnoreCase("true")) {
-                //
+                // edit an entry
 
-                PharmacyStore pharmacyStore = new PharmacyStore();
+                pharmacyStore = new PharmacyStore();
                 pharmacyStore = service.getPharmacyInventoryByUuid(binuuid);
                 if (userService.getAuthenticatedUser().getUserId().equals(pharmacyStore.getCreator().getUserId())) {
                     pharmacyStore.setDrugs(serviceDrugs.getDrugByUuid(uuid));
@@ -850,7 +831,7 @@ public class DrugBincardController {
         } else if (value != null && row_id != null) {
 
 
-            PharmacyStore pharmacyStore = service.getPharmacyInventoryByUuid(row_id);
+            pharmacyStore = service.getPharmacyInventoryByUuid(row_id);
 
             if (value.contains(",")) {
                 String val = value.substring(0, value.indexOf(","));
@@ -862,9 +843,10 @@ public class DrugBincardController {
                 service.savePharmacyInventory(pharmacyStore);
 
             }
-//			
         } else if (binuuidvoid != null) {
-            PharmacyStore pharmacyStore = new PharmacyStore();
+
+            //void an entry
+            pharmacyStore = new PharmacyStore();
             pharmacyStore = service.getPharmacyInventoryByUuid(binuuidvoid);
 
             pharmacyStore.setVoided(true);
@@ -877,7 +859,7 @@ public class DrugBincardController {
     }
 
     public synchronized JSONArray getArray(List<PharmacyStore> pharmacyStore, int size, String location) {
-
+        // show all details for bincard
         if (s11number != null) {
 
             if (!s11number.equalsIgnoreCase("all")) {
@@ -1088,7 +1070,6 @@ public class DrugBincardController {
 
             if (service.getPharmacyLocationsByUuid(pharmacyStore.get(size).getLocation()).getName()
                     .equalsIgnoreCase(location)) {
-                //)&&(pharmacyStore.get(size).getQuantity()>=pharmacyStore.get(size).getMinLevel())
                 Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
                 for (Role rl : xvc) {
 
@@ -1161,11 +1142,6 @@ public class DrugBincardController {
                     return null;
                 } else if (service.getPharmacyStoreOutgoingByUuid(uuiddialog).getDrugs().getUuid()
                         .equals(pharmacyStore.get(size).getDrugs().getUuid())) {
-//					readDate.setTime(pharmacyStore.get(size).getExpireDate());
-//					
-//					two.set(readDate.get(readDate.YEAR), readDate.get(readDate.MONTH), readDate.get(readDate.DAY_OF_MONTH));
-//					
-//					int num = daysBetween(two.getTime(), one.getTime());
                     newDate = new Date();
                     int num = getMonthsDifference(pharmacyStore.get(size).getExpireDate(), newDate);
                     datad2 = new JSONArray();

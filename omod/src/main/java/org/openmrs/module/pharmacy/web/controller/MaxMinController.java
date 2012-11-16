@@ -53,6 +53,14 @@ public class MaxMinController {
     private ConceptService serviceDrugs;
 
     private String druguuid;
+    private List<DrugMaxMin> drugMaxMin;
+    private int size;
+    private JSONArray jsonArray;
+    private JSONObject jsonObject;
+    private List<PharmacyStore> pharmacyInventory;
+    private int sizeList;
+    private List<Drug> allDrugs;
+    private DrugMaxMin maxMin;
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/maxminName")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
@@ -61,35 +69,35 @@ public class MaxMinController {
         String drop = request.getParameter("drop");
         String drug = request.getParameter("drug");
         service = Context.getService(PharmacyService.class);
-        List<DrugMaxMin> list = service.getDrugMaxMin();
-        int size = list.size();
-        JSONObject json = new JSONObject();
+        drugMaxMin = service.getDrugMaxMin();
+        size = drugMaxMin.size();
+        jsonObject = new JSONObject();
 
-        JSONArray jsons = new JSONArray();
+        jsonArray = new JSONArray();
 
         try {
 
             if (drop != null) {
                 if (drop.equalsIgnoreCase("total")) {
 
-                    List<PharmacyStore> listSize = service.getPharmacyInventory();
-                    int sizeList = listSize.size();
+                    pharmacyInventory = service.getPharmacyInventory();
+                    sizeList = pharmacyInventory.size();
 
                     if (size != 0) {
                         for (int i = 0; i < sizeList; i++) {
-                            int val = getCheckSize(listSize, i, drug);
+                            int val = getCheckSize(pharmacyInventory, i, drug);
                             if (val == 0) {
 
                             } else {
-                                jsons.put("" + val);
+                                jsonArray.put("" + val);
                             }
                             if (val != 0)
                                 break;
                         }
                     } else
-                        jsons.put("" + null);
+                        jsonArray.put("" + null);
 
-                    response.getWriter().print(jsons);
+                    response.getWriter().print(jsonArray);
                 }
 
             } else {
@@ -97,12 +105,12 @@ public class MaxMinController {
                 if (size != 0) {
                     for (int i = 0; i < size; i++) {
 
-                        json.accumulate("aaData", getArray(list, i));
+                        jsonObject.accumulate("aaData", getArray(drugMaxMin, i));
 
                     }
 
                 }
-                if (!json.has("aaData")) {
+                if (!jsonObject.has("aaData")) {
 
                     datad2 = new JSONArray();
                     datad2.put("None");
@@ -113,15 +121,15 @@ public class MaxMinController {
                     datad2.put("None");
                     datad2.put("None");
 
-                    json.accumulate("aaData", datad2);
+                    jsonObject.accumulate("aaData", datad2);
 
                 }
-                json.accumulate("iTotalRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iTotalDisplayRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iDisplayStart", 0);
-                json.accumulate("iDisplayLength", 10);
+                jsonObject.accumulate("iTotalRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iTotalDisplayRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iDisplayStart", 0);
+                jsonObject.accumulate("iDisplayLength", 10);
 
-                response.getWriter().print(json);
+                response.getWriter().print(jsonObject);
             }
             response.flushBuffer();
 
@@ -145,46 +153,36 @@ public class MaxMinController {
         userService = Context.getUserContext();
 
         service = Context.getService(PharmacyService.class);
-        List<Drug> dname = serviceDrugs.getAllDrugs();
-        int dnames = dname.size();
-        for (int i = 0; i < dnames; i++) {
-            druguuid = getString(dname, i, drug);
+        allDrugs = serviceDrugs.getAllDrugs();
+        size = allDrugs.size();
+        for (int i = 0; i < size; i++) {
+            druguuid = getString(allDrugs, i, drug);
             if (druguuid != null)
                 break;
 
         }
 
-        List<DrugMaxMin> list = service.getDrugMaxMin();
-        int size = list.size();
+        drugMaxMin = service.getDrugMaxMin();
+        int size = drugMaxMin.size();
 
-        /*  if (size == 0) {
-            DrugMaxMin drugMaxMin = new DrugMaxMin();
-
-            drugMaxMin.setMax(Integer.parseInt(max));
-            drugMaxMin.setMin(Integer.parseInt(min));
-            drugMaxMin.setDrug(serviceDrugs.getDrugByUuid(druguuid));
-            service.saveDrugMaxMin(drugMaxMin);
-
-
-        }*/
 
         if (edit != null) {
             if (edit.equalsIgnoreCase("false")) {
                 //check for same entry before saving
                 for (int i = 0; i < size; i++) {
 
-                    found = getCheck(list, i, druguuid);
+                    found = getCheck(drugMaxMin, i, druguuid);
                     if (found)
                         break;
                 }
 
                 if (!found) {
-                    DrugMaxMin drugMaxMin = new DrugMaxMin();
+                    maxMin = new DrugMaxMin();
 
-                    drugMaxMin.setMax(Integer.parseInt(max));
-                    drugMaxMin.setMin(Integer.parseInt(min));
-                    drugMaxMin.setDrug(serviceDrugs.getDrugByUuid(druguuid));
-                    service.saveDrugMaxMin(drugMaxMin);
+                    maxMin.setMax(Integer.parseInt(max));
+                    maxMin.setMin(Integer.parseInt(min));
+                    maxMin.setDrug(serviceDrugs.getDrugByUuid(druguuid));
+                    service.saveDrugMaxMin(maxMin);
 
                 } else //do code to display to the user
                 {
@@ -192,31 +190,31 @@ public class MaxMinController {
                 }
 
             } else if (edit.equalsIgnoreCase("true")) {
-                DrugMaxMin drugMaxMin = new DrugMaxMin();
+                maxMin = new DrugMaxMin();
 
-                drugMaxMin = service.getDrugMaxMinByUuid(uuid);
+                maxMin = service.getDrugMaxMinByUuid(uuid);
 
-                if (userService.getAuthenticatedUser().getUserId().equals(drugMaxMin.getCreator().getUserId())) {
+                if (userService.getAuthenticatedUser().getUserId().equals(maxMin.getCreator().getUserId())) {
 
                     // saving/updating a record
-                    drugMaxMin.setMax(Integer.parseInt(max));
-                    drugMaxMin.setMin(Integer.parseInt(min));
-                    drugMaxMin.setDrug(serviceDrugs.getDrugByUuid(druguuid));
+                    maxMin.setMax(Integer.parseInt(max));
+                    maxMin.setMin(Integer.parseInt(min));
+                    maxMin.setDrug(serviceDrugs.getDrugByUuid(druguuid));
 
-                    service.saveDrugMaxMin(drugMaxMin);
+                    service.saveDrugMaxMin(maxMin);
                 }
             }
 
         } else if (uuidvoid != null) {
 
-            DrugMaxMin drugMaxMin = new DrugMaxMin();
+            maxMin = new DrugMaxMin();
 
-            drugMaxMin = service.getDrugMaxMinByUuid(uuidvoid);
+            maxMin = service.getDrugMaxMinByUuid(uuidvoid);
 
-            drugMaxMin.setVoided(true);
-            drugMaxMin.setVoidReason(reason);
+            maxMin.setVoided(true);
+            maxMin.setVoidReason(reason);
 
-            service.saveDrugMaxMin(drugMaxMin);
+            service.saveDrugMaxMin(maxMin);
 
         }
 

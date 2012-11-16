@@ -100,9 +100,6 @@ public class hivController {
 
         String[][] obsEnc = ArrayEnc(parser, jsonText);
 
-//		 
-
-
         pEncounter = new PharmacyEncounter();
 
 
@@ -236,13 +233,10 @@ public class hivController {
                         if (!value.startsWith("reg")) {
                             obsdata[i][0] = value.substring(value.indexOf("#"), value.indexOf("#|")).substring(1);
 
-                            //concept id
                             obsdata[i][1] = value.substring(0, value.indexOf("#"));
-                            //answer id
+
                             obsdata[i][2] = value.substring(value.indexOf("#|")).substring(2);
                         } else {
-
-                            System.out.println("<<<<<<<<<<<<<<<<<<<<<<111111<<<<<<<<<<<<<<<<<<<<<<<" + value.substring(value.indexOf("#|")).substring(2));
 
                             currentRegimen = Integer.parseInt(value.substring(value.indexOf("#|")).substring(2));
                         }
@@ -474,10 +468,6 @@ public class hivController {
 
 
                             int age = Context.getPatientService().getPatient(Integer.parseInt(patientID)).getAge();
-
-                            System.out.println("obsdata[i][2]obsdata[i][2]obsdata[i][2]===" + age);
-                            System.out.println("obsdata[i][2]obsdata[i][2]obsdata[i][2]===" + obsdata[i][2].substring(obsdata[i][2].indexOf("#") + 1));
-
                             if (age >= 16) {
 
                                 if (!obsdata[i][2].isEmpty()) {
@@ -493,10 +483,6 @@ public class hivController {
 
                         } else if (obsdata[i][1].equals("90901")) {
 
-//										  if( !obsdata[i][2].isEmpty()){
-//											  ppharmacyOrders.setWeightRange(obsdata[i][2]);
-//											  
-//											  }
 
                         } else if (obsdata[i][1].equals("1939")) {
 

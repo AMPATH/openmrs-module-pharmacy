@@ -38,6 +38,11 @@ public class SupplierNamesController {
     private boolean deletePharmacy = false;
 
     private JSONArray datad2;
+    private JSONObject jsonObject;
+    private List<PharmacySupplier> pharmacySupplier;
+    private int size;
+    private JSONArray jsonArray;
+    private PharmacySupplier pharmacySupplier1;
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/supplierName")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
@@ -45,11 +50,11 @@ public class SupplierNamesController {
         String uuid = request.getParameter("nameuuid");
         String drop = request.getParameter("drop");
         service = Context.getService(PharmacyService.class);
-        List<PharmacySupplier> list = service.getPharmacySupplier();
-        int size = list.size();
-        JSONObject json = new JSONObject();
+        pharmacySupplier = service.getPharmacySupplier();
+        size = pharmacySupplier.size();
+        jsonObject = new JSONObject();
 
-        JSONArray jsons = new JSONArray();
+        jsonArray = new JSONArray();
 
         try {
 
@@ -57,13 +62,13 @@ public class SupplierNamesController {
                 if (drop.equalsIgnoreCase("drop")) {
                     if (size != 0) {
                         for (int i = 0; i < size; i++) {
-                            jsons.put("" + getDropDown(list, i));
+                            jsonArray.put("" + getDropDown(pharmacySupplier, i));
                         }
                     } else {
-                        jsons.put("" + null);
+                        jsonArray.put("" + null);
 
                     }
-                    response.getWriter().print(jsons);
+                    response.getWriter().print(jsonArray);
                 }
 
             } else {
@@ -71,12 +76,12 @@ public class SupplierNamesController {
                 if (size != 0) {
                     for (int i = 0; i < size; i++) {
 
-                        json.accumulate("aaData", getArray(list, i));
+                        jsonObject.accumulate("aaData", getArray(pharmacySupplier, i));
 
                     }
 
                 }
-                if (!json.has("aaData")) {
+                if (!jsonObject.has("aaData")) {
 
                     datad2 = new JSONArray();
                     datad2.put("None");
@@ -87,16 +92,16 @@ public class SupplierNamesController {
                     datad2.put("None");
                     datad2.put("None");
 
-                    json.accumulate("aaData", datad2);
+                    jsonObject.accumulate("aaData", datad2);
 
                 }
 
-                json.accumulate("iTotalRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iTotalDisplayRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iDisplayStart", 0);
-                json.accumulate("iDisplayLength", 10);
+                jsonObject.accumulate("iTotalRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iTotalDisplayRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iDisplayStart", 0);
+                jsonObject.accumulate("iDisplayLength", 10);
 
-                response.getWriter().print(json);
+                response.getWriter().print(jsonObject);
             }
             response.flushBuffer();
 
@@ -121,22 +126,22 @@ public class SupplierNamesController {
             if (edit.equalsIgnoreCase("false")) {
 
                 //check for same entry before saving
-                List<PharmacySupplier> list = service.getPharmacySupplier();
-                int size = list.size();
+                pharmacySupplier = service.getPharmacySupplier();
+                size = pharmacySupplier.size();
                 for (int i = 0; i < size; i++) {
 
-                    found = getCheck(list, i, supplierName);
+                    found = getCheck(pharmacySupplier, i, supplierName);
                     if (found)
                         break;
                 }
 
                 if (!found) {
 
-                    PharmacySupplier supplierNamee = new PharmacySupplier();
-                    supplierNamee.setName(supplierName);
-                    supplierNamee.setDescription(description);
+                    pharmacySupplier1 = new PharmacySupplier();
+                    pharmacySupplier1.setName(supplierName);
+                    pharmacySupplier1.setDescription(description);
 
-                    service.savePharmacySupplier(supplierNamee);
+                    service.savePharmacySupplier(pharmacySupplier1);
 
                 } else //do code to display to the user
                 {
@@ -144,30 +149,30 @@ public class SupplierNamesController {
                 }
 
             } else if (edit.equalsIgnoreCase("true")) {
-                PharmacySupplier supplierNamee = new PharmacySupplier();
+                pharmacySupplier1 = new PharmacySupplier();
 
-                supplierNamee = service.getPharmacySupplierByUuid(uuid);
+                pharmacySupplier1 = service.getPharmacySupplierByUuid(uuid);
 
-                if (userService.getAuthenticatedUser().getUserId().equals(supplierNamee.getCreator().getUserId())) {
+                if (userService.getAuthenticatedUser().getUserId().equals(pharmacySupplier1.getCreator().getUserId())) {
 
                     // saving/updating a record
-                    supplierNamee.setName(supplierName);//(drugName);
-                    supplierNamee.setDescription(description);
+                    pharmacySupplier1.setName(supplierName);//(drugName);
+                    pharmacySupplier1.setDescription(description);
 
-                    service.savePharmacySupplier(supplierNamee);
+                    service.savePharmacySupplier(pharmacySupplier1);
                 }
             }
 
         } else if (uuidvoid != null) {
 
-            PharmacySupplier supplierNamee = new PharmacySupplier();
+            pharmacySupplier1 = new PharmacySupplier();
 
-            supplierNamee = service.getPharmacySupplierByUuid(uuidvoid);
+            pharmacySupplier1 = service.getPharmacySupplierByUuid(uuidvoid);
 
-            supplierNamee.setVoided(true);
-            supplierNamee.setVoidReason(reason);
+            pharmacySupplier1.setVoided(true);
+            pharmacySupplier1.setVoidReason(reason);
 
-            service.savePharmacySupplier(supplierNamee);
+            service.savePharmacySupplier(pharmacySupplier1);
 
         }
 

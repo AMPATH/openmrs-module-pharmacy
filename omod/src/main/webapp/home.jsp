@@ -43,7 +43,39 @@
 
 
 
+
+<openmrs:htmlInclude file="/dwr/interface/DWRPatientService.js" />
+<openmrs:htmlInclude file="/dwr/interface/DWRPersonService.js" />
+<openmrs:htmlInclude file="/scripts/calendar/calendar.js" />
+
+<openmrs:htmlInclude file="/scripts/jquery-ui/js/openmrsSearch.js" />
+<openmrs:htmlInclude file="/dwr/util.js" />
+
+
+<c:choose>
+    <c:when test="${!empty pageTitle}">
+        <title>${pageTitle}</title>
+    </c:when>
+    <c:otherwise>
+        <title><spring:message code="openmrs.title" /></title>
+    </c:otherwise>
+</c:choose>
+
+
+
+<openmrs:extensionPoint pointId="org.openmrs.headerMinimalIncludeExt"
+                        type="html"
+                        requiredClass="org.openmrs.module.web.extension.HeaderIncludeExt">
+    <c:forEach var="file" items="${extension.headerFiles}">
+        <openmrs:htmlInclude file="${file}" />
+    </c:forEach>
+</openmrs:extensionPoint>
+
+
 <%--Css for datatables and for openmrs tweak for pharmacy--%>
+
+
+
 
 <link
         href="${pageContext.request.contextPath}/moduleResources/pharmacy/css/pharmacy_openmrs.css"
@@ -120,15 +152,28 @@
 
     $j("#patient").hide();
     var openmrsContextPath = '${pageContext.request.contextPath}';
+    var dwrLoadingMessage = '<spring:message code="general.loading" />';
+    var jsDateFormat = '<openmrs:datePattern localize="false"/>';
+    var jsLocale = '<%= org.openmrs.api.context.Context.getLocale() %>';
+
     /* prevents users getting false dwr errors msgs when leaving pages */
     var pageIsExiting = false;
     if (jQuery)
-        jQuery(window).bind('beforeunload', function () {
-            pageIsExiting = true;
-        });
+        jQuery(window).bind('beforeunload', function () { pageIsExiting = true; } );
+
+    var handler = function(msg, ex) {
+        if (!pageIsExiting) {
+            var div = document.getElementById("openmrs_dwr_error");
+            div.style.display = ""; // show the error div
+            var msgDiv = document.getElementById("openmrs_dwr_error_msg");
+            msgDiv.innerHTML = '<spring:message code="error.dwr"/>' + " <b>" + msg + "</b>";
+        }
+
+    };
+    dwr.engine.setErrorHandler(handler);
+    dwr.engine.setWarningHandler(handler);
 
     var lastSearch;
-
     $j.validator.addMethod(
             "selectNone",
             function (value, element) {
@@ -460,6 +505,9 @@ function doSelectionHandler(index, data) {
     jQuery.Page = {
         context:path
     };
+
+
+
     $j('#tab_1psychiatry').load('${pageContext.request.contextPath}/moduleResources/pharmacy/subpages/dispense.jsp #disp', function () {
 
         $j.getScript("${pageContext.request.contextPath}/moduleResources/pharmacy/jspharmacy/psychiatryform.js", function () {
@@ -1917,7 +1965,11 @@ $j("form#psychiatryform").submit(function () {
 
 
     }
-
+    $j('#AM1').attr('disabled', '');
+    $j('#AM2').attr('disabled', '');
+    var dataString = $j("#psychiatryform").serialize();
+    var fields = $j("#psychiatryform").serializeArray();
+    alert(JSON.stringify(fields));
 
     $j.ajax({
         type:"GET",
@@ -1933,30 +1985,30 @@ $j("form#psychiatryform").submit(function () {
                 $j('#AM2').attr('disabled', '');
                 var dataString = $j("#psychiatryform").serialize();
                 var fields = $j("#psychiatryform").serializeArray();
+                    alert(JSON.stringify(fields));
 
-
-                $j.ajax({
-                    type:"POST",
-                    url:"home.form",
-
-                    data:{values:JSON.stringify(fields) },
-                    dataType:"json",
-                    beforeSend:function (x) {
-                        if (x && x.overrideMimeType) {
-                            x.overrideMimeType("application/j-son;charset=UTF-8");
-                        }
-                    },
-                    success:function () {
-
-                        $j("#dispenseform").dialog("close");
-
-                        RefreshTable("#tunits");
-
-                        $j('#dataDiv .loc').replaceWith("<div id='red'>Data saved<div>");
-                        $j("#dataDiv").show("slow");//
-                        $j("#dataDiv").delay(5000).hide("slow");
-                    }
-                });
+//                $j.ajax({
+//                    type:"POST",
+//                    url:"home.form",
+//
+//                    data:{values:JSON.stringify(fields) },
+//                    dataType:"json",
+//                    beforeSend:function (x) {
+//                        if (x && x.overrideMimeType) {
+//                            x.overrideMimeType("application/j-son;charset=UTF-8");
+//                        }
+//                    },
+//                    success:function () {
+//
+//                        $j("#dispenseform").dialog("close");
+//
+//                        RefreshTable("#tunits");
+//
+//                        $j('#dataDiv .loc').replaceWith("<div id='red'>Data saved<div>");
+//                        $j("#dataDiv").show("slow");//
+//                        $j("#dataDiv").delay(5000).hide("slow");
+//                    }
+//                });
 
             }
             else {

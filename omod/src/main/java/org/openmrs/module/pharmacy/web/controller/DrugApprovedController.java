@@ -44,11 +44,6 @@ public class DrugApprovedController {
     private boolean found = false;
 
     private String uuid;
-
-    private String drugstrength;
-
-    private String drugunit;
-
     private String formulation;
 
     private String originalbindrug;
@@ -61,19 +56,7 @@ public class DrugApprovedController {
 
     private String uuidfilter = null;
 
-    private String approveddrug;
-
-    private String approvedquantityin;
-
-    private String approvedmax;
-
-    private String approvedbatch;
-
-    private String approveds11;
-
-    private String approvedmin;
-
-    private String approvednumber;
+    private String approveddrug, approvedquantityin, approvedmax, approvedbatch, approveds11, approvedmin, approvednumber;
 
     private boolean exit = false;
 
@@ -101,22 +84,37 @@ public class DrugApprovedController {
 
     private boolean deletePharmacy = false;
 
+    private List<PharmacyLocationUsers> pharmacyLocationUsersByUserName;
+
+    private int sizeUsers;
+
+    private List<PharmacyStoreApproved> pharmacyStoreApproved;
+    private int size, size1;
+    private List<Drug> allDrugs;
+    private JSONObject jsonObject;
+    private JSONArray jsonArray;
+    private List<PharmacyLocationUsers> pharmacyLocationUsersByUserName1;
+    private List<PharmacyStore> pharmacyStoreArray;
+    private List<DrugTransactions> drugTransactionArray;
+    private PharmacyStoreApproved pharmacyStoreApprovedObject;
+    private PharmacyStore pharmacyStore;
+    private DrugTransactions drugTransactions;
+
+
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/drugApproved")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
-        userService = Context.getUserContext();
         String locationVal = null;
         service = Context.getService(PharmacyService.class);
-        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        int sizeUsers = listUsers.size();
+        userService = Context.getUserContext();
+        pharmacyLocationUsersByUserName = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
+        sizeUsers = pharmacyLocationUsersByUserName.size();
 
 
         if (sizeUsers > 1) {
             locationVal = request.getSession().getAttribute("location").toString();
 
         } else if (sizeUsers == 1) {
-            locationVal = listUsers.get(0).getLocation();
-
-
+            locationVal = pharmacyLocationUsersByUserName.get(0).getLocation();
         }
 
         drop = request.getParameter("drop");
@@ -125,35 +123,23 @@ public class DrugApprovedController {
         if (filter == null)
             filter = "a";
 
-        List<PharmacyStoreApproved> List = service.getPharmacyStoreApproved();
-        int size = List.size();
+        pharmacyStoreApproved = service.getPharmacyStoreApproved();
+        size = pharmacyStoreApproved.size();
 
-        JSONObject json = new JSONObject();
-        JSONArray jsons = new JSONArray();
-        response.setContentType("application/json");
-
+        jsonObject = new JSONObject();
+        jsonArray = new JSONArray();
+        response.setContentType("application/jsonObject");
+        //check datatabe filter
         if (filter.length() > 2) {
             originalbindrug = filter;
 
             serviceLocation = Context.getLocationService();
             serviceDrugs = Context.getConceptService();
 
-            //			approveddrug = filter.substring(0, filter.indexOf("("));
-            //
-            //			drugstrength = originalbindrug.substring(originalbindrug.indexOf("(") + 1, originalbindrug.indexOf(","));
-            //			drugunit = originalbindrug.substring(originalbindrug.indexOf(",") + 1, originalbindrug.indexOf("/"));
-            //			formulation = originalbindrug.substring(originalbindrug.indexOf("/") + 1, originalbindrug.indexOf(")"));
-            //
-            //
-            //		String uuidvalue = service.getDrugNameByName(approveddrug).getUuid();
-            //		String drugstrengthuuid = service.getDrugStrengthByName(drugstrength).getUuid();
-            //		String drugsunituuid = service.getDrugUnitsByName(drugunit).getUuid();
-            //		String drugsformulationuuid = service.getDrugFormulationByName(formulation).getUuid();
-            //
-            List<Drug> dname = serviceDrugs.getAllDrugs();
-            int dnames = dname.size();
-            for (int i = 0; i < dnames; i++) {
-                uuidfilter = getString(dname, i, originalbindrug);
+            allDrugs = serviceDrugs.getAllDrugs();
+            size1 = allDrugs.size();
+            for (int i = 0; i < size1; i++) {
+                uuidfilter = getString(allDrugs, i, originalbindrug);
                 if (uuidfilter != null)
                     break;
 
@@ -161,26 +147,25 @@ public class DrugApprovedController {
         }
         try {
             if (dialog != null) {
-
                 for (int i = 0; i < size; i++) {
-
-                    json.accumulate("aaData", getArrayDialog(List, i));
+                    // get the drugs with quantity
+                    jsonObject.accumulate("aaData", getDrugDetailsForDialog(pharmacyStoreApproved, i));
                 }
 
             } else {
                 for (int i = 0; i < size; i++) {
-                    if (List.get(i).getDestination().getName().equalsIgnoreCase(locationVal)) {
+                    if (pharmacyStoreApproved.get(i).getDestination().getName().equalsIgnoreCase(locationVal)) {
 
-                        JSONArray val = getArray(List, i, locationVal);
-                        if (val != null)
-                            json.accumulate("aaData", val);
+                        JSONArray jsonArray1 = getDetailsForDatables(pharmacyStoreApproved, i, locationVal);
+                        if (jsonArray1 != null)
+                            jsonObject.accumulate("aaData", jsonArray1);
 
                     }
                     if (exit)
                         break;
                     data = new JSONArray();
                 }
-                if (!json.has("aaData")) {
+                if (!jsonObject.has("aaData")) {
 
                     data = new JSONArray();
                     data.put("No entry");
@@ -211,17 +196,17 @@ public class DrugApprovedController {
 
                     data.put("No entry");
 
-                    json.accumulate("aaData", data);
+                    jsonObject.accumulate("aaData", data);
                 }
 
             }
             exit = false;
-            json.accumulate("iTotalRecords", json.getJSONArray("aaData").length());
-            json.accumulate("iTotalDisplayRecords", json.getJSONArray("aaData").length());
-            json.accumulate("iDisplayStart", 0);
-            json.accumulate("iDisplayLength", 10);
+            jsonObject.accumulate("iTotalRecords", jsonObject.getJSONArray("aaData").length());
+            jsonObject.accumulate("iTotalDisplayRecords", jsonObject.getJSONArray("aaData").length());
+            jsonObject.accumulate("iDisplayStart", 0);
+            jsonObject.accumulate("iDisplayLength", 10);
 
-            response.getWriter().print(json);
+            response.getWriter().print(jsonObject);
 
             response.flushBuffer();
         } catch (Exception e) {
@@ -234,97 +219,75 @@ public class DrugApprovedController {
     @RequestMapping(method = RequestMethod.POST, value = "module/pharmacy/drugApproved")
     public synchronized void pageLoadd(HttpServletRequest request, HttpServletResponse response) {
 
-        String locationVal = null;
 
-        String[] drugId;
-        String[] drugQ;
-        service = Context.getService(PharmacyService.class);
-        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        int sizeUsers = listUsers.size();
-
-
-        if (sizeUsers > 1) {
-            locationVal = locationVal;
-
-        } else if (sizeUsers == 1) {
-            locationVal = listUsers.get(0).getLocation();
-
-
-        }
-
-
-        serviceLocation = Context.getLocationService();
         approveddrug = request.getParameter("approveddrug");
         approvedquantityin = request.getParameter("approvedquantityin");
-
         approvednumber = request.getParameter("approvednumber");
         approvedmax = request.getParameter("approvedmax");
         approvedmin = request.getParameter("approvedmin");
         approvedmin = request.getParameter("approvedmin");
-
         requisition = request.getParameter("requisitionp");
         issued = request.getParameter("issued");
         authorized = request.getParameter("authorizedp");
-
-        userService = Context.getUserContext();
         answers = request.getParameter("answers");
-
         uuid1 = request.getParameter("one");
         uuid2 = request.getParameter("two");
         uuid3 = request.getParameter("three");
         uuid4 = request.getParameter("four");
-
         approvedbatch = request.getParameter("approvedbatch");
         approveds11 = request.getParameter("approveds11");
 
-        String approvedexpire = request.getParameter("approvedexpirea");
+        String approvedExpire = request.getParameter("approvedexpirea");
 
-        String approvedreason = request.getParameter("approvedreason");
-        String approveduuidvoid = request.getParameter("approveduuidvoid");
+        String approvedReason = request.getParameter("approvedReason");
+        String approvedUuidVoid = request.getParameter("approvedUuidVoid");
 
-        String approveduuidextra = request.getParameter("approveduuidextra");
+        String approvedUuidExtra = request.getParameter("approvedUuidExtra");
 
         String destination = request.getParameter("destination");
         String location = request.getParameter("location");
         String supplier = request.getParameter("supplierout");
         String transactions = request.getParameter("transactions");
-        String deliveryno = request.getParameter("delivery");
+        String deliveryNo = request.getParameter("delivery");
 
-        String approvededit = request.getParameter("approvededit");
-        String approveduuid = request.getParameter("approveduuid");
-        String approvedcom = request.getParameter("approvedcom");
-
-        List<PharmacyStore> pharmacyStoreArray = new ArrayList<PharmacyStore>();
-        List<DrugTransactions> drugTransactionArray = new ArrayList<DrugTransactions>();
+        String approvedEdit = request.getParameter("approvedEdit");
+        String approvedUuid = request.getParameter("approvedUuid");
+        String approvedCom = request.getParameter("approvedCom");
 
 
+        String locationVal = null;
+
+        String[] drugId;
+        String[] drugQ;
+        service = Context.getService(PharmacyService.class);
+
+        userService = Context.getUserContext();
+
+
+        pharmacyLocationUsersByUserName1 = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
+        size = pharmacyLocationUsersByUserName1.size();
+
+        if (size > 1) {
+
+            locationVal = locationVal;
+
+        } else if (size == 1) {
+            locationVal = pharmacyLocationUsersByUserName1.get(0).getLocation();
+        }
+
+
+        serviceLocation = Context.getLocationService();
+
+
+        pharmacyStoreArray = new ArrayList<PharmacyStore>();
+        drugTransactionArray = new ArrayList<DrugTransactions>();
         originalbindrug = approveddrug;
-
-
         drugId = request.getParameterValues("drugId");
-
-
         drugQ = request.getParameterValues("quantity");
 
 
-        if (approveduuidvoid == null) {
-
-            //		approveddrug = approveddrug.substring(0, approveddrug.indexOf("("));
-            //
-            //		drugstrength = originalbindrug.substring(originalbindrug.indexOf("(") + 1, originalbindrug.indexOf(","));
-            //		drugunit = originalbindrug.substring(originalbindrug.indexOf(",") + 1, originalbindrug.indexOf("/"));
-            //		formulation = originalbindrug.substring(originalbindrug.indexOf("/") + 1, originalbindrug.indexOf(")"));
-            //
-            //
-            //		String uuidvalue = service.getDrugNameByName(approveddrug).getUuid();
-            //		String drugstrengthuuid = service.getDrugStrengthByName(drugstrength).getUuid();
-            //		String drugsunituuid = service.getDrugUnitsByName(drugunit).getUuid();
-            //		String drugsformulationuuid = service.getDrugFormulationByName(formulation).getUuid();
-            //
-            //
-
+        if (approvedUuidVoid == null) {
             serviceDrugs = Context.getConceptService();
-
             List<Drug> dname = serviceDrugs.getAllDrugs();
             int dnames = dname.size();
             for (int i = 0; i < dnames; i++) {
@@ -335,187 +298,184 @@ public class DrugApprovedController {
             }
 
         }
-        if (approvededit != null) {
-            if (approvededit.equalsIgnoreCase("false")) {
+        if (approvedEdit != null) {
+            if (approvedEdit.equalsIgnoreCase("false")) {
 
                 ///check for same entry before saving
-                List<PharmacyStoreApproved> list = service.getPharmacyStoreApproved();
-                int size = list.size();
+                pharmacyStoreApproved = service.getPharmacyStoreApproved();
+                int size = pharmacyStoreApproved.size();
                 for (int i = 0; i < size; i++) {
-
-                    found = getCheck(list, i, approveddrug);
+                    found = getCheck(pharmacyStoreApproved, i, approveddrug);
                     if (found)
                         break;
                 }
 
-                PharmacyStoreApproved pharmacyStoreApproved = new PharmacyStoreApproved();
+                pharmacyStoreApprovedObject = new PharmacyStoreApproved();
 
-                //get drug details 		drugstrength drugunit formulation
+                pharmacyStoreApprovedObject.setDrugs(serviceDrugs.getDrugByUuid(uuid));
 
-                pharmacyStoreApproved.setDrugs(serviceDrugs.getDrugByUuid(uuid));
-
-                pharmacyStoreApproved.setQuantityIn(Integer.parseInt(approvedquantityin));
+                pharmacyStoreApprovedObject.setQuantityIn(Integer.parseInt(approvedquantityin));
 
                 if (approvedmax != null) {
 
-                    pharmacyStoreApproved.setMaxLevel(Integer.parseInt(approvedmax));
+                    pharmacyStoreApprovedObject.setMaxLevel(Integer.parseInt(approvedmax));
 
                 } else if (approvedmax == null) {
-                    pharmacyStoreApproved.setMaxLevel(0);
+                    pharmacyStoreApprovedObject.setMaxLevel(0);
                 }
 
                 if (approvedmin != null) {
-                    pharmacyStoreApproved.setMinLevel(Integer.parseInt(approvedmin));
+                    pharmacyStoreApprovedObject.setMinLevel(Integer.parseInt(approvedmin));
 
                 } else if (approvedmin == null) {
-                    pharmacyStoreApproved.setMinLevel(0);
+                    pharmacyStoreApprovedObject.setMinLevel(0);
                 }
 
                 if (approvedbatch != null) {
-                    pharmacyStoreApproved.setBatchNo(Integer.parseInt(approvedbatch));
+                    pharmacyStoreApprovedObject.setBatchNo(Integer.parseInt(approvedbatch));
 
                 } else if (approvedbatch == null) {
-                    pharmacyStoreApproved.setBatchNo(0);
+                    pharmacyStoreApprovedObject.setBatchNo(0);
                 }
 
                 if (approveds11 != null) {
-                    pharmacyStoreApproved.setS11(Integer.parseInt(approveds11));
+                    pharmacyStoreApprovedObject.setS11(Integer.parseInt(approveds11));
 
                 } else if (approveds11 == null) {
-                    pharmacyStoreApproved.setS11(0);
+                    pharmacyStoreApprovedObject.setS11(0);
                 }
 
                 Date date = null;
                 try {
-                    if (approvedexpire != null) {
-                        date = new SimpleDateFormat("MM/dd/yyyy").parse(approvedexpire);
+                    if (approvedExpire != null) {
+                        date = new SimpleDateFormat("MM/dd/yyyy").parse(approvedExpire);
                     }
                 } catch (ParseException e) {
-                    // TODO Auto-generated catch block
                     log.error("Error generated", e);
                 }
 
-                pharmacyStoreApproved.setExpireDate(date);
+                pharmacyStoreApprovedObject.setExpireDate(date);
                 serviceLocation = Context.getLocationService();
 
-                pharmacyStoreApproved.setDestination(service.getPharmacyLocationsByName(destination));
-                pharmacyStoreApproved.setLocation(service.getPharmacyLocationsByName(locationVal));
+                pharmacyStoreApprovedObject.setDestination(service.getPharmacyLocationsByName(destination));
+                pharmacyStoreApprovedObject.setLocation(service.getPharmacyLocationsByName(locationVal));
 
-                pharmacyStoreApproved.setChangeReason(null);
+                pharmacyStoreApprovedObject.setChangeReason(null);
 
                 if (supplier == null) {
-                    pharmacyStoreApproved.setSupplier(null);
+                    pharmacyStoreApprovedObject.setSupplier(null);
 
                 } else
-                    pharmacyStoreApproved.setSupplier(service.getPharmacySupplierByName(supplier));
+                    pharmacyStoreApprovedObject.setSupplier(service.getPharmacySupplierByName(supplier));
 
-                pharmacyStoreApproved.setTransaction(service.getPharmacyTransactionTypesByName(transactions));
+                pharmacyStoreApprovedObject.setTransaction(service.getPharmacyTransactionTypesByName(transactions));
 
-                service.savePharmacyStoreApproved(pharmacyStoreApproved);
+                service.savePharmacyStoreApproved(pharmacyStoreApprovedObject);
 
-            } else if (approvededit.equalsIgnoreCase("true")) {
+            } else if (approvedEdit.equalsIgnoreCase("true")) {
+                //editing an entry
 
-                PharmacyStoreApproved pharmacyStoreApproved = new PharmacyStoreApproved();
-                pharmacyStoreApproved = service.getPharmacyStoreApprovedByUuid(approveduuid);
-                if (userService.getAuthenticatedUser().getUserId().equals(pharmacyStoreApproved.getCreator().getUserId())) {
+                pharmacyStoreApprovedObject = new PharmacyStoreApproved();
+                pharmacyStoreApprovedObject = service.getPharmacyStoreApprovedByUuid(approvedUuid);
+                if (userService.getAuthenticatedUser().getUserId().equals(pharmacyStoreApprovedObject.getCreator().getUserId())) {
 
-                    pharmacyStoreApproved.setDrugs(serviceDrugs.getDrugByUuid(uuid));
+                    pharmacyStoreApprovedObject.setDrugs(serviceDrugs.getDrugByUuid(uuid));
 
-                    pharmacyStoreApproved.setQuantityIn(Integer.parseInt(approvedquantityin));
+                    pharmacyStoreApprovedObject.setQuantityIn(Integer.parseInt(approvedquantityin));
 
-                    pharmacyStoreApproved.setMaxLevel(0);
+                    pharmacyStoreApprovedObject.setMaxLevel(0);
 
-                    pharmacyStoreApproved.setMinLevel(0);
+                    pharmacyStoreApprovedObject.setMinLevel(0);
 
                     if (approvedbatch != null) {
-                        pharmacyStoreApproved.setBatchNo(Integer.parseInt(approvedbatch));
+                        pharmacyStoreApprovedObject.setBatchNo(Integer.parseInt(approvedbatch));
 
                     } else if (approvedbatch == null) {
-                        pharmacyStoreApproved.setBatchNo(0);
+                        pharmacyStoreApprovedObject.setBatchNo(0);
                     }
 
                     if (approveds11 != null) {
-                        pharmacyStoreApproved.setS11(Integer.parseInt(approveds11));
+                        pharmacyStoreApprovedObject.setS11(Integer.parseInt(approveds11));
 
                     } else if (approveds11 == null) {
-                        pharmacyStoreApproved.setS11(0);
+                        pharmacyStoreApprovedObject.setS11(0);
                     }
 
                     Date date = null;
                     try {
-                        if (approvedexpire != null) {
-                            date = new SimpleDateFormat("MM/dd/yyyy").parse(approvedexpire);
+                        if (approvedExpire != null) {
+                            date = new SimpleDateFormat("MM/dd/yyyy").parse(approvedExpire);
                         }
                     } catch (ParseException e) {
                         // TODO Auto-generated catch block
                         log.error("Error generated", e);
                     }
-                    pharmacyStoreApproved.setExpireDate(date);
+                    pharmacyStoreApprovedObject.setExpireDate(date);
                     serviceLocation = Context.getLocationService();
 
-                    pharmacyStoreApproved.setDestination(service.getPharmacyLocationsByName(destination));
-                    pharmacyStoreApproved.setLocation(service.getPharmacyLocationsByName(location));
+                    pharmacyStoreApprovedObject.setDestination(service.getPharmacyLocationsByName(destination));
+                    pharmacyStoreApprovedObject.setLocation(service.getPharmacyLocationsByName(location));
 
-                    pharmacyStoreApproved.setChangeReason(null);
+                    pharmacyStoreApprovedObject.setChangeReason(null);
 
                     if (supplier == null) {
-                        pharmacyStoreApproved.setSupplier(null);
+                        pharmacyStoreApprovedObject.setSupplier(null);
 
                     } else
-                        pharmacyStoreApproved.setSupplier(service.getPharmacySupplierByName(supplier));
+                        pharmacyStoreApprovedObject.setSupplier(service.getPharmacySupplierByName(supplier));
 
-                    pharmacyStoreApproved.setTransaction(service.getPharmacyTransactionTypesByName(transactions));
+                    pharmacyStoreApprovedObject.setTransaction(service.getPharmacyTransactionTypesByName(transactions));
 
-                    service.savePharmacyStoreApproved(pharmacyStoreApproved);
+                    service.savePharmacyStoreApproved(pharmacyStoreApprovedObject);
 
                 }
             }
 
-        } else if (approveduuidvoid != null) {
-            PharmacyStoreApproved pharmacyStoreApproved = new PharmacyStoreApproved();
-            pharmacyStoreApproved = service.getPharmacyStoreApprovedByUuid(approveduuidvoid);
+        } else if (approvedUuidVoid != null) {
 
-            pharmacyStoreApproved.setVoided(true);
-            pharmacyStoreApproved.setVoidReason(approvedreason);
+            //void an entry
+            pharmacyStoreApprovedObject = new PharmacyStoreApproved();
+            pharmacyStoreApprovedObject = service.getPharmacyStoreApprovedByUuid(approvedUuidVoid);
 
-            service.savePharmacyStoreApproved(pharmacyStoreApproved);
+            pharmacyStoreApprovedObject.setVoided(true);
+            pharmacyStoreApprovedObject.setVoidReason(approvedReason);
 
-        } else if (approveduuidextra != null) {
+            service.savePharmacyStoreApproved(pharmacyStoreApprovedObject);
 
+        } else if (approvedUuidExtra != null) {
+            // approve
             for (int y = 0; y < drugId.length; y++) {
-                System.out.println(drugId[y]);
 
-
-                PharmacyStoreApproved pharmacyStoreApproved = new PharmacyStoreApproved();
-                pharmacyStoreApproved = service.getPharmacyStoreApprovedByUuid(drugId[y]);
+                pharmacyStoreApprovedObject = new PharmacyStoreApproved();
+                pharmacyStoreApprovedObject = service.getPharmacyStoreApprovedByUuid(drugId[y]);
 
                 if (requisition != null && authorized != null) {
-                    pharmacyStoreApproved.setRequested(Context.getUserService().getUser(Integer.parseInt(requisition)));
-                    pharmacyStoreApproved.setAuthorized(Context.getUserService().getUser(Integer.parseInt(authorized)));
-                    pharmacyStoreApproved.setIssued(Context.getUserService().getUserByUsername(Context.getAuthenticatedUser().getUsername()));
+                    pharmacyStoreApprovedObject.setRequested(Context.getUserService().getUser(Integer.parseInt(requisition)));
+                    pharmacyStoreApprovedObject.setAuthorized(Context.getUserService().getUser(Integer.parseInt(authorized)));
+                    pharmacyStoreApprovedObject.setIssued(Context.getUserService().getUserByUsername(Context.getAuthenticatedUser().getUsername()));
                 }
 
 
-                PharmacyStore pharmacyStore = new PharmacyStore();
+                pharmacyStore = new PharmacyStore();
 
-                pharmacyStore.setDrugs(pharmacyStoreApproved.getDrugs());
-                pharmacyStore.setQuantity(pharmacyStoreApproved.getQuantityIn());
+                pharmacyStore.setDrugs(pharmacyStoreApprovedObject.getDrugs());
+                pharmacyStore.setQuantity(pharmacyStoreApprovedObject.getQuantityIn());
 
-                pharmacyStore.setBatchNo(pharmacyStoreApproved.getBatchNo());
-                pharmacyStore.setCategory(pharmacyStoreApproved.getCategory());
+                pharmacyStore.setBatchNo(pharmacyStoreApprovedObject.getBatchNo());
+                pharmacyStore.setCategory(pharmacyStoreApprovedObject.getCategory());
 
-                pharmacyStore.setDeliveryNo(pharmacyStoreApproved.getDeliveryNo());
-                pharmacyStore.setExpireDate(pharmacyStoreApproved.getDateCreated());
-                pharmacyStore.setIncoming(pharmacyStoreApproved.getIncoming());
+                pharmacyStore.setDeliveryNo(pharmacyStoreApprovedObject.getDeliveryNo());
+                pharmacyStore.setExpireDate(pharmacyStoreApprovedObject.getDateCreated());
+                pharmacyStore.setIncoming(pharmacyStoreApprovedObject.getIncoming());
 
-                pharmacyStore.setLocation(pharmacyStoreApproved.getDestination().getUuid());
+                pharmacyStore.setLocation(pharmacyStoreApprovedObject.getDestination().getUuid());
 
 
-                pharmacyStore.setMaxLevel(pharmacyStoreApproved.getMaxLevel());
-                pharmacyStore.setMinLevel(pharmacyStoreApproved.getMinLevel());
-                pharmacyStore.setS11(pharmacyStoreApproved.getS11());
-                pharmacyStore.setSupplier(pharmacyStoreApproved.getSupplier());
-                pharmacyStore.setTransaction(pharmacyStoreApproved.getTransaction());
+                pharmacyStore.setMaxLevel(pharmacyStoreApprovedObject.getMaxLevel());
+                pharmacyStore.setMinLevel(pharmacyStoreApprovedObject.getMinLevel());
+                pharmacyStore.setS11(pharmacyStoreApprovedObject.getS11());
+                pharmacyStore.setSupplier(pharmacyStoreApprovedObject.getSupplier());
+                pharmacyStore.setTransaction(pharmacyStoreApprovedObject.getTransaction());
 
 
                 pharmacyStoreArray.add(pharmacyStore);
@@ -523,34 +483,35 @@ public class DrugApprovedController {
 
                 DrugTransactions drugTransaction = new DrugTransactions();
 
-                drugTransaction.setDrugs(pharmacyStoreApproved.getDrugs());
+                drugTransaction.setDrugs(pharmacyStoreApprovedObject.getDrugs());
                 drugTransaction.setQuantityIn(0);
                 drugTransaction.setQuantityOut(Integer.parseInt(drugQ[y]));
-                drugTransaction.setexpireDate(pharmacyStoreApproved.getDateCreated());
+                drugTransaction.setexpireDate(pharmacyStoreApprovedObject.getDateCreated());
                 drugTransaction.setComment("Give out");
 
-                drugTransaction.setLocation(pharmacyStoreApproved.getDestination().getUuid());
+                drugTransaction.setLocation(pharmacyStoreApprovedObject.getDestination().getUuid());
 
                 drugTransactionArray.add(drugTransaction);
 
 
                 if (requisition != null && issued != null && authorized != null) {
-                    pharmacyStoreApproved.setRequested(Context.getUserService().getUser(Integer.parseInt(requisition)));
-                    pharmacyStoreApproved.setAuthorized(Context.getUserService().getUser(Integer.parseInt(authorized)));
-                    pharmacyStoreApproved.setIssued(Context.getUserService().getUser(Integer.parseInt(issued)));
+                    pharmacyStoreApprovedObject.setRequested(Context.getUserService().getUser(Integer.parseInt(requisition)));
+                    pharmacyStoreApprovedObject.setAuthorized(Context.getUserService().getUser(Integer.parseInt(authorized)));
+                    pharmacyStoreApprovedObject.setIssued(Context.getUserService().getUser(Integer.parseInt(issued)));
                 }
                 service.savePharmacyInventory(pharmacyStoreArray);
                 service.saveDrugTransactions(drugTransactionArray);
-                pharmacyStoreApproved.setApproved(true);
-                service.savePharmacyStoreApproved(pharmacyStoreApproved);
+                pharmacyStoreApprovedObject.setApproved(true);
+                service.savePharmacyStoreApproved(pharmacyStoreApprovedObject);
 
             }
 
-
+            // approve an larger file of request
             if (approveds11 == "app") {
 
-                PharmacyStoreApproved pharmacyStoreApproved = new PharmacyStoreApproved();
-                pharmacyStoreApproved = service.getPharmacyStoreApprovedByUuid(approveduuidextra);
+
+                pharmacyStoreApprovedObject = new PharmacyStoreApproved();
+                pharmacyStoreApprovedObject = service.getPharmacyStoreApprovedByUuid(approvedUuidExtra);
                 /* String to split. */
 
                 String[] temp;
@@ -570,7 +531,7 @@ public class DrugApprovedController {
 
                         if (i == 1) {
 
-                            PharmacyStore pharmacyStore = new PharmacyStore();
+                            pharmacyStore = new PharmacyStore();
 
                             pharmacyStore = service.getPharmacyInventoryByUuid(uuid1);
 
@@ -580,7 +541,7 @@ public class DrugApprovedController {
 
                         } else if (i == 2) {
 
-                            PharmacyStore pharmacyStore = new PharmacyStore();
+                            pharmacyStore = new PharmacyStore();
 
                             pharmacyStore = service.getPharmacyInventoryByUuid(uuid2);
 
@@ -589,7 +550,7 @@ public class DrugApprovedController {
                             service.savePharmacyInventory(pharmacyStore);
                         } else if (i == 3) {
 
-                            PharmacyStore pharmacyStore = new PharmacyStore();
+                            pharmacyStore = new PharmacyStore();
 
                             pharmacyStore = service.getPharmacyInventoryByUuid(uuid3);
 
@@ -597,7 +558,7 @@ public class DrugApprovedController {
 
                             service.savePharmacyInventory(pharmacyStore);
                         } else if (i == 4) {
-                            PharmacyStore pharmacyStore = new PharmacyStore();
+                            pharmacyStore = new PharmacyStore();
 
                             pharmacyStore = service.getPharmacyInventoryByUuid(uuid4);
 
@@ -611,29 +572,26 @@ public class DrugApprovedController {
 
                 }
 
-                if (total == pharmacyStoreApproved.getQuantityIn()) {
+                if (total == pharmacyStoreApprovedObject.getQuantityIn()) {
 
-                    pharmacyStoreApproved.setApproved(true);
-                    pharmacyStoreApproved.setQuantityIn(0);
+                    pharmacyStoreApprovedObject.setApproved(true);
+                    pharmacyStoreApprovedObject.setQuantityIn(0);
                 } else {
-                    if (total < pharmacyStoreApproved.getQuantityIn()) {
-                        pharmacyStoreApproved.setQuantityIn((pharmacyStoreApproved.getQuantityIn() - total));
+                    if (total < pharmacyStoreApprovedObject.getQuantityIn()) {
+                        pharmacyStoreApprovedObject.setQuantityIn((pharmacyStoreApprovedObject.getQuantityIn() - total));
                     }
 
                 }
 
-                pharmacyStoreApproved.setS11(Integer.parseInt(approveds11));
+                pharmacyStoreApprovedObject.setS11(Integer.parseInt(approveds11));
 
 
                 if (requisition != null && issued != null && authorized != null) {
-                    pharmacyStoreApproved.setRequested(Context.getUserService().getUser(Integer.parseInt(requisition)));
-                    pharmacyStoreApproved.setAuthorized(Context.getUserService().getUser(Integer.parseInt(authorized)));
-                    pharmacyStoreApproved.setIssued(Context.getUserService().getUser(Integer.parseInt(issued)));
+                    pharmacyStoreApprovedObject.setRequested(Context.getUserService().getUser(Integer.parseInt(requisition)));
+                    pharmacyStoreApprovedObject.setAuthorized(Context.getUserService().getUser(Integer.parseInt(authorized)));
+                    pharmacyStoreApprovedObject.setIssued(Context.getUserService().getUser(Integer.parseInt(issued)));
                 }
-
-                //pharmacyStoreApproved.setSupplier(service.getPharmacySupplierByName(supplier));
-
-                DrugTransactions drugTransactions = new DrugTransactions();
+                drugTransactions = new DrugTransactions();
 
                 //transactions
                 drugTransactions.setDrugs(serviceDrugs.getDrugByUuid(uuid));
@@ -644,37 +602,7 @@ public class DrugApprovedController {
 
                 drugTransactions.setLocation(service.getPharmacyLocationsByName(locationVal).getUuid());
 
-                //drugTransactions.setLocation(location)
                 service.saveDrugTransactions(drugTransactions);
-
-                //				pharmacyStore.setLocation(serviceLocation.getLocation(service.getPharmacyLocation()).getUuid());
-                //
-                //
-                //				pharmacyStore.setQuantity(Integer.parseInt(incomingnumber));
-                //
-                //				pharmacyStore.setQuantityIn(0);
-                //				pharmacyStore.setQuantityOut(0);
-                //				pharmacyStore.setChangeReason(null);
-                //
-                //
-                //
-                //
-                //				pharmacyStore.setBatchNo(Integer.parseInt(incomingbatch));
-                //				pharmacyStore.setDeliveryNo(Integer.parseInt(deliveryno));
-                //
-                //
-                //				pharmacyStore.setExpireDate(date);
-                //				pharmacyStore.setMaxLevel(Integer.parseInt(incomingmax));
-                //				pharmacyStore.setMinLevel(Integer.parseInt(incomingmin));
-                //				pharmacyStore.setS11(Integer.parseInt(incomings11));
-                //
-                //				pharmacyStore.setSupplier(service.getPharmacySupplierByName(supplier));
-                //				pharmacyStore.setTransaction(pharmacyStoreIncoming.getTransaction());
-                //				pharmacyStore.setIncoming(service.getPharmacyStoreIncomingByUuid(incominguuidextra));
-                //
-                //
-                //
-                //				service.savePharmacyInventory(pharmacyStore);
 
                 service.savePharmacyStoreApproved(pharmacyStoreApproved);
             }
@@ -683,8 +611,8 @@ public class DrugApprovedController {
 
     }
 
-    public synchronized JSONArray getArray(List<PharmacyStoreApproved> pharmacyApproved, int size, String location) {
-
+    public synchronized JSONArray getDetailsForDatables(List<PharmacyStoreApproved> pharmacyApproved, int size, String location) {
+        // for datatables filter
         if (filter.length() > 2) {
 
             if (uuidfilter.equalsIgnoreCase(pharmacyApproved.get(size).getDrugs().getUuid())) {
@@ -757,9 +685,6 @@ public class DrugApprovedController {
                         data.put("");
                     data.put(pharmacyApproved.get(size).getStatus());
                     data.put("<input type=\"checkbox\" name=\"check\" id=\"one\" >");
-//
-
-
                     if (pharmacyApproved.get(size).getAuthorized() != null)
                         data.put(pharmacyApproved.get(size).getAuthorized().getUsername());
                     else
@@ -775,7 +700,8 @@ public class DrugApprovedController {
                 return null;
             }
 
-        } else {
+        } else    // get the details for datatables
+        {
             if ((pharmacyApproved.get(size).getDestination().getName().equalsIgnoreCase(location)) && (!pharmacyApproved.get(size).getApproved())) {
 
                 data = new JSONArray();
@@ -840,7 +766,6 @@ public class DrugApprovedController {
                     data.put("");
                 data.put(pharmacyApproved.get(size).getStatus() + "[" + pharmacyApproved.get(size).getDateCreated().toString().substring(0, 10) + "]");
                 data.put("<input type=\"checkbox\" name=\"check\" id=\"one\" >");
-//
 
 
                 if (pharmacyApproved.get(size).getAuthorized() != null)
@@ -859,7 +784,7 @@ public class DrugApprovedController {
         return null;
     }
 
-    public synchronized JSONArray getArrayDialog(List<PharmacyStoreApproved> pharmacyStore, int size) {
+    public synchronized JSONArray getDrugDetailsForDialog(List<PharmacyStoreApproved> pharmacyStore, int size) {
 
         datad = new JSONArray();
 

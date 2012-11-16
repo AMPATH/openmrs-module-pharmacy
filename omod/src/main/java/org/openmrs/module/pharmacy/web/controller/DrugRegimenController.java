@@ -80,6 +80,17 @@ public class DrugRegimenController {
     private boolean datafive;
     private RegimenCombination newOption2;
     private RegimenCombination newOption1;
+    private List<Regimen> regimenList;
+    private JSONObject jsonObject;
+    private JSONArray jsonArray;
+    private List<RegimenCombination> regimenCombinations;
+    private List<Regimen> regimenList1;
+    private Regimen regimen;
+    private List<Regimen> regimenList2;
+    private List<RegimenCombination> regimenCombination1;
+    private int sizee;
+    private List<Regimen> serviceRegimen;
+    private List<RegimenCombination> regimenCombination2;
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/drugRegimen")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
@@ -89,34 +100,34 @@ public class DrugRegimenController {
 
 
         serviceDrugs = Context.getConceptService();
-        List<Regimen> list = service.getRegimen();
+        regimenList = service.getRegimen();
         regimenCombination = new RegimenCombination();
         regimenNames = new RegimenNames();
-        int size = list.size();
-        JSONObject json = new JSONObject();
+        int size = regimenList.size();
+        jsonObject = new JSONObject();
 
-        JSONArray jsons = new JSONArray();
+        jsonArray = new JSONArray();
         try {
 
             if (drop != null) {
                 if (drop.equalsIgnoreCase("drop")) {
 
                     for (int i = 0; i < size; i++) {
-                        jsons.put("" + getDropDown(list, i));
+                        jsonArray.put("" + getDropDown(regimenList, i));
                     }
 
-                    response.getWriter().print(jsons);
+                    response.getWriter().print(jsonArray);
                 }
 
             } else {
 
                 for (int i = 0; i < size; i++) {
 
-                    json.accumulate("aaData", getArray(list, i));
+                    jsonObject.accumulate("aaData", getArray(regimenList, i));
 
                 }
 
-                if (!json.has("aaData")) {
+                if (!jsonObject.has("aaData")) {
 
                     datad2 = new JSONArray();
 
@@ -134,15 +145,15 @@ public class DrugRegimenController {
                     datad2.put("None");
                     datad2.put("None");
                     datad2.put("None");
-                    json.accumulate("aaData", datad2);
+                    jsonObject.accumulate("aaData", datad2);
 
                 }
-                json.accumulate("iTotalRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iTotalDisplayRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iDisplayStart", 0);
-                json.accumulate("iDisplayLength", 10);
+                jsonObject.accumulate("iTotalRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iTotalDisplayRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iDisplayStart", 0);
+                jsonObject.accumulate("iDisplayLength", 10);
 
-                response.getWriter().print(json);
+                response.getWriter().print(jsonObject);
             }
             response.flushBuffer();
 
@@ -186,18 +197,18 @@ public class DrugRegimenController {
         String optionss = request.getParameter("optionss");
 
         //check for same entry before saving
-        List<Regimen> list = service.getRegimen();
-        List<RegimenCombination> list2 = service.getRegimenCombination();
-        int size = list.size();
-        int size2 = list2.size();
+        regimenList1 = service.getRegimen();
+        regimenCombinations = service.getRegimenCombination();
+        int size = regimenList1.size();
+        int size2 = regimenCombinations.size();
         if (regimenuuidvoid == null) {
             for (int i = 0; i < size; i++) {
 
                 if (optionss.equalsIgnoreCase("Yes")) {
-                    foundOptionYes = getCheck(list, i, regimennamecomplete);
+                    foundOptionYes = getCheck(regimenList1, i, regimennamecomplete);
 
                 } else if (optionss.equalsIgnoreCase("No")) {
-                    found = getCheck(list, i, regimennamecomplete);
+                    found = getCheck(regimenList1, i, regimennamecomplete);
 
                 }
 
@@ -214,7 +225,7 @@ public class DrugRegimenController {
                 if (!optionss.isEmpty()) {
                     if ((!foundOptionYes) && optionss.equalsIgnoreCase("Yes")) {
 
-                        Regimen regimen = new Regimen();
+                        regimen = new Regimen();
 
                         regimen.setRegimenNames(service.getRegimenNamesByName(regimennamecomplete));
 
@@ -226,8 +237,6 @@ public class DrugRegimenController {
                         regimen.setCombination(true);
                         regimen.setCategory(category);
                         service.saveRegimen(regimen);
-                        //	    		    	    		if((!regimennameoption.equals("-1")&&!regimendrug1.equals("-1")&&!regimendrug2.equals("-1")&&!regimendrug3.equals("-1"))){
-
                         combination = new RegimenCombination();
                         combination1 = new RegimenCombination();
                         combination2 = new RegimenCombination();
@@ -236,11 +245,11 @@ public class DrugRegimenController {
                         combination.setRegimenNames(service.getRegimenNamesByName(regimennamecomplete));
 
                         String check = service.getRegimenNamesByName(regimennamecomplete).getUuid();
-                        List<Regimen> regimenn = service.getRegimen();
-                        int sizee = regimenn.size();
+                        regimenList2 = service.getRegimen();
+                        int sizee = regimenList2.size();
 
                         for (int r = 0; r < sizee; r++) {
-                            String get = getUuid(regimenn, r, check);
+                            String get = getUuid(regimenList2, r, check);
 
                             if (get != null) {
                                 combination.setPharmacyRegimen(regimen);
@@ -255,15 +264,12 @@ public class DrugRegimenController {
                             combination.setDrugName(null);
 
                         combination1.setRegimenNames(service.getRegimenNamesByName(regimennamecomplete));
-                        //combination1.setPharmacyRegimen(service.getRegimenByUuid(service.getRegimenNamesByName(regimennamecomplete).getUuid()));
                         if (!regimendrug2.equals("-1"))
                             combination1.setDrugName(serviceDrugs.getDrugByNameOrId(regimendrug2));
                         else
                             combination1.setDrugName(null);
 
                         combination2.setRegimenNames(service.getRegimenNamesByName(regimennamecomplete));
-
-                        //combination2.setPharmacyRegimen(service.getRegimenByUuid(service.getRegimenNamesByName(regimennamecomplete).getUuid()));
                         if (!regimendrug3.equals("-1"))
                             combination2.setDrugName(serviceDrugs.getDrugByNameOrId(regimendrug3));
                         else
@@ -303,7 +309,7 @@ public class DrugRegimenController {
 
                     } else if ((!found) && optionss.equalsIgnoreCase("No")) {
 
-                        Regimen regimen = new Regimen();
+                        regimen = new Regimen();
 
                         regimen.setRegimenNames(service.getRegimenNamesByName(regimennamecomplete));
                         if (!complete.equals("-1"))
@@ -326,8 +332,8 @@ public class DrugRegimenController {
 
                     if ((foundOptionYes) && optionss.equalsIgnoreCase("Yes")) {
 
-                        List<RegimenCombination> combinat = service.getRegimenCombination();
-                        int sizee = combinat.size();
+                        regimenCombination1 = service.getRegimenCombination();
+                        sizee = regimenCombination1.size();
                         if (sizee == 0) {
                             newOption1 = new RegimenCombination();
                             newOption2 = new RegimenCombination();
@@ -341,13 +347,13 @@ public class DrugRegimenController {
                         }
                         for (int r = 0; r < sizee; r++) {
 
-                            String get = getRegimenUuid(combinat, r, regimenuuid);
+                            String get = getRegimenUuid(regimenCombination1, r, regimenuuid);
 
 
                             if (get != null) {
 
 
-                                if (combinat.get(r).getOptions()) {
+                                if (regimenCombination1.get(r).getOptions()) {
                                     if (datafour) {
                                         option1Combi = new RegimenCombination();
 
@@ -429,14 +435,9 @@ public class DrugRegimenController {
 
                         }
 
-                        Regimen regimen = new Regimen();
+                        regimen = new Regimen();
 
                         regimen = service.getRegimenByUuid(regimenuuid);//
-
-                        // if (userService.getAuthenticatedUser().getUserId() == regimen.getCreator().getUserId()) {
-
-
-                        //regimen.setRegimenNames(service.getRegimenNamesByName(regimennamecomplete));
                         if (!complete.equals("-1"))
                             regimen.setDrugName(serviceDrugs.getDrugByNameOrId(complete));
                         else
@@ -447,11 +448,11 @@ public class DrugRegimenController {
                         newcombination1.setRegimenNames(regimen.getRegimenNames());
 
                         String check = regimen.getRegimenNames().getUuid();
-                        List<Regimen> regimenn = service.getRegimen();
-                        int sze = regimenn.size();
+                        serviceRegimen = service.getRegimen();
+                        int sze = serviceRegimen.size();
 
                         for (int r = 0; r < sze; r++) {
-                            String get = getUuid(regimenn, r, check);
+                            String get = getUuid(serviceRegimen, r, check);
 
                             if (get != null) {
                                 newcombination1.setPharmacyRegimen(regimen);
@@ -512,7 +513,7 @@ public class DrugRegimenController {
                         //}
                     } else if ((found) && optionss.equalsIgnoreCase("No")) {
 
-                        Regimen regimen = new Regimen();
+                        regimen = new Regimen();
 
                         regimen = service.getRegimenByUuid(regimenuuid);//
 
@@ -560,7 +561,7 @@ public class DrugRegimenController {
 
         } else if (regimenuuidvoid != null) {
 
-            Regimen regimen = new Regimen();
+            regimen = new Regimen();
 
             regimen = service.getRegimenByUuid(regimenuuidvoid);
 
@@ -570,12 +571,12 @@ public class DrugRegimenController {
             service.saveRegimen(regimen);
             if (service.getRegimenByUuid(regimenuuidvoid).getCombination()) {
 
-                List<RegimenCombination> listcheck = service.getRegimenCombination();
-                int number = listcheck.size();
+                regimenCombination2 = service.getRegimenCombination();
+                int number = regimenCombination2.size();
 
                 for (int i = 0; i < number; i++) {
 
-                    String uuid = getDrug(listcheck, i, regimenuuidvoid);
+                    String uuid = getDrug(regimenCombination2, i, regimenuuidvoid);
 
                     if (uuid != null) {
 
@@ -585,6 +586,7 @@ public class DrugRegimenController {
 
                         combination.setVoided(true);
                         combination.setVoidReason(regimenreason);
+
 
                         service.saveRegimenCombination(combination);//
 

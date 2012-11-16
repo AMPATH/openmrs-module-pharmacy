@@ -49,6 +49,16 @@ public class LocationUsersController {
     private boolean deletePharmacy = false;
 
     private JSONArray datad2;
+    private List<PharmacyLocationUsers> locationUsers;
+    private int size;
+    private JSONObject jsonObject;
+    private JSONArray jsonArray;
+    private List<PharmacyStore> pharmacyInventory;
+    private int sizeList;
+    private List<User> userList;
+    private List<PharmacyLocations> pharmacyLocations;
+    private List<PharmacyLocationUsers> pharmacyLocationUsers;
+    private PharmacyLocationUsers pharmacyLocationUsers1;
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/locationUsers")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
@@ -61,11 +71,11 @@ public class LocationUsersController {
         int psize;
 
         service = Context.getService(PharmacyService.class);
-        List<PharmacyLocationUsers> list = service.getPharmacyLocationUsers();
-        int size = list.size();
-        JSONObject json = new JSONObject();
+        locationUsers = service.getPharmacyLocationUsers();
+        size = locationUsers.size();
+        jsonObject = new JSONObject();
 
-        JSONArray jsons = new JSONArray();
+        jsonArray = new JSONArray();
 
         try {
 
@@ -73,84 +83,84 @@ public class LocationUsersController {
                 if (drop.equalsIgnoreCase("drop")) {
                     if (size != 0) {
                         for (int i = 0; i < size; i++) {
-                            jsons.put("" + getDropDown(list, i));
+                            jsonArray.put("" + getDropDown(locationUsers, i));
                         }
 
                     } else
-                        jsons.put("" + null);
+                        jsonArray.put("" + null);
 
-                    response.getWriter().print(jsons);
+                    response.getWriter().print(jsonArray);
                 } else if (drop.equalsIgnoreCase("total")) {
 
-                    List<PharmacyStore> listSize = service.getPharmacyInventory();
-                    int sizeList = listSize.size();
+                    pharmacyInventory = service.getPharmacyInventory();
+                    sizeList = pharmacyInventory.size();
 
                     if (size != 0) {
                         for (int i = 0; i < sizeList; i++) {
-                            int val = getCheckSize(listSize, i, drug);
+                            int val = getCheckSize(pharmacyInventory, i, drug);
                             if (val == 0) {
 
                             } else {
-                                jsons.put("" + val);
+                                jsonArray.put("" + val);
                             }
                             if (val != 0)
                                 break;
                         }
                     } else
-                        jsons.put("" + null);
+                        jsonArray.put("" + null);
 
-                    response.getWriter().print(jsons);
+                    response.getWriter().print(jsonArray);
                 }
 
 
             } else if (user != null) {
 
 
-                List<User> p = Context.getUserService().getUsers(user, Context.getUserService().getRoles(), true);
+                userList = Context.getUserService().getUsers(user, Context.getUserService().getRoles(), true);
 
 
-                psize = p.size();
+                psize = userList.size();
 
-                JSONArray temp = new JSONArray();
+                jsonArray = new JSONArray();
                 for (int i = 0; i < psize; i++) {
 
 
-                    temp.put(p.get(i).getUsername());
+                    jsonArray.put(userList.get(i).getUsername());
 
 
                 }
 
-                response.getWriter().print(temp);
+                response.getWriter().print(jsonArray);
             } else if (locations != null) {
 
 
-                List<PharmacyLocations> p = service.getPharmacyLocations();
+                pharmacyLocations = service.getPharmacyLocations();
 
 
-                psize = p.size();
+                psize = pharmacyLocations.size();
 
-                JSONArray temp = new JSONArray();
+                jsonArray = new JSONArray();
                 for (int i = 0; i < psize; i++) {
 
 
-                    temp.put(p.get(i).getName());
+                    jsonArray.put(pharmacyLocations.get(i).getName());
 
 
                 }
 
-                response.getWriter().print(temp);
+                response.getWriter().print(jsonArray);
             } else {
 
 
                 if (size != 0) {
                     for (int i = 0; i < size; i++) {
 
-                        json.accumulate("aaData", getArray(list, i));
+                        jsonObject.accumulate("aaData", getArray(locationUsers, i));
 
                     }
 
                 }
-                if (!json.has("aaData")) {
+                if (!jsonObject.has("aaData")) {
 
                     datad2 = new JSONArray();
                     datad2.put("None");
@@ -161,15 +171,15 @@ public class LocationUsersController {
                     datad2.put("None");
                     datad2.put("None");
                     datad2.put("None");
-                    json.accumulate("aaData", datad2);
+                    jsonObject.accumulate("aaData", datad2);
 
                 }
-                json.accumulate("iTotalRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iTotalDisplayRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iDisplayStart", 0);
-                json.accumulate("iDisplayLength", 10);
+                jsonObject.accumulate("iTotalRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iTotalDisplayRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iDisplayStart", 0);
+                jsonObject.accumulate("iDisplayLength", 10);
 
-                response.getWriter().print(json);
+                response.getWriter().print(jsonObject);
             }
             response.flushBuffer();
 
@@ -195,48 +205,48 @@ public class LocationUsersController {
 
             if (edit.equalsIgnoreCase("false")) {
                 //check for same entry before saving
-                List<PharmacyLocationUsers> list = service.getPharmacyLocationUsers();
-                int size = list.size();
+                pharmacyLocationUsers = service.getPharmacyLocationUsers();
+                size = pharmacyLocationUsers.size();
                 for (int i = 0; i < size; i++) {
 
-                    found = getCheck(list, i, locationName);
+                    found = getCheck(pharmacyLocationUsers, i, locationName);
                     if (found)
                         break;
                 }
 
 
-                PharmacyLocationUsers pharmacyLocations = new PharmacyLocationUsers();
-                pharmacyLocations.setUserName(locationName);
-                pharmacyLocations.setLocation(description);
+                pharmacyLocationUsers1 = new PharmacyLocationUsers();
+                pharmacyLocationUsers1.setUserName(locationName);
+                pharmacyLocationUsers1.setLocation(description);
 
-                service.savePharmacyLocationUsers(pharmacyLocations);
+                service.savePharmacyLocationUsers(pharmacyLocationUsers1);
 
 
             } else if (edit.equalsIgnoreCase("true")) {
-                PharmacyLocationUsers pharmacyLocations = new PharmacyLocationUsers();
+                pharmacyLocationUsers1 = new PharmacyLocationUsers();
 
-                pharmacyLocations = service.getPharmacyLocationUsersByUuid(uuid);
+                pharmacyLocationUsers1 = service.getPharmacyLocationUsersByUuid(uuid);
 
-                if (userService.getAuthenticatedUser().getUserId().equals(pharmacyLocations.getCreator().getUserId())) {
+                if (userService.getAuthenticatedUser().getUserId().equals(pharmacyLocationUsers1.getCreator().getUserId())) {
 
                     // saving/updating a record
-                    pharmacyLocations.setUserName(locationName);
-                    pharmacyLocations.setLocation(description);
+                    pharmacyLocationUsers1.setUserName(locationName);
+                    pharmacyLocationUsers1.setLocation(description);
 
-                    service.savePharmacyLocationUsers(pharmacyLocations);
+                    service.savePharmacyLocationUsers(pharmacyLocationUsers1);
                 }
             }
 
         } else if (uuidvoid != null) {
 
-            PharmacyLocationUsers pharmacyLocations = new PharmacyLocationUsers();
+            pharmacyLocationUsers1 = new PharmacyLocationUsers();
 
-            pharmacyLocations = service.getPharmacyLocationUsersByUuid(uuidvoid);
+            pharmacyLocationUsers1 = service.getPharmacyLocationUsersByUuid(uuidvoid);
 
-            pharmacyLocations.setVoided(true);
-            pharmacyLocations.setVoidReason(reason);
+            pharmacyLocationUsers1.setVoided(true);
+            pharmacyLocationUsers1.setVoidReason(reason);
 
-            service.savePharmacyLocationUsers(pharmacyLocations);
+            service.savePharmacyLocationUsers(pharmacyLocationUsers1);
 
         }
 

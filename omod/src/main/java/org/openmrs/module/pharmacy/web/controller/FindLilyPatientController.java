@@ -17,6 +17,7 @@ public class FindLilyPatientController {
     @RequestMapping("module/pharmacy/findLilyPatient")
     public synchronized void pageLoad(ModelMap map) {
 
+
     }
 
 }

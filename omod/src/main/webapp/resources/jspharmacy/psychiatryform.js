@@ -194,6 +194,7 @@ $j('#tforms').delegate(
             + "module/jsonforms/jsonforms.form?datajson=" + aData[1],
             function (result) {
 
+
                 getDataDispense(result, pid, formid);
 
             });
@@ -380,6 +381,13 @@ function getDataDispense(data, pid, formid) {
         var oFormObject = document.forms['psychiatryform'];
         oFormObject.elements["Patient_id|2#2"].value = pid;
     }
+    else{
+      alert("cv");
 
+
+        $j("#dispenseform").dialog("open");
+        $j("#psychiatryform").empty();
+        $j("#psychiatryform").buildForm(JSON.parse(data));
+    }
 
 }

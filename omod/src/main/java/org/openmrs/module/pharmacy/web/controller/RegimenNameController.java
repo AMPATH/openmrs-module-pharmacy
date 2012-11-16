@@ -38,6 +38,11 @@ public class RegimenNameController {
     private boolean deletePharmacy = false;
 
     private JSONArray datad2;
+    private List<RegimenNames> regimenNames;
+    private int size;
+    private JSONObject jsonObject;
+    private JSONArray jsonArray;
+    private RegimenNames names;
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/regimenName")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
@@ -45,11 +50,12 @@ public class RegimenNameController {
 
         userService = Context.getUserContext();
         String drop = request.getParameter("drop");
-        List<RegimenNames> list = service.getRegimenNames();
-        int size = list.size();
-        JSONObject json = new JSONObject();
+        regimenNames = service.getRegimenNames();
+        size = regimenNames.size();
+        jsonObject = new JSONObject();
 
-        JSONArray jsons = new JSONArray();
+        jsonArray = new JSONArray();
+
         Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
         for (Role rl : xvc) {
 
@@ -75,21 +81,21 @@ public class RegimenNameController {
                 if (drop.equalsIgnoreCase("drop")) {
 
                     for (int i = 0; i < size; i++) {
-                        jsons.put(getDropDown(list, i));
+                        jsonArray.put(getDropDown(regimenNames, i));
                     }
 
-                    response.getWriter().print(jsons);
+                    response.getWriter().print(jsonArray);
                 }
 
             } else {
 
                 for (int i = 0; i < size; i++) {
 
-                    json.accumulate("aaData", getArray(list, i));
+                    jsonObject.accumulate("aaData", getArray(regimenNames, i));
 
                 }
 
-                if (!json.has("aaData")) {
+                if (!jsonObject.has("aaData")) {
 
                     datad2 = new JSONArray();
 
@@ -100,14 +106,14 @@ public class RegimenNameController {
                     datad2.put("None");
                     datad2.put("None");
 
-                    json.accumulate("aaData", datad2);
+                    jsonObject.accumulate("aaData", datad2);
 
                 }
-                json.accumulate("iTotalRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iTotalDisplayRecords", json.getJSONArray("aaData").length());
-                json.accumulate("iDisplayStart", 0);
-                json.accumulate("iDisplayLength", 10);
-                response.getWriter().print(json);
+                jsonObject.accumulate("iTotalRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iTotalDisplayRecords", jsonObject.getJSONArray("aaData").length());
+                jsonObject.accumulate("iDisplayStart", 0);
+                jsonObject.accumulate("iDisplayLength", 10);
+                response.getWriter().print(jsonObject);
             }
             response.flushBuffer();
             editPharmacy = false;
@@ -138,8 +144,8 @@ public class RegimenNameController {
             if (regimennameedit.equalsIgnoreCase("false")) {
 
                 //check for same entry before saving
-                List<RegimenNames> list = service.getRegimenNames();
-                int size = list.size();
+                regimenNames = service.getRegimenNames();
+                int size = regimenNames.size();
                 if (size == 0) {
 
                     RegimenNames regimenNames = new RegimenNames();
@@ -151,7 +157,7 @@ public class RegimenNameController {
 
                 for (int i = 0; i < size; i++) {
 
-                    found = getCheck(list, i, regimennamename);
+                    found = getCheck(regimenNames, i, regimennamename);
 
                     if (found)
                         break;
@@ -159,10 +165,10 @@ public class RegimenNameController {
 
                 if (!found) {
 
-                    RegimenNames regimenNames = new RegimenNames();
+                    names = new RegimenNames();
 
-                    regimenNames.setRegimenName(regimennamename);
-                    service.saveRegimenNames(regimenNames);
+                    names.setRegimenName(regimennamename);
+                    service.saveRegimenNames(names);
 
                 } else //do code to display to the user
                 {
@@ -170,27 +176,27 @@ public class RegimenNameController {
                 }
                 found = true;
             } else if (regimennameedit.equalsIgnoreCase("true")) {
-                RegimenNames regimenNames = new RegimenNames();
-                regimenNames = service.getRegimenNamesByUuid(regimennameuuid);
-                if (userService.getAuthenticatedUser().getUserId().equals(regimenNames.getCreator().getUserId())) {
+                names = new RegimenNames();
+                names = service.getRegimenNamesByUuid(regimennameuuid);
+                if (userService.getAuthenticatedUser().getUserId().equals(names.getCreator().getUserId())) {
 
                     // saving/updating a record
-                    regimenNames.setRegimenName(regimennamename);
+                    names.setRegimenName(regimennamename);
 
-                    service.saveRegimenNames(regimenNames);
+                    service.saveRegimenNames(names);
                 }
 
             }
 
         } else if (regimennameuuidvoid != null) {
 
-            RegimenNames regimenNames = new RegimenNames();
-            regimenNames = service.getRegimenNamesByUuid(regimennameuuidvoid);
+            names = new RegimenNames();
+            names = service.getRegimenNamesByUuid(regimennameuuidvoid);
 
-            regimenNames.setVoided(true);
-            regimenNames.setVoidReason(regimennamereason);
+            names.setVoided(true);
+            names.setVoidReason(regimennamereason);
 
-            service.saveRegimenNames(regimenNames);
+            service.saveRegimenNames(names);
 
         }
 
