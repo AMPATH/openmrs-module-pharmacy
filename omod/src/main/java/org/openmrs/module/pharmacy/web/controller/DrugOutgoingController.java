@@ -34,150 +34,127 @@ public class DrugOutgoingController {
 
     private JSONArray datad;
 
-    public PharmacyService service;
-
-    String drop = null;
-
     private boolean found = false;
 
-    private String uuid;
 
-    private String drugstrength;
-
-    private String drugunit;
-
-    private String formulation;
-
-    private String originalbindrug;
-
-    private String dialog = null;
-
-    private LocationService serviceLocation;
-
-    private String filter = null;
-
-    private String uuidfilter = null;
-
-    private String outgoingdrug;
-
-    private String outgoingquantityin;
-
-    private String outgoingmax;
-
-    private String outgoingbatch;
-
-    private String outgoings11;
-
-    private String outgoingmin;
-
-    private String outgoingnumber;
 
     private boolean exit = false;
 
-    private String answers;
-
-    private String uuid1;
-
-    private String uuid2;
-
-    private String uuid3;
-
-    private String uuid4;
-
-    private ConceptService serviceDrugs;
-
-    private UserContext userService;
-
-    private String requisition;
-
-    private String issued;
-
-    private String authorized;
 
     private boolean editPharmacy = false;
 
     private boolean deletePharmacy = false;
-    private List<PharmacyLocationUsers> pharmacyLocationUsersByUserName;
-    private int size, size1, size3;
+
+
+    //       Global    variables that are use in both Get and Post
+    private List<PharmacyStoreOutgoing> listStoreOutgoing;
+
+    private String originalbindrug;
+    private String uuidfilter = null;
+
+    private String reload = null;
+    private String filterDrug = null;
+
     private JSONObject jsonObject;
     private JSONArray jsonArray;
+
+    private LocationService serviceLocation;
+    private ConceptService serviceDrugs;
     private List<Drug> allDrugs;
-    private List<PharmacyStoreIncoming> pStoreIncoming;
-    private List<PharmacyStoreOutgoing> pStoreOutgoing;
-    private PharmacyStoreIncoming pharmacyStoreIncoming;
-    private DrugTransactions drugTransactions;
-    private PharmacyStore pharmacyStore;
+
+    private String userLocation = null;
+
+    private UserContext userService;
+    public PharmacyService service;
+    private List<PharmacyLocationUsers> pharmacyLocationUsersByUserName;
+    private int userLocationsize, sizeOfOutgoingEntries, sizeForAllDrugs;
 
 
-    private List<PharmacyStoreApproved> pStoreApproved;
-    private List<DrugTransactions> drugTransactions2;
-
-    private List<PharmacyStoreOutgoing> pharmacyStoreOutgoing1;
-    private PharmacyStoreOutgoing pharmacyStoreOutgoing;
-
-    private PharmacyStoreApproved pharmacyStoreApproved;
-    private PharmacyStoreIncoming PharmacyStoreIncoming;
 
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/drugOutgoing")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
-        userService = Context.getUserContext();
-        String locationVal = null;
 
+        /// get openmts specific components
         service = Context.getService(PharmacyService.class);
+        userService = Context.getUserContext();
+        serviceLocation = Context.getLocationService();
+        serviceDrugs = Context.getConceptService();
+
+
+        /*
+        Get the user logged in and Get a list locations that user has been assigned to
+        In UI there is an options to assign users to locations
+        Assign the size of the list to a variable size
+        */
+
 
         pharmacyLocationUsersByUserName = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        size = pharmacyLocationUsersByUserName.size();
+        userLocationsize = pharmacyLocationUsersByUserName.size();
 
 
-        if (size > 1) {
-            locationVal = request.getSession().getAttribute("location").toString();
+        /*
+        check if the users location is greater than 1 or only one
+        If its one it means that the user can only manage one location hence get that location name
+        In the UI if a user that has more than one locations assigned to access the module, they must choose one location and the location is set to session
+        So if the size if greater than one we ge the location from session
+        */
+        userLocation = getUserLocation(userLocationsize, request);
 
-        } else if (size == 1) {
-            locationVal = pharmacyLocationUsersByUserName.get(0).getLocation();
+
+        // reload variable is to reload the datatable may be after saving an entry
+        reload = request.getParameter("reload");
+
+        //filterDrug variable  is for filtering entries in the datatable
+        filterDrug = request.getParameter("sSearch");
+
+        // get the whole list of outgoing entries made for display
+        listStoreOutgoing = service.getPharmacyStoreOutgoing();
+        sizeOfOutgoingEntries = listStoreOutgoing.size();
 
 
-        }
-        drop = request.getParameter("drop");
-        dialog = request.getParameter("dialog");
-        filter = request.getParameter("sSearch");
-
-        pStoreOutgoing = service.getPharmacyStoreOutgoing();
-        size1 = pStoreOutgoing.size();
-
+        // objects for returning back the response
         jsonObject = new JSONObject();
         jsonArray = new JSONArray();
         response.setContentType("application/jsonObject");
         //check on the filter for datatables
 
-        if (filter.length() > 2) {
-            originalbindrug = filter;
 
-            serviceLocation = Context.getLocationService();
-            serviceDrugs = Context.getConceptService();
-
-
-            allDrugs = serviceDrugs.getAllDrugs();
-            size3 = allDrugs.size();
-            for (int i = 0; i < size3; i++) {
-                uuidfilter = getString(allDrugs, i, originalbindrug);
-                if (uuidfilter != null)
-                    break;
-
-            }
+        /*
+        * Always when the datatable is being refreshed there is a parameter for filter that its always there so to check if the
+        * user as assigned a value to it that they want to filter records to be of the given type , I check  if its size is greater than 2
+        * If its greater than two the user as given a filter parameter if not its the default filter variable
+        *
+        * the objective of this code is to get the uuid of the drug selected by the user for filtering the datatable
+        *
+        * */
+        if (filterDrug.length() > 2) {
+            originalbindrug = filterDrug;
+            uuidfilter = getUuidFilter();
         }
         try {
-            if (dialog != null) {
 
-                for (int i = 0; i < size; i++) {
 
-                    jsonObject.accumulate("aaData", getArrayDialog(pStoreOutgoing, i));
+            /*
+            * Checks if the users wants to reload
+            * */
+            if (reload != null) {
+
+                for (int i = 0; i < sizeOfOutgoingEntries; i++) {
+                    jsonObject.accumulate("aaData", getArrayDialog(listStoreOutgoing, i));
                 }
 
             } else {
-                for (int i = 0; i < size; i++) {
-                    if (pStoreOutgoing.get(i).getDestination().getName().equalsIgnoreCase(locationVal)) {
-                        jsonArray = getArray(pStoreOutgoing, i, locationVal);
+
+                /*
+                *    loop through the size of outgoing entries  and add the details of that outgoing entry to the jsonArray object
+                *
+                *
+                * */
+                for (int i = 0; i < sizeOfOutgoingEntries; i++) {
+                    // get only location that the user has selected
+                    if (listStoreOutgoing.get(i).getDestination().getName().equalsIgnoreCase(userLocation)) {
+                        jsonArray = getArray(listStoreOutgoing, i, userLocation);
                         if (jsonArray != null)
                             jsonObject.accumulate("aaData", jsonArray);
 
@@ -187,34 +164,7 @@ public class DrugOutgoingController {
                     data = new JSONArray();
                 }
                 if (!jsonObject.has("aaData")) {
-
-                    data = new JSONArray();
-                    data.put("No entry");
-                    data.put("No entry");
-                    data.put("No entry");
-                    data.put("No entry");
-                    data.put("No entry");
-
-                    data.put("No entry");
-                    data.put("No entry");
-
-                    data.put("No entry");
-
-                    data.put("No entry");
-                    data.put("No entry");
-                    data.put("No entry");
-                    data.put("No entry");
-
-                    data.put("No entry");
-                    data.put("No entry");
-                    data.put("No entry");
-                    data.put("No entry");
-                    data.put("No entry");
-                    data.put("No entry");
-                    data.put("No entry");
-                    data.put("No entry");
-
-                    jsonObject.accumulate("aaData", data);
+                    jsonObject.accumulate("aaData", null);
                 }
 
             }
@@ -235,55 +185,28 @@ public class DrugOutgoingController {
 
     }
 
+
     @RequestMapping(method = RequestMethod.POST, value = "module/pharmacy/drugOutgoing")
     public synchronized void pageLoadd(HttpServletRequest request, HttpServletResponse response) {
-        serviceLocation = Context.getLocationService();
 
+        //POST specific variable
+        String outgoingdrug = request.getParameter("outgoingdrug");
 
-        pStoreOutgoing = new ArrayList<PharmacyStoreOutgoing>();
-        pStoreApproved = new ArrayList<PharmacyStoreApproved>();
-        drugTransactions2 = new ArrayList<DrugTransactions>();
+        String outgoingquantityin = request.getParameter("outgoingquantityin");
+        String outgoingnumber = request.getParameter("outgoingnumber");
+        String outgoingmax = request.getParameter("outgoingmax");
+        String outgoingmin = request.getParameter("outgoingmin");
 
+        String outgoingbatch = request.getParameter("outgoingbatch");
+        String outgoings11 = request.getParameter("outgoings11");
+        String requisition = request.getParameter("requisition");
 
-        String locationVal = null;
-        String[] drugId;
-        String[] drugQ, quantityToGive;
-        service = Context.getService(PharmacyService.class);
+        String issued = request.getParameter("issued");
 
-        List<PharmacyLocationUsers> listUsers = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
-        int sizeUsers = listUsers.size();
+        String authorized = request.getParameter("authorized");
 
+        String answers = request.getParameter("answers");
 
-        if (sizeUsers > 1) {
-            locationVal = request.getSession().getAttribute("location").toString();
-
-        } else if (sizeUsers == 1) {
-            locationVal = listUsers.get(0).getLocation();
-
-
-        }
-        outgoingdrug = request.getParameter("outgoingdrug");
-        outgoingquantityin = request.getParameter("outgoingquantityin");
-
-        outgoingnumber = request.getParameter("outgoingnumber");
-        outgoingmax = request.getParameter("outgoingmax");
-        outgoingmin = request.getParameter("outgoingmin");
-        outgoingmin = request.getParameter("outgoingmin");
-
-        requisition = request.getParameter("requisition");
-        issued = request.getParameter("issued");
-        authorized = request.getParameter("authorized");
-
-        userService = Context.getUserContext();
-        answers = request.getParameter("answers");
-
-        uuid1 = request.getParameter("one");
-        uuid2 = request.getParameter("two");
-        uuid3 = request.getParameter("three");
-        uuid4 = request.getParameter("four");
-
-        outgoingbatch = request.getParameter("outgoingbatch");
-        outgoings11 = request.getParameter("outgoings11");
 
         String outgoingexpire = request.getParameter("outgoingexpire");
 
@@ -301,433 +224,184 @@ public class DrugOutgoingController {
         String outgoingedit = request.getParameter("outgoingedit");
         String outgoinguuid = request.getParameter("outgoinguuid");
         String outgoingcom = request.getParameter("outgoingcom");
-        String authorizedo = request.getParameter("authorizedo");     //requisitiono
-        String requisitiono = request.getParameter("authorizedo");     //
+        DrugTransactions drugTransactions;
+        PharmacyStore pharmacyStore;
+
+        List<PharmacyStoreOutgoing> pharmacyStoreOutgoing1;
+        PharmacyStoreOutgoing pharmacyStoreOutgoing;
+
+
+        listStoreOutgoing = new ArrayList<PharmacyStoreOutgoing>();
+
         originalbindrug = outgoingdrug;
 
-
-        drugId = request.getParameterValues("drugId");
-
-
-        drugQ = request.getParameterValues("quantity");
-
-        //
-        quantityToGive = request.getParameterValues("quantityToGive");
+        //Arrays of drug Ids that the user has given the approving a large number of drugs for outgoing purposes
+        String[] drugId = request.getParameterValues("drugId");
 
 
+        String[] drugQ = request.getParameterValues("quantity");
+
+
+        String[] quantityToGive = request.getParameterValues("quantityToGive");
+
+
+
+
+        // openmrs specific contstants
+
+
+        service = Context.getService(PharmacyService.class);
+        serviceLocation = Context.getLocationService();
+        userService = Context.getUserContext();
+        serviceDrugs = Context.getConceptService();
+
+
+        /*
+        Get the user logged in and Get a list locations that user has been assigned to
+        In UI there is an options to assign users to locations
+        Assign the size of the list to a variable size
+        */
+
+
+        pharmacyLocationUsersByUserName = service.getPharmacyLocationUsersByUserName(Context.getAuthenticatedUser().getUsername());
+        userLocationsize = pharmacyLocationUsersByUserName.size();
+
+
+        /*
+        check if the users location is greater than 1 or only one
+        If its one it means that the user can only manage one location hence get that location name
+        In the UI if a user that has more than one locations assigned to access the module, they must choose one location and the location is set to session
+        So if the size if greater than one we ge the location from session
+        */
+
+        userLocation = getUserLocation(userLocationsize, request);
+
+
+        /*
+        * from the user interface the users selects from teh drop down a drug that will filter the drugs show in the database
+        * once they select we need to get the uuid of the drug given this code does provide us with that functionality
+        * */
         if (outgoinguuidvoid == null) {
 
+            uuidfilter = getUuidFilter();
 
-            serviceDrugs = Context.getConceptService();
-
-            List<Drug> dname = serviceDrugs.getAllDrugs();
-            int dnames = dname.size();
-            for (int i = 0; i < dnames; i++) {
-                uuid = getString(dname, i, originalbindrug);
-                if (uuid != null)
-                    break;
-
-            }
 
         }
+
+        /*
+        * variable outgoingEdit checks when the user wants to edit an entry or not, the default will always be false and this will be when they
+        * are making a new entry
+        *
+        *
+        * */
+
+
         if (outgoingedit != null) {
+
+
+            /*
+           *  when outgoingedit is false it means they are doing a new entry to the system of an outgoing request
+           *
+           * */
+
             if (outgoingedit.equalsIgnoreCase("false")) {
 
-                ///check for same entry before saving
                 pharmacyStoreOutgoing1 = service.getPharmacyStoreOutgoing();
 
-                int size = pharmacyStoreOutgoing1.size();
-                for (int i = 0; i < size; i++) {
-
-                    found = getCheck(pharmacyStoreOutgoing1, i, outgoingdrug);
-                    if (found)
-                        break;
-                }
-
                 pharmacyStoreOutgoing = new PharmacyStoreOutgoing();
-                pharmacyStoreOutgoing.setDrugs(serviceDrugs.getDrugByUuid(uuid));
+                pharmacyStoreOutgoing.setDrugs(serviceDrugs.getDrugByUuid(uuidfilter));
 
-                pharmacyStoreOutgoing.setQuantityIn(Integer.parseInt(outgoingquantityin));
-
-                if (outgoingmax != null) {
-
-                    pharmacyStoreOutgoing.setMaxLevel(Integer.parseInt(outgoingmax));
-
-                } else if (outgoingmax == null) {
-                    pharmacyStoreOutgoing.setMaxLevel(0);
-                }
-
-                if (outgoingmin != null) {
-                    pharmacyStoreOutgoing.setMinLevel(Integer.parseInt(outgoingmin));
-
-                } else if (outgoingmin == null) {
-                    pharmacyStoreOutgoing.setMinLevel(0);
-                }
-
-                if (outgoingbatch != null) {
-                    pharmacyStoreOutgoing.setBatchNo(Integer.parseInt(outgoingbatch));
-
-                } else if (outgoingbatch == null) {
-                    pharmacyStoreOutgoing.setBatchNo(0);
-                }
-
-                if (outgoings11 != null) {
-                    pharmacyStoreOutgoing.setS11(Integer.parseInt(outgoings11));
-
-                } else if (outgoings11 == null) {
-                    pharmacyStoreOutgoing.setS11(0);
-                }
-
-                Date date = null;
-                try {
-                    if (outgoingexpire != null) {
-                        date = new SimpleDateFormat("MM/dd/yyyy").parse(outgoingexpire);
-                    }
-                } catch (ParseException e) {
-                    // TODO Auto-generated catch block
-                    log.error("Error generated", e);
-                }
-
-                pharmacyStoreOutgoing.setExpireDate(date);
-                serviceLocation = Context.getLocationService();
-
-                pharmacyStoreOutgoing.setDestination(service.getPharmacyLocationsByName(destination));
-                pharmacyStoreOutgoing.setLocation(service.getPharmacyLocationsByName(locationVal));
-
-                pharmacyStoreOutgoing.setChangeReason(null);
-
-                if (supplier == null) {
-                    pharmacyStoreOutgoing.setSupplier(null);
-
-                } else
-                    pharmacyStoreOutgoing.setSupplier(service.getPharmacySupplierByName(supplier));
-
-                pharmacyStoreOutgoing.setTransaction(service.getPharmacyTransactionTypesByName(transactions));
-
-                service.savePharmacyStoreOutgoing(pharmacyStoreOutgoing);
-
+                service.savePharmacyStoreOutgoing(outgoingEntryNewObject(pharmacyStoreOutgoing, outgoingquantityin, outgoingmax, transactions,
+                        outgoingmin, outgoingbatch, outgoings11, outgoingexpire, destination, supplier));
             } else if (outgoingedit.equalsIgnoreCase("true")) {
 
+                /*
+                * this is called when a user wants to edit an entry
+                * The use has to be authenticated so that to only allow people who made the record to edit
+                *
+                * its not be done to allow supers user to do  the edit it only has to be done by the user who did create the entry
+                *
+                * */
+
                 pharmacyStoreOutgoing = new PharmacyStoreOutgoing();
+
+                // get the entry the user wants to edit using the outgoinguuid
                 pharmacyStoreOutgoing = service.getPharmacyStoreOutgoingByUuid(outgoinguuid);
                 if (userService.getAuthenticatedUser().getUserId().equals(pharmacyStoreOutgoing.getCreator().getUserId())) {
 
-                    pharmacyStoreOutgoing.setDrugs(serviceDrugs.getDrugByUuid(uuid));
 
-                    pharmacyStoreOutgoing.setQuantityIn(Integer.parseInt(outgoingquantityin));
+                    /*
+                   * getPharmacyStoreOutgoingObject method call is for creation of editing   object of type PharamacyStoreOutgoing
+                   * the method takes in a class type of PharmacyStoreOutgoing and returns the same type for database updating
+                   *
+                   * */
 
-                    pharmacyStoreOutgoing.setMaxLevel(0);
 
-                    pharmacyStoreOutgoing.setMinLevel(0);
+                    service.savePharmacyStoreOutgoing(getPharmacyStoreOutgoingObject(pharmacyStoreOutgoing, outgoingquantityin, transactions, supplier, outgoingbatch, outgoings11, outgoingexpire, destination, location));
 
-                    if (outgoingbatch != null) {
-                        pharmacyStoreOutgoing.setBatchNo(Integer.parseInt(outgoingbatch));
-
-                    } else if (outgoingbatch == null) {
-                        pharmacyStoreOutgoing.setBatchNo(0);
-                    }
-
-                    if (outgoings11 != null) {
-                        pharmacyStoreOutgoing.setS11(Integer.parseInt(outgoings11));
-
-                    } else if (outgoings11 == null) {
-                        pharmacyStoreOutgoing.setS11(0);
-                    }
-
-                    Date date = null;
-                    try {
-                        if (outgoingexpire != null) {
-                            date = new SimpleDateFormat("MM/dd/yyyy").parse(outgoingexpire);
-                        }
-                    } catch (ParseException e) {
-                        // TODO Auto-generated catch block
-                        log.error("Error generated", e);
-                    }
-                    pharmacyStoreOutgoing.setExpireDate(date);
-                    serviceLocation = Context.getLocationService();
-
-                    pharmacyStoreOutgoing.setDestination(service.getPharmacyLocationsByName(destination));
-                    pharmacyStoreOutgoing.setLocation(service.getPharmacyLocationsByName(location));
-
-                    pharmacyStoreOutgoing.setChangeReason(null);
-
-                    if (supplier == null) {
-                        pharmacyStoreOutgoing.setSupplier(null);
-
-                    } else
-                        pharmacyStoreOutgoing.setSupplier(service.getPharmacySupplierByName(supplier));
-
-                    pharmacyStoreOutgoing.setTransaction(service.getPharmacyTransactionTypesByName(transactions));
-
-                    service.savePharmacyStoreOutgoing(pharmacyStoreOutgoing);
-                    pharmacyStoreApproved = new PharmacyStoreApproved();
-
-                    pharmacyStoreApproved.setDrugs(pharmacyStoreOutgoing.getDrugs());
-                    pharmacyStoreApproved.setQuantityIn(0);
-                    pharmacyStoreApproved.setCategory(pharmacyStoreOutgoing.getCategory());
-                    pharmacyStoreApproved.setDestination(pharmacyStoreOutgoing.getDestination());
-
-                    pharmacyStoreApproved.setLocation(pharmacyStoreOutgoing.getDestination());
-                    pharmacyStoreApproved.setDestination(pharmacyStoreOutgoing.getLocation());
-                    pharmacyStoreApproved.setTransaction(pharmacyStoreOutgoing.getTransaction());
-                    pharmacyStoreApproved.setIncoming(pharmacyStoreOutgoing.getIncoming());
-
-                    pharmacyStoreApproved.setOutgoing(pharmacyStoreOutgoing);
-                    pharmacyStoreApproved.setApproved(false);
-                    pharmacyStoreApproved.setS11(pharmacyStoreOutgoing.getS11());
-
-                    pharmacyStoreApproved.setVoided(pharmacyStoreOutgoing.getVoided());
-                    pharmacyStoreApproved.setMaxLevel(pharmacyStoreOutgoing.getMaxLevel());
-                    pharmacyStoreApproved.setMinLevel(pharmacyStoreOutgoing.getMinLevel());
-                    pharmacyStoreApproved.setBatchNo(pharmacyStoreOutgoing.getBatchNo());
-                    pharmacyStoreApproved.setStatus("Approved");
                 }
             }
-
+            // this is executed when the user wants to void/delete and entry from the database
         } else if (outgoinguuidvoid != null) {
+
+            /*
+           * getPharmacyStoreOutgoingObject is a method that takes in parameters from the use and also an object of type PharmacyStoreOutgoingObject
+           * this will return an object that has been assigned data ready for updating int the database;
+           *
+           *
+           * */
+
             pharmacyStoreOutgoing = new PharmacyStoreOutgoing();
-            pharmacyStoreOutgoing = service.getPharmacyStoreOutgoingByUuid(outgoinguuidvoid);
 
-            pharmacyStoreOutgoing.setVoided(true);
-            pharmacyStoreOutgoing.setVoidReason(outgoingreason);
-
-            service.savePharmacyStoreOutgoing(pharmacyStoreOutgoing);
+            service.savePharmacyStoreOutgoing(getPharmacyStoreOutgoingObjectVoid(pharmacyStoreOutgoing, outgoinguuidvoid, outgoingreason));
 
         } else if (outgoinguuidextra != null) {
-            boolean canSave = false;
 
-            for (int y = 0; y < drugId.length; y++) {
 
-
-                pharmacyStoreOutgoing = new PharmacyStoreOutgoing();
-                pharmacyStoreOutgoing = service.getPharmacyStoreOutgoingByUuid(drugId[y]);
-
-                pharmacyStore = new PharmacyStore();
-
-                pharmacyStore = service.getDrugDispenseSettingsByLocation(service.getPharmacyLocationsByName(locationVal)).getInventoryId();
-
-
-                if (Integer.parseInt(quantityToGive[y]) <= pharmacyStore.getQuantity()) {
-                    canSave = true;
-                    int num;
-
-                    if (Integer.parseInt(quantityToGive[y]) == pharmacyStoreOutgoing.getQuantityIn()) {
-
-                        pharmacyStoreOutgoing.setApproved(true);
-                        pharmacyStoreOutgoing.setQuantityIn(0);
-                        num = (pharmacyStore.getQuantity() - Integer.parseInt(quantityToGive[y]));
-                        System.out.println(pharmacyStore.getQuantity() + "===pharmacyStore.getS11()pharmacyStore+==" + num + "===.getS11()pharmacyStore.getS11()" + Integer.parseInt(quantityToGive[y]));
-
-                        pharmacyStore.setQuantity(num);
-                        service.savePharmacyInventory(pharmacyStore);
-
-                    } else {
-
-                        if (Integer.parseInt(quantityToGive[y]) < pharmacyStoreOutgoing.getQuantityIn()) {
-                            pharmacyStoreOutgoing.setQuantityIn((pharmacyStoreOutgoing.getQuantityIn() - Integer.parseInt(quantityToGive[y])));
-                        }
-
-                        System.out.println(pharmacyStore.getQuantity() + "===pharmacyStore.getS11()pharmacyStore.getS11()pharmacyStore.getS11()" + Integer.parseInt(quantityToGive[y]));
-                        num = (pharmacyStore.getQuantity() - Integer.parseInt(quantityToGive[y]));
-
-
-                        pharmacyStore.setQuantity(num);
-                        service.savePharmacyInventory(pharmacyStore);
-
-                    }
-
-                    pharmacyStoreOutgoing.setAuthorized(Context.getUserService().getUserByUsername(Context.getAuthenticatedUser().getUsername()));
-
-                    pharmacyStoreOutgoing.setIssued(Context.getUserService().getUserByUsername(Context.getAuthenticatedUser().getUsername()));
-
-                    pStoreOutgoing.add(pharmacyStoreOutgoing);
-                    drugTransactions = new DrugTransactions();
-
-                    drugTransactions.setDrugs(pharmacyStoreOutgoing.getDrugs());
-                    drugTransactions.setQuantityIn(0);
-                    drugTransactions.setQuantityOut(Integer.parseInt(quantityToGive[y]));
-                    drugTransactions.setexpireDate(pharmacyStore.getExpireDate());
-                    drugTransactions.setComment("Give out");
-
-                    drugTransactions.setLocation(service.getPharmacyLocationsByName(locationVal).getUuid());
-
-                    drugTransactions2.add(drugTransactions);
-                    pharmacyStoreApproved = new PharmacyStoreApproved();
-
-                    pharmacyStoreApproved.setDrugs(pharmacyStoreOutgoing.getDrugs());
-                    pharmacyStoreApproved.setQuantityIn(Integer.parseInt(quantityToGive[y]));
-                    pharmacyStoreApproved.setCategory(pharmacyStoreOutgoing.getCategory());
-                    pharmacyStoreApproved.setDestination(pharmacyStoreOutgoing.getDestination());
-
-                    pharmacyStoreApproved.setLocation(pharmacyStoreOutgoing.getDestination());
-                    pharmacyStoreApproved.setDestination(pharmacyStoreOutgoing.getLocation());
-                    pharmacyStoreApproved.setTransaction(pharmacyStoreOutgoing.getTransaction());
-                    pharmacyStoreApproved.setIncoming(pharmacyStoreOutgoing.getIncoming());
-
-                    pharmacyStoreApproved.setOutgoing(pharmacyStoreOutgoing);
-                    pharmacyStoreApproved.setApproved(false);
-                    pharmacyStoreApproved.setS11(pharmacyStoreOutgoing.getS11());
-
-
-                    pharmacyStoreApproved.setVoided(pharmacyStoreOutgoing.getVoided());
-                    pharmacyStoreApproved.setMaxLevel(pharmacyStore.getMaxLevel());
-                    pharmacyStoreApproved.setMinLevel(pharmacyStore.getMinLevel());
-                    pharmacyStoreApproved.setBatchNo(pharmacyStore.getBatchNo());
-                    pharmacyStoreApproved.setExpireDate(pharmacyStore.getExpireDate());
-                    pharmacyStoreApproved.setDeliveryNo(pharmacyStore.getDeliveryNo());
-                    pharmacyStoreApproved.setRequested(pharmacyStoreOutgoing.getRequested());
-                    pharmacyStoreApproved.setAuthorized(pharmacyStoreOutgoing.getAuthorized());
-                    pharmacyStoreApproved.setIssued(pharmacyStoreOutgoing.getissued());
-
-                    pharmacyStoreApproved.setStatus("Approved");
-
-                    PharmacyStoreIncoming = pharmacyStoreOutgoing.getIncoming();
-                    PharmacyStoreIncoming.setApproved(true);
-
-                    PharmacyStoreIncoming.setStatus("Apprroved");
-
-                    service.savePharmacyStoreIncoming(PharmacyStoreIncoming);
-
-                    pStoreApproved.add(pharmacyStoreApproved);
-
-                }
-            }
-            outgoinguuidextra = null;
-            if (canSave) {
-                service.savePharmacyStoreOutgoing(pStoreOutgoing);
-                service.savePharmacyStoreApproved(pStoreApproved);
-                service.saveDrugTransactions(drugTransactions);
-            }
-
-
-            if (outgoings11 != null) {
-
-                pharmacyStoreOutgoing = new PharmacyStoreOutgoing();
-                pharmacyStoreOutgoing = service.getPharmacyStoreOutgoingByUuid(outgoinguuidextra);
-                /* String to split. */
-
-                String[] temp;
-
-                /* delimiter */
-                String delimiter = ",";
-                /* given string will be split by the argument delimiter provided. */
-                temp = answers.split(delimiter);
-                int total = 0;
-                String name = "uuid";
-
-                for (int i = 0; i < temp.length; i++) {
-                    if (!temp[i].isEmpty())
-                        total += Integer.parseInt(temp[i]);
-
-                    if (i >= 1) {
-
-                        if (i == 1) {
-
-                            pharmacyStore = new PharmacyStore();
-
-                            pharmacyStore = service.getPharmacyInventoryByUuid(uuid1);
-
-                            pharmacyStore.setQuantity(pharmacyStore.getQuantity() - Integer.parseInt(temp[i]));
-
-                            service.savePharmacyInventory(pharmacyStore);
-
-                        } else if (i == 2) {
-
-                            pharmacyStore = new PharmacyStore();
-
-                            pharmacyStore = service.getPharmacyInventoryByUuid(uuid2);
-
-                            pharmacyStore.setQuantity(pharmacyStore.getQuantity() - Integer.parseInt(temp[i]));
-
-                            service.savePharmacyInventory(pharmacyStore);
-                        } else if (i == 3) {
-
-                            pharmacyStore = new PharmacyStore();
-
-                            pharmacyStore = service.getPharmacyInventoryByUuid(uuid3);
-
-                            pharmacyStore.setQuantity(pharmacyStore.getQuantity() - Integer.parseInt(temp[i]));
-
-                            service.savePharmacyInventory(pharmacyStore);
-                        } else if (i == 4) {
-                            pharmacyStore = new PharmacyStore();
-
-                            pharmacyStore = service.getPharmacyInventoryByUuid(uuid4);
-
-                            pharmacyStore.setQuantity(pharmacyStore.getQuantity() - Integer.parseInt(temp[i]));
-
-                            service.savePharmacyInventory(pharmacyStore);
-
-                        }
-
-                    }
-
-                }
-
-                if (total == pharmacyStoreOutgoing.getQuantityIn()) {
-
-                    pharmacyStoreOutgoing.setApproved(true);
-                    pharmacyStoreOutgoing.setQuantityIn(0);
-                } else {
-                    if (total < pharmacyStoreOutgoing.getQuantityIn()) {
-                        pharmacyStoreOutgoing.setQuantityIn((pharmacyStoreOutgoing.getQuantityIn() - total));
-                    }
-
-                }
-
-
-                pharmacyStoreOutgoing.setS11(Integer.parseInt(outgoings11));
-
-                if (requisition != null && issued != null && authorized != null) {
-                    pharmacyStoreOutgoing.setRequested(Context.getUserService().getUser(Integer.parseInt(requisition)));
-                    pharmacyStoreOutgoing.setAuthorized(Context.getUserService().getUser(Integer.parseInt(authorized)));
-                    pharmacyStoreOutgoing.setIssued(Context.getUserService().getUser(Integer.parseInt(issued)));
-                }
-
-
-                service.saveDrugTransactions(drugTransactions);
-
-
-                pharmacyStoreApproved = new PharmacyStoreApproved();
-
-                pharmacyStoreApproved.setDrugs(pharmacyStoreOutgoing.getDrugs());
-                pharmacyStoreApproved.setQuantityIn(total);
-                pharmacyStoreApproved.setCategory(pharmacyStoreOutgoing.getCategory());
-                pharmacyStoreApproved.setDestination(pharmacyStoreOutgoing.getDestination());
-
-                pharmacyStoreApproved.setLocation(pharmacyStoreOutgoing.getDestination());
-                pharmacyStoreApproved.setDestination(pharmacyStoreOutgoing.getLocation());
-                pharmacyStoreApproved.setTransaction(pharmacyStoreOutgoing.getTransaction());
-                pharmacyStoreApproved.setIncoming(pharmacyStoreOutgoing.getIncoming());
-
-                pharmacyStoreApproved.setOutgoing(pharmacyStoreOutgoing);
-                pharmacyStoreApproved.setApproved(false);
-                pharmacyStoreApproved.setS11(pharmacyStoreOutgoing.getS11());
-
-                pharmacyStoreApproved.setVoided(pharmacyStoreOutgoing.getVoided());
-                pharmacyStoreApproved.setMaxLevel(pharmacyStoreOutgoing.getMaxLevel());
-                pharmacyStoreApproved.setMinLevel(pharmacyStoreOutgoing.getMinLevel());
-                pharmacyStoreApproved.setBatchNo(pharmacyStoreOutgoing.getBatchNo());
-                pharmacyStoreApproved.setStatus("Approved");
-                service.savePharmacyStoreOutgoing(pharmacyStoreOutgoing);
-                service.savePharmacyStoreApproved(pharmacyStoreApproved);
-
-            }
+            /* outGoingExtraDetailsForNewEntry method is executed when a user needs to approve a whole list of outgoing request.
+            *
+           * we get from the user an arrray for drugs selected for approval we iterate through each of those in order to approve each entry at a time
+           *
+           * */
+            outGoingExtraDetailsForNewEntry(false, drugId, quantityToGive);
 
         }
 
     }
 
+    /*    getArray is a method that is called to create the JsonArray for the consumption by the datatables
+   *     so the jsonarray is entailed by the content form the PharmacyStoreOutgoing table,
+   *     its also the one responsible for filtering the results in the users interface
+   *
+   *    it returns a JSONArray object
+   *
+   * */
     public synchronized JSONArray getArray(List<PharmacyStoreOutgoing> pharmacyStore, int size, String location) {
 
-        if (filter.length() > 2) {
+        /*
+        * filterDrug variable checks to ensure that the user has assigned a value to it for filtering the datatables
+        * by default its less that 2 in length but the moment its greater that 2 then it meets the criteria of a filter
+        * */
 
+        if (filterDrug.length() > 2) {
+
+            /*
+            * With the drug filter the user has selected is the same as what we want to add in the array for display in the database
+            *
+            * */
             if (uuidfilter.equalsIgnoreCase(pharmacyStore.get(size).getDrugs().getUuid())) {
-
+                /*
+               *
+               * Only display the once that has been selected  and also for the location the user is currently viewing
+               * */
                 if ((pharmacyStore.get(size).getDestination().getName().equalsIgnoreCase(location))
                         && (!pharmacyStore.get(size).getApproved())) {
 
                     data = new JSONArray();
+
+                    /*
+                    * check the roles and permission and grant them to do specific tasks in the UI e.g Edit and delete entries
+                    * */
                     Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
                     for (Role rl : xvc) {
 
@@ -799,11 +473,18 @@ public class DrugOutgoingController {
             }
 
         } else {
+            /*
+           * this is the default to add everything in PharmacyStoreOutgoing for display
+           *  Only display the once that has been selected  and also for the location the user is currently viewing
+           * */
 
             if ((pharmacyStore.get(size).getDestination().getName().equalsIgnoreCase(location))
                     && (!pharmacyStore.get(size).getApproved())) {
 
                 data = new JSONArray();
+                /*
+               * check the roles and permission and grant them to do specific tasks in the UI e.g Edit and delete entries
+               * */
                 Collection<Role> xvc = userService.getAuthenticatedUser().getAllRoles();
                 for (Role rl : xvc) {
 
@@ -875,6 +556,12 @@ public class DrugOutgoingController {
         return null;
     }
 
+    /*
+   *   getArrayDialog method is responsible for details of a drug with the current quantity of that drug
+   *   this is for the purpose of informing the user in summary
+   *   parameters are pharmacyStore object and an integer for the current item to be added to the JSONArray for display
+   *   returns JSONArray object
+   * */
     public synchronized JSONArray getArrayDialog(List<PharmacyStoreOutgoing> pharmacyStore, int size) {
 
         datad = new JSONArray();
@@ -887,33 +574,10 @@ public class DrugOutgoingController {
         return datad;
     }
 
-    public synchronized String getDropDown(List<PharmacyStoreOutgoing> pharmacyStore, int size) {
 
-        return pharmacyStore.get(size).getUuid();
-    }
+    /*getString is used to compare drugs and if found it returns the uuid
+   * */
 
-    public synchronized boolean getCheck(List<PharmacyStoreOutgoing> pharmacyStore, int size, String name) {
-
-        if (pharmacyStore.get(size).getDrugs().getName().equals(name)) {
-
-            return true;
-
-        } else
-            return false;
-
-    }
-
-    public synchronized String getDrug(List<PharmacyStoreOutgoing> pharmacyStore, int size, String name) {
-        service = Context.getService(PharmacyService.class);
-
-        if (pharmacyStore.get(size).getDrugs().getName().equals(name)) {
-
-            return pharmacyStore.get(size).getUuid();
-
-        } else
-            return null;
-
-    }
 
     public synchronized String getString(List<Drug> dname, int size, String text) {
 
@@ -922,6 +586,323 @@ public class DrugOutgoingController {
             return dname.get(size).getUuid();
         }
         return null;
+
+
+    }
+
+    /*
+   * Method to return the name of the location that has been assigned to the user who has logged in
+   *
+   *
+   * */
+    public String getUserLocation(int userLocationsize, HttpServletRequest request) {
+
+
+        if (userLocationsize > 1) {
+            userLocation = request.getSession().getAttribute("location").toString();
+
+        } else {
+            userLocation = pharmacyLocationUsersByUserName.get(0).getLocation();
+
+        }
+
+        return userLocation;
+    }
+
+
+    /**
+     * outgoingEntryNewObject method create an outgoing object from the variables the user passes from the ui
+     * <p/>
+     * The parameters to this method are from the UI and  it return an object of type    PharmacyStoreOutgoing
+     */
+
+
+    public PharmacyStoreOutgoing outgoingEntryNewObject(PharmacyStoreOutgoing pharmacyStoreOutgoing, String outgoingquantityin, String outgoingmax, String transactions,
+                                                        String outgoingmin, String outgoingbatch, String outgoings11, String outgoingexpire, String destination, String supplier
+    ) {
+
+
+        pharmacyStoreOutgoing.setDrugs(serviceDrugs.getDrugByUuid(uuidfilter));
+
+        pharmacyStoreOutgoing.setQuantityIn(Integer.parseInt(outgoingquantityin));
+
+        if (outgoingmax != null) {
+
+            pharmacyStoreOutgoing.setMaxLevel(Integer.parseInt(outgoingmax));
+
+        } else if (outgoingmax == null) {
+            pharmacyStoreOutgoing.setMaxLevel(0);
+        }
+
+        if (outgoingmin != null) {
+            pharmacyStoreOutgoing.setMinLevel(Integer.parseInt(outgoingmin));
+
+        } else if (outgoingmin == null) {
+            pharmacyStoreOutgoing.setMinLevel(0);
+        }
+
+        if (outgoingbatch != null) {
+            pharmacyStoreOutgoing.setBatchNo(Integer.parseInt(outgoingbatch));
+
+        } else if (outgoingbatch == null) {
+            pharmacyStoreOutgoing.setBatchNo(0);
+        }
+        if (outgoings11 != null) {
+            pharmacyStoreOutgoing.setS11(Integer.parseInt(outgoings11));
+
+        } else if (outgoings11 == null) {
+            pharmacyStoreOutgoing.setS11(0);
+        }
+
+        Date date = null;
+        try {
+            if (outgoingexpire != null) {
+                date = new SimpleDateFormat("MM/dd/yyyy").parse(outgoingexpire);
+            }
+        } catch (ParseException e) {
+
+            log.error("Error generated", e);
+        }
+
+        pharmacyStoreOutgoing.setExpireDate(date);
+        serviceLocation = Context.getLocationService();
+
+        pharmacyStoreOutgoing.setDestination(service.getPharmacyLocationsByName(destination));
+        pharmacyStoreOutgoing.setLocation(service.getPharmacyLocationsByName(userLocation));
+
+        pharmacyStoreOutgoing.setChangeReason(null);
+
+        if (supplier == null) {
+            pharmacyStoreOutgoing.setSupplier(null);
+
+        } else
+            pharmacyStoreOutgoing.setSupplier(service.getPharmacySupplierByName(supplier));
+
+        pharmacyStoreOutgoing.setTransaction(service.getPharmacyTransactionTypesByName(transactions));
+
+
+        return pharmacyStoreOutgoing;
+
+    }
+
+    /*
+   *
+   * Method responsible for giving the uuid of the drug selected when a user chooses one from the interface
+   * This where the system gets the uuid for that drug
+   * */
+    public String getUuidFilter() {
+
+
+        allDrugs = serviceDrugs.getAllDrugs();
+        sizeForAllDrugs = allDrugs.size();
+        for (int i = 0; i < sizeForAllDrugs; i++) {
+            uuidfilter = getString(allDrugs, i, originalbindrug);
+            if (uuidfilter != null)
+                break;
+        }
+
+        return uuidfilter;
+    }
+    /*
+   * getPharmacyStoreOutgoingObject is a method that takes in parameters from the use and also an object of type PharmacyStoreOutgoingObject
+   * this will return an object that has been assigned data ready for updating int the database;
+   *
+   *
+   * */
+
+    public PharmacyStoreOutgoing getPharmacyStoreOutgoingObject(PharmacyStoreOutgoing pharmacyStoreOutgoing, String outgoingquantityin, String transactions, String supplier, String outgoingbatch, String outgoings11,
+                                                                String outgoingexpire, String destination, String location) {
+
+        // pharmacyStoreOutgoing.setDrugs(serviceDrugs.getDrugByUuid(uuidfilter));
+
+
+        pharmacyStoreOutgoing.setQuantityIn(Integer.parseInt(outgoingquantityin));
+
+        pharmacyStoreOutgoing.setMaxLevel(0);
+
+
+        pharmacyStoreOutgoing.setMinLevel(0);
+
+        if (outgoingbatch != null) {
+            pharmacyStoreOutgoing.setBatchNo(Integer.parseInt(outgoingbatch));
+
+        } else if (outgoingbatch == null) {
+            pharmacyStoreOutgoing.setBatchNo(0);
+        }
+
+        if (outgoings11 != null) {
+            pharmacyStoreOutgoing.setS11(Integer.parseInt(outgoings11));
+
+        } else if (outgoings11 == null) {
+            pharmacyStoreOutgoing.setS11(0);
+        }
+
+        Date date = null;
+        try {
+            if (outgoingexpire != null) {
+                date = new SimpleDateFormat("MM/dd/yyyy").parse(outgoingexpire);
+            }
+        } catch (ParseException e) {
+
+            log.error("Error generated", e);
+        }
+        pharmacyStoreOutgoing.setExpireDate(date);
+        serviceLocation = Context.getLocationService();
+
+        pharmacyStoreOutgoing.setDestination(service.getPharmacyLocationsByName(destination));
+        pharmacyStoreOutgoing.setLocation(service.getPharmacyLocationsByName(location));
+
+        pharmacyStoreOutgoing.setChangeReason(null);
+
+        if (supplier == null) {
+            pharmacyStoreOutgoing.setSupplier(null);
+
+        } else
+            pharmacyStoreOutgoing.setSupplier(service.getPharmacySupplierByName(supplier));
+
+        pharmacyStoreOutgoing.setTransaction(service.getPharmacyTransactionTypesByName(transactions));
+        return pharmacyStoreOutgoing;
+
+    }
+
+    /*
+   *    getPharmacyStoreOutgoingObjectVoid is a method that is responsible for  create a void object of type PharamacyStoreOutgoing
+   *    returns PharamacyStoreOutgoing objects
+   *
+   * */
+    public PharmacyStoreOutgoing getPharmacyStoreOutgoingObjectVoid(PharmacyStoreOutgoing pharmacyStoreOutgoingVoid, String outgoinguuidvoid, String outgoingreason) {
+
+
+        pharmacyStoreOutgoingVoid = service.getPharmacyStoreOutgoingByUuid(outgoinguuidvoid);
+        pharmacyStoreOutgoingVoid.setVoided(true);
+        pharmacyStoreOutgoingVoid.setVoidReason(outgoingreason);
+        return pharmacyStoreOutgoingVoid;
+    }
+
+    /*     outGoingExtraDetailsForNewEntry is a method to us when the users has approved the system.
+   *       this method will take in parameters from the UI and the outcome is changes added to the database
+   * */
+    public void outGoingExtraDetailsForNewEntry(boolean canSave, String[] drugId, String[] quantityToGive) {
+        PharmacyStoreApproved pharmacyStoreApproved;
+        PharmacyStoreIncoming PharmacyStoreIncoming;
+        List<DrugTransactions> listDrugTransactions = new ArrayList<DrugTransactions>();
+        List<PharmacyStoreApproved> listStoreApproved = new ArrayList<PharmacyStoreApproved>();
+        String outgoinguuidextra;
+        DrugTransactions drugTransactions;
+        PharmacyStore pharmacyStore;
+        PharmacyStoreOutgoing pharmacyStoreOutgoing;
+
+        /* outGoingExtraDetailsForNewEntry method is executed when a user needs to approve a whole list of outgoing request.
+        *
+       * we get from the user an arrray for drugs selected for approval we iterate through each of those in order to approve each entry at a time
+       *
+       * */
+        for (int y = 0; y < drugId.length; y++) {
+
+
+            pharmacyStoreOutgoing = new PharmacyStoreOutgoing();
+            pharmacyStoreOutgoing = service.getPharmacyStoreOutgoingByUuid(drugId[y]);
+
+            pharmacyStore = new PharmacyStore();
+
+            pharmacyStore = service.getDrugDispenseSettingsByLocation(service.getPharmacyLocationsByName(userLocation)).getInventoryId();
+
+           // Check if there is enough drugs in the store for approving quantity to give
+           // This is to ensure that we have enough in store
+            if (Integer.parseInt(quantityToGive[y]) <= pharmacyStore.getQuantity()) {
+                canSave = true;
+                int num;
+
+                if (Integer.parseInt(quantityToGive[y]) == pharmacyStoreOutgoing.getQuantityIn()) {
+
+                    pharmacyStoreOutgoing.setApproved(true);
+                    pharmacyStoreOutgoing.setQuantityIn(0);
+                    num = (pharmacyStore.getQuantity() - Integer.parseInt(quantityToGive[y]));
+                    System.out.println(pharmacyStore.getQuantity() + "===pharmacyStore.getS11()pharmacyStore+==" + num + "===.getS11()pharmacyStore.getS11()" + Integer.parseInt(quantityToGive[y]));
+
+                    pharmacyStore.setQuantity(num);
+                    service.savePharmacyInventory(pharmacyStore);
+
+                } else {
+
+                    if (Integer.parseInt(quantityToGive[y]) < pharmacyStoreOutgoing.getQuantityIn()) {
+                        pharmacyStoreOutgoing.setQuantityIn((pharmacyStoreOutgoing.getQuantityIn() - Integer.parseInt(quantityToGive[y])));
+                    }
+
+                    System.out.println(pharmacyStore.getQuantity() + "===pharmacyStore.getS11()pharmacyStore.getS11()pharmacyStore.getS11()" + Integer.parseInt(quantityToGive[y]));
+                    num = (pharmacyStore.getQuantity() - Integer.parseInt(quantityToGive[y]));
+
+
+                    pharmacyStore.setQuantity(num);
+                    service.savePharmacyInventory(pharmacyStore);
+
+                }
+
+                pharmacyStoreOutgoing.setAuthorized(Context.getUserService().getUserByUsername(Context.getAuthenticatedUser().getUsername()));
+
+                pharmacyStoreOutgoing.setIssued(Context.getUserService().getUserByUsername(Context.getAuthenticatedUser().getUsername()));
+
+                listStoreOutgoing.add(pharmacyStoreOutgoing);
+                drugTransactions = new DrugTransactions();
+
+                drugTransactions.setDrugs(pharmacyStoreOutgoing.getDrugs());
+                drugTransactions.setQuantityIn(0);
+                drugTransactions.setQuantityOut(Integer.parseInt(quantityToGive[y]));
+                drugTransactions.setexpireDate(pharmacyStore.getExpireDate());
+                drugTransactions.setComment("Give out");
+
+                drugTransactions.setLocation(service.getPharmacyLocationsByName(userLocation).getUuid());
+
+                listDrugTransactions.add(drugTransactions);
+                pharmacyStoreApproved = new PharmacyStoreApproved();
+
+                pharmacyStoreApproved.setDrugs(pharmacyStoreOutgoing.getDrugs());
+                pharmacyStoreApproved.setQuantityIn(Integer.parseInt(quantityToGive[y]));
+                pharmacyStoreApproved.setCategory(pharmacyStoreOutgoing.getCategory());
+                pharmacyStoreApproved.setDestination(pharmacyStoreOutgoing.getDestination());
+
+                pharmacyStoreApproved.setLocation(pharmacyStoreOutgoing.getDestination());
+                pharmacyStoreApproved.setDestination(pharmacyStoreOutgoing.getLocation());
+                pharmacyStoreApproved.setTransaction(pharmacyStoreOutgoing.getTransaction());
+                pharmacyStoreApproved.setIncoming(pharmacyStoreOutgoing.getIncoming());
+
+                pharmacyStoreApproved.setOutgoing(pharmacyStoreOutgoing);
+                pharmacyStoreApproved.setApproved(false);
+                pharmacyStoreApproved.setS11(pharmacyStoreOutgoing.getS11());
+
+
+                pharmacyStoreApproved.setVoided(pharmacyStoreOutgoing.getVoided());
+                pharmacyStoreApproved.setMaxLevel(pharmacyStore.getMaxLevel());
+                pharmacyStoreApproved.setMinLevel(pharmacyStore.getMinLevel());
+                pharmacyStoreApproved.setBatchNo(pharmacyStore.getBatchNo());
+                pharmacyStoreApproved.setExpireDate(pharmacyStore.getExpireDate());
+                pharmacyStoreApproved.setDeliveryNo(pharmacyStore.getDeliveryNo());
+                pharmacyStoreApproved.setRequested(pharmacyStoreOutgoing.getRequested());
+                pharmacyStoreApproved.setAuthorized(pharmacyStoreOutgoing.getAuthorized());
+                pharmacyStoreApproved.setIssued(pharmacyStoreOutgoing.getissued());
+
+                pharmacyStoreApproved.setStatus("Approved");
+
+                PharmacyStoreIncoming = pharmacyStoreOutgoing.getIncoming();
+                PharmacyStoreIncoming.setApproved(true);
+
+                PharmacyStoreIncoming.setStatus("Apprroved");
+
+                service.savePharmacyStoreIncoming(PharmacyStoreIncoming);
+
+                listStoreApproved.add(pharmacyStoreApproved);
+
+            }
+        }
+        outgoinguuidextra = null;
+
+        if (canSave) {
+            service.savePharmacyStoreOutgoing(listStoreOutgoing);
+            service.savePharmacyStoreApproved(listStoreApproved);
+            service.saveDrugTransactions(listDrugTransactions);
+        }
+
+
     }
 
 }

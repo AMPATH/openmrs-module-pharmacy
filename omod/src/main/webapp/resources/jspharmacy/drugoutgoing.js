@@ -371,7 +371,7 @@ function closeOutgoingExtra() {
     oFormObject.elements["outgoinguuidextra"].value = "";
 
 
-    $j('#tinventoryoutgoing').dataTable().fnReloadAjax("drugBincard.form?dialog=dialog&uuid=123");
+    $j('#tinventoryoutgoing').dataTable().fnReloadAjax("drugBincard.form?reload=reload&uuid=123");
     var i;
     for (i = 0; i < totalElements; i++) {
 
