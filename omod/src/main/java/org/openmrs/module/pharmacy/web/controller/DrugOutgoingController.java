@@ -25,6 +25,22 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+/**
+ *     DrugOutgoingController controller is responsible for managing all requests that a location are getting from other sites
+ *     this will mean all the request that they have been requested to for drugs or any other commodity that the inventory is managing
+ *     All the response is in JSONArray format
+ *
+ *     #GET part is responsible for displaying all the records that have been made and also for filtering through that record
+ *
+ *     #POST part is the one responsible for
+ *     1.Editing entries already made
+ *     2.Approving a number of  drug outgoing requests
+ *     3. Adding a new entry inform of an outgoing request
+ *
+ *
+ */
+
+
 @Controller
 public class DrugOutgoingController {
 
