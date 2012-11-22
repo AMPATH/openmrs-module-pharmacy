@@ -46,47 +46,31 @@ public class DrugOutgoingController {
 
     private static final Log log = LogFactory.getLog(DrugOutgoingController.class);
 
-    private JSONArray data;
 
-    private JSONArray datad;
-
-    private boolean found = false;
-
-
-
-    private boolean exit = false;
-
-
-    private boolean editPharmacy = false;
-
-    private boolean deletePharmacy = false;
 
 
     //       Global    variables that are use in both Get and Post
     private List<PharmacyStoreOutgoing> listStoreOutgoing;
-
     private String originalbindrug;
     private String uuidfilter = null;
-
     private String reload = null;
     private String filterDrug = null;
-
     private JSONObject jsonObject;
     private JSONArray jsonArray;
-
     private LocationService serviceLocation;
     private ConceptService serviceDrugs;
     private List<Drug> allDrugs;
-
     private String userLocation = null;
-
     private UserContext userService;
     public PharmacyService service;
     private List<PharmacyLocationUsers> pharmacyLocationUsersByUserName;
     private int userLocationsize, sizeOfOutgoingEntries, sizeForAllDrugs;
-
-
-
+    private JSONArray data;
+    private JSONArray datad;
+    private boolean found =false;
+    private boolean exit = false;
+    private boolean editPharmacy = false;
+    private boolean deletePharmacy = false;
 
     @RequestMapping(method = RequestMethod.GET, value = "module/pharmacy/drugOutgoing")
     public synchronized void pageLoad(HttpServletRequest request, HttpServletResponse response) {
@@ -245,27 +229,15 @@ public class DrugOutgoingController {
 
         List<PharmacyStoreOutgoing> pharmacyStoreOutgoing1;
         PharmacyStoreOutgoing pharmacyStoreOutgoing;
-
-
         listStoreOutgoing = new ArrayList<PharmacyStoreOutgoing>();
-
         originalbindrug = outgoingdrug;
 
         //Arrays of drug Ids that the user has given the approving a large number of drugs for outgoing purposes
         String[] drugId = request.getParameterValues("drugId");
-
-
         String[] drugQ = request.getParameterValues("quantity");
-
-
         String[] quantityToGive = request.getParameterValues("quantityToGive");
 
-
-
-
         // openmrs specific contstants
-
-
         service = Context.getService(PharmacyService.class);
         serviceLocation = Context.getLocationService();
         userService = Context.getUserContext();
