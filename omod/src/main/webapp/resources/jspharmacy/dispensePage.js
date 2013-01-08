@@ -101,7 +101,7 @@ var methodOne;
 var id = jQuery.Pid.id;
 
 var url = 'dispense.form?patientID=' + id;
-var urljson = '' + jQuery.Page.context + 'module/jsonforms/jsonforms.form?id='
+var urljson = '' + jQuery.Page.context + 'module/jforms/view.form?id='
     + id;
 
 
@@ -161,6 +161,9 @@ binTable = $j('#tforms')
                     + jQuery.Page.context
                     + 'moduleResources/pharmacy/images/edit2.png" />');
 
+
+
+
             $j('td:eq(4)', nRow).html(aData[4]);
 
             return nRow;
@@ -191,7 +194,7 @@ $j('#tforms').delegate(
         var formid = aData[2];
 
         $j.getJSON("" + jQuery.Page.context
-            + "module/jsonforms/jsonforms.form?datajson=" + aData[1],
+            + "module/jforms/view.form?datajson=" + aData[1],
             function (result) {
 
 

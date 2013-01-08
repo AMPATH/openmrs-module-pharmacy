@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+    <class name="org.openmrs.module.pharmacy.model.DrugDispenseSettings"
+           table="pharmacy_drug_dispense_settings">
+        <cache usage="read-write"/>
+
+        <id name="id" type="int" column="pharmacy_drug_dispense_settings_id" unsaved-value="0">
+            <generator
+                    class="org.openmrs.api.db.hibernate.NativeIfNotAssignedIdentityGenerator"/>
+        </id>
+        <discriminator column="pharmacy_drug_dispense_settings_id" insert="false"/>
+
+        <many-to-one name="drugId" class="org.openmrs.Drug"
+                     column="drug_id"/>
+
+        <property name="batchId" type="java.lang.Integer" column="batch_id"
+                  length="255"/>
+
+
+        <many-to-one name="option" property-ref="uuid" column="pharmacy_general_uuid"/>
+
+        <property name="value" type="java.lang.Integer" column="value"
+                  length="255"/>
+
+
+        <property name="amount" type="double" column="amount"
+                  length="255"/>
+
+        <property name="quantity" type="java.lang.Integer" column="quantity"
+                  length="255"/>
+        <property name="form" type="java.lang.String" column="form"
+                  length="255"/>
+
+        <property name="front" type="java.lang.String" column="front"
+                  length="255"/>
+        <property name="back" type="java.lang.String" column="back"
+                  length="255"/>
+
+
+        <many-to-one name="inventoryId"
+                     property-ref="uuid" column="inventory_id"/>
+
+        <many-to-one name="location"
+                     property-ref="uuid" column="location_uuid"/>
+
+        <many-to-one name="creator" class="org.openmrs.User"
+                     column="creator" not-null="true"/>
+
+        <property name="dateCreated" type="java.util.Date" column="datecreated"
+                  not-null="true"/>
+
+        <property name="voided" type="boolean" not-null="true"/>
+
+
+        <many-to-one name="voidedBy" class="org.openmrs.User"
+                     column="voided_by"/>
+
+        <property name="dateVoided" type="java.util.Date" column="date_voided"/>
+        <property name="voidReason" type="java.lang.String" column="void_reason"
+                  length="255"/>
+
+        <property name="uuid" type="string" length="38" not-null="true"
+                  unique="true"/>
+
+    </class>
+</hibernate-mapping>
